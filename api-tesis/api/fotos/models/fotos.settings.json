@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "fotos",
+  "info": {
+    "name": "Fotos"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "required": true
+    },
+    "fecha_captura": {
+      "type": "datetime",
+      "required": true
+    },
+    "carpeta": {
+      "model": "carpetas",
+      "via": "fotos"
+    },
+    "etiquetas": {
+      "collection": "etiquetas",
+      "via": "fotos",
+      "dominant": true
+    },
+    "color": {
+      "model": "colores",
+      "via": "fotos"
+    },
+    "puntuacion": {
+      "type": "decimal",
+      "default": 0
+    },
+    "ruta_imagen_disco": {
+      "type": "string"
+    }
+  }
+}

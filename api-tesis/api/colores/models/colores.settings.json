@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "colores",
+  "info": {
+    "name": "Colores"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "unique": true,
+      "required": true
+    },
+    "fotos": {
+      "via": "color",
+      "collection": "fotos"
+    }
+  }
+}

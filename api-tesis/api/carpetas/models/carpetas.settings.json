@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "carpetas",
+  "info": {
+    "name": "Carpetas"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "unique": true,
+      "required": true
+    },
+    "fecha_creacion": {
+      "type": "datetime",
+      "required": true
+    },
+    "fotos": {
+      "via": "carpeta",
+      "collection": "fotos"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "etiquetas",
+  "info": {
+    "name": "Etiquetas"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "fotos": {
+      "via": "etiquetas",
+      "collection": "fotos"
+    }
+  }
+}
