@@ -8,6 +8,15 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: "app",
+  mounted() {
+    //this.$store.dispatch("loadCarpetas");
+  }
+};
+</script>
+
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

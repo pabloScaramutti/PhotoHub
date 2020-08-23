@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { AccionesNombres } from "@/store/actions/acciones";
 
 export default {
   name: "Login",
@@ -39,19 +39,20 @@ export default {
   methods: {
     iniciarSesion() {
       if (!this.validarCampos) return;
-      axios
-        .post("http://192.168.0.17:1337/auth/local", {
-          identifier: this.mail,
+      this.$store
+        .dispatch(AccionesNombres.Login, {
+          identifier: this.mail.toLowerCase(),
           password: this.password
         })
         .then(response => {
-          console.log("Well done!");
           console.log("User profile", response.data.user);
           console.log("User token", response.data.jwt);
           this.$router.push({ name: "Home" });
         })
         .catch(error => {
           console.log("An error occurred:", error.response);
+          this.mail = "";
+          this.password = "";
         });
     }
   }
