@@ -1,19 +1,37 @@
 <template>
-  <div>
-    <form v-on:keyup.enter="iniciarSesion">
-      <p>
-        <label for="mail">mail: </label>
-        <input v-model="mail" type="text" placeholder="Mail..." />
-      </p>
-      <p>
-        <label for="password">Contraseña: </label>
-        <input v-model="password" type="password" placeholder="Contraseña..." />
-      </p>
-      <button type="button" :disabled="!validarCampos" @click="iniciarSesion">
-        Login
-      </button>
-    </form>
-  </div>
+  <v-app>
+    <div class="mx-auto mt-5" v-on:keyup.enter="iniciarSesion">
+      <v-form>
+        <v-text-field
+          prepend-icon="mdi-account-circle"
+          label="Mail"
+          v-model="mail"
+          type="text"
+        />
+        <v-text-field
+          label="Contraseña"
+          v-model="password"
+          :type="showPassword ? 'text' : 'password'"
+          prepend-icon="mdi-lock"
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          @click:append="showPassword = !showPassword"
+        />
+        <v-btn
+          block
+          rounded
+          color="primary"
+          :disabled="!validarCampos"
+          @click="iniciarSesion"
+        >
+          Login
+        </v-btn>
+        <div class="separator">o</div>
+        <v-btn rounded outlined block color="primary">
+          Registrarse
+        </v-btn>
+      </v-form>
+    </div>
+  </v-app>
 </template>
 
 <script>
@@ -33,7 +51,8 @@ export default {
   data() {
     return {
       mail: undefined,
-      password: undefined
+      password: undefined,
+      showPassword: false
     };
   },
   methods: {
@@ -58,3 +77,22 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+.separator::before, .separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid rgb(175, 175, 175);
+}
+.separator::before {
+  margin-right: .25em;
+}
+.separator::after {
+  margin-left: .25em;
+}
+</style>
