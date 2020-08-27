@@ -1,35 +1,42 @@
 <template>
   <v-app>
-    <div class="mx-auto mt-5" v-on:keyup.enter="iniciarSesion">
-      <v-form>
-        <v-text-field
-          prepend-icon="mdi-account-circle"
-          label="Mail"
-          v-model="mail"
-          type="text"
-        />
-        <v-text-field
-          label="Contraseña"
-          v-model="password"
-          :type="showPassword ? 'text' : 'password'"
-          prepend-icon="mdi-lock"
-          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-          @click:append="showPassword = !showPassword"
-        />
-        <v-btn
-          block
-          rounded
-          color="primary"
-          :disabled="!validarCampos"
-          @click="iniciarSesion"
-        >
-          Login
-        </v-btn>
-        <div class="separator">o</div>
-        <v-btn rounded outlined block color="primary">
-          Registrarse
-        </v-btn>
-      </v-form>
+    <div style="margin: auto">
+      <div>
+        <v-img src="@/assets/logo-tesis.png" height="170" contain></v-img>
+      </div>
+      <div class="mx-auto mt-5" v-on:keyup.enter="iniciarSesion">
+        <v-form>
+          <v-text-field
+            prepend-icon="mdi-account-circle"
+            label="Mail"
+            v-model="mail"
+            type="text"
+          />
+          <v-text-field
+            label="Contraseña"
+            v-model="password"
+            :type="showPassword ? 'text' : 'password'"
+            prepend-icon="mdi-lock"
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            @click:append="showPassword = !showPassword"
+          />
+          <v-btn
+            block
+            rounded
+            color="primary"
+            class="negro--text"
+            :loading="loading"
+            :disabled="!validarCampos"
+            @click="iniciarSesion"
+          >
+            Login
+          </v-btn>
+          <div class="separator">o</div>
+          <v-btn rounded outlined block color="primary">
+            Registrarse
+          </v-btn>
+        </v-form>
+      </div>
     </div>
   </v-app>
 </template>
@@ -80,6 +87,8 @@ export default {
 
 <style lang="scss" scoped>
 .separator {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
   display: flex;
   align-items: center;
   text-align: center;

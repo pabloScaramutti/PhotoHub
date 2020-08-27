@@ -1,7 +1,7 @@
 <template>
   <v-app id="inspire">
     <div>
-      <NavBar />
+      <NavBar v-if="this.$router.currentRoute.name != 'Login'"/>
     </div>
     <v-main>
       <router-view />
@@ -17,6 +17,11 @@ export default {
 
   components: {
     NavBar
+  },
+
+  created: function () {
+    // `this` hace referencia a la instancia vm
+    console.log(this.$router.currentRoute);
   },
 
   data: () => ({
