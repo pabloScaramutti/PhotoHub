@@ -1,7 +1,7 @@
 <template>
   <v-app id="inspire">
     <div>
-      <NavBar v-if="this.$router.currentRoute.name != 'Login'"/>
+      <NavBar v-if="muestroNavBar()" />
     </div>
     <v-main>
       <router-view />
@@ -19,9 +19,22 @@ export default {
     NavBar
   },
 
-  created: function () {
+  created: function() {
     // `this` hace referencia a la instancia vm
     console.log(this.$router.currentRoute);
+  },
+
+  methods: {
+    muestroNavBar() {
+      switch (this.$router.currentRoute.name) {
+        case "Login":
+          return false;
+        case "Registro":
+          return false;
+        default:
+          return true;
+      }
+    }
   },
 
   data: () => ({

@@ -8,7 +8,7 @@
         <v-form>
           <v-text-field
             prepend-icon="mdi-account-circle"
-            label="Mail"
+            label="Mail o nombre de usuario"
             v-model="mail"
             type="text"
           />
@@ -25,16 +25,17 @@
             rounded
             color="primary"
             class="negro--text"
-            :loading="loading"
             :disabled="!validarCampos"
             @click="iniciarSesion"
           >
             Login
           </v-btn>
           <div class="separator">o</div>
-          <v-btn rounded outlined block color="primary">
-            Registrarse
-          </v-btn>
+          <router-link :to="{ name: 'Registro' }" style="text-decoration:none;">
+            <v-btn rounded outlined block color="primary">
+              Registrarse
+            </v-btn>
+          </router-link>
         </v-form>
       </div>
     </div>
@@ -93,15 +94,16 @@ export default {
   align-items: center;
   text-align: center;
 }
-.separator::before, .separator::after {
-  content: '';
+.separator::before,
+.separator::after {
+  content: "";
   flex: 1;
   border-bottom: 1px solid rgb(175, 175, 175);
 }
 .separator::before {
-  margin-right: .25em;
+  margin-right: 0.25em;
 }
 .separator::after {
-  margin-left: .25em;
+  margin-left: 0.25em;
 }
 </style>
