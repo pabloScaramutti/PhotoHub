@@ -19,11 +19,6 @@ export default {
     NavBar
   },
 
-  created: function() {
-    // `this` hace referencia a la instancia vm
-    console.log(this.$router.currentRoute);
-  },
-
   methods: {
     muestroNavBar() {
       switch (this.$router.currentRoute.name) {

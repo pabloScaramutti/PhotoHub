@@ -1,34 +1,38 @@
 <template>
-  <v-app-bar app color="primary" dark>
+  <v-app-bar app color="negro" dark>
     <div class="d-flex align-center">
-      <v-img
-        alt="Vuetify Logo"
-        class="shrink mr-2"
-        contain
-        src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-        transition="scale-transition"
-        width="40"
-      />
-
-      <v-img
-        alt="Vuetify Name"
-        class="shrink mt-1 hidden-sm-and-down"
-        contain
-        min-width="100"
-        src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-        width="100"
-      />
+      <router-link :to="{ name: 'Home' }">
+        <v-img
+          alt="Vuetify Logo"
+          class="shrink mr-2"
+          contain
+          src="@/assets/logo-tesis.png"
+          transition="scale-transition"
+          width="40"
+        />
+      </router-link>
     </div>
 
     <v-spacer></v-spacer>
 
-    <v-btn
-      href="https://github.com/vuetifyjs/vuetify/releases/latest"
-      target="_blank"
-      text
-    >
-      <span class="mr-2">Latest Release</span>
-      <v-icon>mdi-open-in-new</v-icon>
-    </v-btn>
+    <router-link class="link" :to="{}">
+      <v-icon>mdi-magnify</v-icon>
+    </router-link>
+    <router-link class="link" :to="{}">
+      <v-icon>mdi-menu</v-icon>
+    </router-link>
   </v-app-bar>
 </template>
+
+<style scoped>
+.link {
+  text-decoration: none;
+  margin: 0.5rem;
+  border-radius: 45%;
+  padding: 0.5rem;
+}
+
+.link:active {
+  background: rgba(126, 255, 126, 0.1);
+}
+</style>
