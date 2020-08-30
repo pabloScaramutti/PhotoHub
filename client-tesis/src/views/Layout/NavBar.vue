@@ -16,10 +16,12 @@
     <v-spacer></v-spacer>
 
     <router-link class="link" :to="{}">
-      <v-icon>mdi-magnify</v-icon>
+      <v-btn icon>
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
     </router-link>
     <router-link class="link" :to="{}">
-      <v-icon>mdi-menu</v-icon>
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
     </router-link>
   </v-app-bar>
 </template>
@@ -27,12 +29,5 @@
 <style scoped>
 .link {
   text-decoration: none;
-  margin: 0.5rem;
-  border-radius: 45%;
-  padding: 0.5rem;
-}
-
-.link:active {
-  background: rgba(126, 255, 126, 0.1);
 }
 </style>

@@ -31,11 +31,15 @@
             Login
           </v-btn>
           <div class="separator">o</div>
-          <router-link :to="{ name: 'Registro' }" style="text-decoration:none;">
-            <v-btn rounded outlined block color="primary">
-              Registrarse
-            </v-btn>
-          </router-link>
+          <v-btn
+            :to="{ name: 'Registro' }"
+            rounded
+            outlined
+            block
+            color="primary"
+          >
+            Registrarse
+          </v-btn>
         </v-form>
       </div>
     </div>

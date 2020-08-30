@@ -1,26 +1,31 @@
 <template>
   <v-app id="inspire">
     <div>
-      <NavBar v-if="muestroNavBar()" />
+      <NavBar v-if="muestroLayout()" />
     </div>
     <v-main>
       <router-view />
     </v-main>
+    <div>
+      <BottomBar v-if="muestroLayout()" />
+    </div>
   </v-app>
 </template>
 
 <script>
 import NavBar from "./views/Layout/NavBar";
+import BottomBar from "./views/Layout/BottomBar";
 
 export default {
   name: "App",
 
   components: {
-    NavBar
+    NavBar,
+    BottomBar
   },
 
   methods: {
-    muestroNavBar() {
+    muestroLayout() {
       switch (this.$router.currentRoute.name) {
         case "Login":
           return false;
