@@ -27,3 +27,11 @@ export default {
   name: "BottomBar"
 };
 </script>
+
+<style scoped>
+
+.v-item-group.v-bottom-navigation .v-btn {
+  min-width: 73px;
+} 
+
+</style>
