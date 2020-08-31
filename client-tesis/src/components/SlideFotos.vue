@@ -1,7 +1,11 @@
 <template>
   <div>
-    <v-toolbar dense flat style="background: transparent">
-      <v-toolbar-title>{{ titulo }}</v-toolbar-title>
+    <v-toolbar dense flat style="background: transparent; height:2.5rem">
+      <router-link to="">
+        <v-toolbar-title style="font-size: 1.1rem;">
+          {{ titulo }}
+        </v-toolbar-title>
+      </router-link>
       <v-spacer></v-spacer>
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
@@ -18,7 +22,7 @@
 
     <v-slide-group>
       <v-slide-item v-for="item in imagenes" :key="item">
-        <router-link :to="item">
+        <router-link :to="{ name: 'Foto' }">
           <v-card
             :height="tamImagenes()"
             :width="tamImagenes()"
@@ -76,3 +80,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.v-application a {
+  text-decoration: none;
+  color: white;
+}
+</style>

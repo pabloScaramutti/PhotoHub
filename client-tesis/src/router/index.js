@@ -3,12 +3,18 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Registro from "../views/Registro.vue";
+import Nota from "../views/Nota.vue";
+import Foto from "../views/Foto.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
+    component: Home
+  },
+  {
+    path: "/home",
     name: "Home",
     component: Home
   },
@@ -30,6 +36,16 @@ const routes = [
     path: "/registro",
     name: "Registro",
     component: Registro
+  },
+  {
+    path: "/nota",
+    name: "Nota",
+    component: Nota
+  },
+  {
+    path: "/foto",
+    name: "Foto",
+    component: Foto
   }
 ];
 

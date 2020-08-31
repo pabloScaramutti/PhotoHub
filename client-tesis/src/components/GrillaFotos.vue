@@ -10,7 +10,7 @@
         md="2"
         style="padding:0"
       >
-        <router-link :to="item">
+        <router-link :to="{ name: 'Foto' }">
           <v-img
             :src="item"
             :lazy-src="item"
