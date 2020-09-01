@@ -31,12 +31,28 @@
       </div>
 
       <ul>
-        <li>apertura</li>
-        <li>velocidad</li>
-        <li>iso</li>
-        <li>etiquetas</li>
-        <li>calificacion</li>
+        <li>
+          <v-icon>camera</v-icon>
+          apertura
+        </li>
+        <li>
+          <v-icon>shutter_speed</v-icon>
+          velocidad
+        </li>
+        <li>
+          <v-icon>iso</v-icon>
+          iso
+        </li>
+        <li>
+          <v-icon>label</v-icon>
+          etiquetas
+        </li>
       </ul>
+
+      <li>
+        <v-icon>delete</v-icon>
+        Borrar
+      </li>
     </div>
   </div>
 </template>
@@ -45,7 +61,7 @@
 export default {
   data() {
     return {
-      imagen: require("@/assets/Media/DSC_0342.jpg"),
+      imagen: require("@/assets/Media/DSC_0370.jpg"),
       rating: 0.0,
       ratingAnterior: 0.0,
       tactil:

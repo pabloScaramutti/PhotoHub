@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar app color="negro" dark>
+    <v-app-bar app color="negro" dark height="45rem">
       <div class="d-flex align-center">
         <!--router-link :to="{ name: 'Home' }">
           <v-img
@@ -30,7 +30,7 @@
 
       <v-navigation-drawer
         v-model="drawer"
-        absolute
+        app
         temporary
         color="negro"
       >
