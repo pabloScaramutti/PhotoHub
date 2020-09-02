@@ -1,69 +1,80 @@
 <template>
-  <v-container>
-    <v-container style="padding:0">
-      <v-row>
-        <v-col cols="12" sm="6" md="6">
-          <v-text-field
-            ref="Titulo"
-            label="Titulo"
-            placeholder="Escriba el titulo de la nota..."
+  <div>
+    <v-expansion-panels v-model="paneles">
+      <v-expansion-panel :readonly="seEstaEditando">
+        <v-expansion-panel-header @click="avisoGuardado">
+          <v-row no-gutters>
+            <v-col>
+              <v-text-field
+                dense
+                hide-details
+                ref="Titulo"
+                label="Titulo"
+                placeholder="Escriba el titulo de la nota..."
+                outlined
+                v-model="titulo"
+                :append-icon="noEditableTitulo == true ? 'edit' : 'none'"
+                :color="noEditableTitulo ? 'teal lighten-5' : 'primary'"
+                @click:append="
+                  noEditableTitulo = false;
+                  focusTextArea('Titulo');
+                  paneles = 0;
+                "
+                :readonly="noEditableTitulo"
+                style="width:98%"
+              ></v-text-field>
+              <p class="fecha">{{ fechaCreacion }}</p>
+            </v-col>
+          </v-row>
+        </v-expansion-panel-header>
+        <v-divider></v-divider>
+        <v-expansion-panel-content style="padding: 1rem 0 0 0; background-color: #0f0f0f;">
+          <v-textarea
             outlined
-            v-model="titulo"
-            :append-icon="noEditableTitulo == true ? 'edit' : 'none'"
-            :color="noEditableTitulo ? 'teal lighten-5' : 'primary'"
+            hide-details
+            ref="Nota"
+            label="Nota"
+            placeholder="Escriba una nueva nota..."
+            v-model="texto"
+            :append-icon="noEditableNota == true ? 'edit' : 'none'"
+            :color="noEditableNota ? 'teal lighten-5' : 'primary'"
             @click:append="
-              noEditableTitulo = false;
-              focusTextArea('Titulo');
+              noEditableNota = false;
+              focusTextArea('Nota');
             "
-            :readonly="noEditableTitulo"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-          <v-text-field
-            label="Fecha de creación"
-            color="white"
-            flat
-            v-model="fechaCreacion"
-            class="datos"
-            readonly
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" xm="6" md="3">
-          <v-text-field
-            label="Fecha de ultima modificación"
-            color="white"
-            flat
-            v-model="fechaModificacion"
-            readonly
-          ></v-text-field>
-        </v-col>
-      </v-row>
-    </v-container>
-    <v-textarea
-      outlined
-      ref="Nota"
-      label="Nota"
-      placeholder="Escriba una nueva nota..."
-      v-model="texto"
-      :append-icon="noEditableNota == true ? 'edit' : 'none'"
-      :color="noEditableNota ? 'teal lighten-5' : 'primary'"
-      @click:append="
-        noEditableNota = false;
-        focusTextArea('Nota');
-      "
-      :readonly="noEditableNota"
-    >
-    </v-textarea>
-    <v-btn
-      v-if="!(noEditableNota && noEditableTitulo)"
-      color="primary"
-      class="negro--text"
-      @click="guardar"
-    >
-      <v-icon left>save</v-icon>
-      Guardar
-    </v-btn>
-  </v-container>
+            :readonly="noEditableNota"
+          >
+          </v-textarea>
+          <v-btn
+            v-if="seEstaEditando"
+            color="primary"
+            class="negro--text"
+            @click="guardar"
+            style="margin: 1rem 0 0 0"
+          >
+            <v-icon left>save</v-icon>
+            Guardar
+          </v-btn>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
+    <v-snackbar
+        v-model="alerta"
+      >
+        "Guarde las notas que estan activas antes de cerrar"
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            color="pink"
+            text
+            v-bind="attrs"
+            @click="alerta = false"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </div>
 </template>
 
 <script>
@@ -74,10 +85,10 @@ export default {
       texto: "",
       titulo: "",
       fechaCreacion: "01/09/2020",
-      fechaModificacion: "05/09/2020",
       noEditableNota: true,
       noEditableTitulo: true,
-      edicionActivaV: false
+      paneles: undefined,
+      alerta: false
     };
   },
   methods: {
@@ -87,16 +98,25 @@ export default {
     },
     focusTextArea(area) {
       this.$refs[area].$refs.input.focus();
+    },
+    avisoGuardado(){
+      if( this.seEstaEditando && event.target.tagName != "INPUT" ){
+        this.alerta = true;
+      }
+    }
+  },
+  computed: {
+    seEstaEditando: function() {
+      return !(this.noEditableNota && this.noEditableTitulo)
     }
   }
 };
 </script>
 
 <style>
-.v-text-field > .v-input__control > .v-input__slot:after {
-  border-style: none !important;
-}
-.v-text-field > .v-input__control > .v-input__slot:before {
-  border-style: none !important;
+.fecha {
+  font-size: 0.8rem !important;
+  color: lightgray !important;
+  margin: 0.5rem 0rem 0 0.8rem !important;
 }
 </style>

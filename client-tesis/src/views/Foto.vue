@@ -44,7 +44,7 @@
           iso
         </li>
         <li>
-          <v-icon>label</v-icon>
+          <v-icon>local_offer</v-icon>
           etiquetas
         </li>
       </ul>
