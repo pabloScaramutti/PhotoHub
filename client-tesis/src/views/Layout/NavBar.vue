@@ -22,55 +22,46 @@
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
       </router-link>
-      
     </v-app-bar>
 
     <!------------------------------------------------------------------->
-    
 
-      <v-navigation-drawer
-        v-model="drawer"
-        app
-        temporary
-        color="negro"
-      >
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer" style="margin: 10px"></v-app-bar-nav-icon>
-        <v-img src="@/assets/logo-tesis.png" class="logo"></v-img>
+    <v-navigation-drawer v-model="drawer" app temporary color="negro">
+      <v-app-bar-nav-icon
+        @click.stop="drawer = !drawer"
+        style="margin: 10px"
+      ></v-app-bar-nav-icon>
+      <v-img src="@/assets/logo-tesis.png" class="logo"></v-img>
 
-        <v-divider></v-divider>
+      <v-divider></v-divider>
 
-        <v-list dense>
+      <v-list dense>
+        <v-list-item v-for="item in items" :key="item.title" link>
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
 
-          <v-list-item
-            v-for="item in items"
-            :key="item.title"
-            link
-          >
-            <v-list-item-icon>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-item-icon>
-
-            <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-navigation-drawer>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
   </div>
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        drawer: null,
-        items: [
-          { title: 'Home', icon: 'dashboard' },
-          { title: 'About', icon: 'question_answer' },
-        ],
-      }
-    },
+export default {
+  data() {
+    return {
+      drawer: null,
+      items: [
+        { title: "Home", icon: "dashboard" },
+        { title: "About", icon: "question_answer" }
+      ]
+    };
   }
+};
 </script>
 
 <style scoped>
