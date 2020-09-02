@@ -1,5 +1,11 @@
 <template>
-  <v-bottom-navigation :value="activo" app background-color="negro" color="primary" dark>
+  <v-bottom-navigation
+    :value="activo"
+    app
+    background-color="negro"
+    color="primary"
+    dark
+  >
     <v-btn :to="{ name: 'Home' }">
       <v-icon>home</v-icon>
     </v-btn>
@@ -27,11 +33,11 @@ export default {
   name: "BottomBar",
   data() {
     return {
-      activo: 0
-    }
+      activo: undefined
+    };
   },
-  mounted: function () {
-    if( this.$router.currentRoute.name == "/" ){
+  created: function() {
+    if (this.$router.currentRoute.name == "/") {
       this.activo = 0;
     }
   }
