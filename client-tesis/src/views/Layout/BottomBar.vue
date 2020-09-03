@@ -22,7 +22,7 @@
       <v-icon>description</v-icon>
     </v-btn>
 
-    <v-btn>
+    <v-btn :to="{ name: 'Calendario' }">
       <v-icon>today</v-icon>
     </v-btn>
   </v-bottom-navigation>

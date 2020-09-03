@@ -5,6 +5,7 @@ import Login from "../views/Login.vue";
 import Registro from "../views/Registro.vue";
 import Nota from "../views/Nota.vue";
 import Foto from "../views/Foto.vue";
+import Calendario from "../views/Calendario.vue";
 
 Vue.use(VueRouter);
 
@@ -46,6 +47,11 @@ const routes = [
     path: "/foto",
     name: "Foto",
     component: Foto
+  },
+  {
+    path: "/calendario",
+    name: "Calendario",
+    component: Calendario
   }
 ];
 
