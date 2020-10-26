@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="foto">
     <div class="fondo-contenedor-imagen" ref="foto">
       <v-img
         max-height="70vh"
@@ -25,7 +25,6 @@
           color="primary"
           background-color="grey darken-1"
           empty-icon="$ratingFull"
-          half-increments
           :hover="!tactil"
         ></v-rating>
       </div>
@@ -47,12 +46,12 @@
           <v-icon>local_offer</v-icon>
           etiquetas
         </li>
-      </ul>
 
-      <li>
-        <v-icon>delete</v-icon>
-        Borrar
-      </li>
+        <li>
+          <v-icon>delete</v-icon>
+          Borrar
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -61,7 +60,7 @@
 export default {
   data() {
     return {
-      imagen: require("@/assets/Media/DSC_0370.jpg"),
+      imagen: require("@/assets/Media/DSC_0338.jpg"),
       rating: 0.0,
       ratingAnterior: 0.0,
       tactil:
@@ -73,7 +72,7 @@ export default {
   },
   methods: {
     checkearCero() {
-      if (this.rating == this.ratingAnterior && this.ratingAnterior == 0.5) {
+      if (this.rating == this.ratingAnterior && this.ratingAnterior == 1) {
         this.rating = this.ratingAnterior = 0.0;
       } else {
         this.ratingAnterior = this.rating;
@@ -83,8 +82,24 @@ export default {
 };
 </script>
 
-<style>
-.fondo-contenedor-imagen {
-  background: #1b1b1b;
+<style lang="scss">
+.foto {
+  .fondo-contenedor-imagen {
+    background: #1b1b1b;
+  }
+
+  ul {
+    padding: 0;
+    margin: 0;
+    width: fit-content;
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    //justify-content: flex-start;
+
+    li {
+      margin-right: 0.7vw;
+    }
+  }
 }
 </style>

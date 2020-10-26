@@ -8,6 +8,18 @@
     <v-main>
       <router-view />
     </v-main>
+
+    <v-btn v-if="muestroLayout()" class="floating-button" fab color="primary">
+      <v-badge
+        color="error"
+        :value="noLeidos.length"
+        :content="noLeidos.length"
+      >
+        <v-icon>
+          camera_alt
+        </v-icon>
+      </v-badge>
+    </v-btn>
     <div>
       <BottomBar v-if="muestroLayout()" />
     </div>
@@ -26,7 +38,8 @@ export default {
   data() {
     return {
       socket: {},
-      algunaCosa: String
+      algunaCosa: String,
+      noLeidos: []
     };
   },
 
@@ -39,7 +52,8 @@ export default {
       this.algunaCosa = data;
     });
     this.socket.on("recibido", data => {
-      console.log(data);
+      this.noLeidos.push(data);
+      //console.log(this.noLeidos);
     });
   },
 
@@ -61,7 +75,7 @@ export default {
     },
     sendTest() {
       this.socket.emit("test", 123);
-      console.log("envio test");
+      //console.log("envio test");
     }
   }
 
@@ -70,3 +84,12 @@ export default {
   })*/
 };
 </script>
+
+<style scoped>
+.floating-button {
+  z-index: 2;
+  position: fixed;
+  bottom: 10vh;
+  right: 5vw;
+}
+</style>

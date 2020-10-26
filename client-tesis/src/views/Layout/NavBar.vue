@@ -31,7 +31,9 @@
         @click.stop="drawer = !drawer"
         style="margin: 10px"
       ></v-app-bar-nav-icon>
-      <v-img src="@/assets/logo-tesis.png" class="logo"></v-img>
+      <router-link :to="{ name: 'Home' }">
+        <v-img src="@/assets/logo-tesis.png" class="logo"></v-img>
+      </router-link>
 
       <v-divider></v-divider>
 

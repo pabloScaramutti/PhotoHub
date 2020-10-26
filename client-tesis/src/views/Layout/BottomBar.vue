@@ -14,7 +14,7 @@
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
 
-    <v-btn>
+    <v-btn :to="{ name: 'NuevaCarpeta' }">
       <v-icon>create_new_folder</v-icon>
     </v-btn>
 
