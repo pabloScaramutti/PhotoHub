@@ -2,8 +2,8 @@
   <v-container fluid class="grilla">
     <v-row>
       <v-col
-        v-for="item in imageSelector"
-        :key="item.img"
+        v-for="item in imagenes"
+        :key="item"
         class="d-flex child-flex"
         cols="4"
         sm="4"
@@ -12,23 +12,23 @@
       >
         <router-link :to="{ name: 'Foto' }" tag="button" :disabled="selectable">
           <v-img
-            :src="item.img"
-            :lazy-src="item.img"
+            :src="item"
+            :lazy-src="item"
             class="grey lighten-2 foto"
             aspect-ratio="1"
-            @click="selectable && (item.selector = !item.selector)"
+            @click="toggleSelection(item)"
           >
             <template v-slot:placeholder>
               <v-row class="fill-height" align="center" justify="center">
                 <v-progress-circular indeterminate color="grey lighten-5" />
               </v-row>
             </template>
-            <v-checkbox
-              v-if="selectable"
+            <v-icon
+              v-if="selectable && existe(selected, item) == -1"
               class="selection-checkbox"
-              v-model="item.selector"
-              disabled
-            ></v-checkbox>
+              >check_box_outline_blank</v-icon
+            >
+            <v-icon v-else class="selection-checkbox">check_box</v-icon>
           </v-img>
         </router-link>
       </v-col>
@@ -40,7 +40,7 @@
 export default {
   data() {
     return {
-      imageSelector: this.agregarCheck(this.imagenes)
+      selected: []
     };
   },
   props: {
@@ -54,13 +54,27 @@ export default {
     }
   },
   methods: {
-    agregarCheck: function(imagenes) {
-      var aux = [];
-      for (var i = 0; i < imagenes.length; i++) {
-        var img = { img: imagenes[i], selector: false };
-        aux.push(img);
+    toggleSelection(img) {
+      var index = this.existe(this.selected, img);
+      if (index != -1) {
+        this.selected.splice(index, 1);
+      } else {
+        this.selected.push(img);
       }
-      return (this.imageSelector = aux);
+      return this.selected;
+    },
+
+    existe(arreglo, img) {
+      if (arreglo == null || arreglo.length < 1) {
+        return -1;
+      } else {
+        for (var i = 0; i < arreglo.length; i++) {
+          if (arreglo[i].localeCompare(img) == 0) {
+            return i;
+          }
+        }
+        return -1;
+      }
     }
   }
 };
@@ -80,11 +94,8 @@ export default {
   .selection-checkbox {
     margin-top: 0;
     padding-top: 0;
-  }
-
-  .v-input--is-disabled .v-icon {
-    color: white !important;
-    opacity: 1 !important;
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>

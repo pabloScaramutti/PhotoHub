@@ -1,14 +1,27 @@
 <template>
   <div>
-    <form action="">
+    <form action="" class="formulario-nueva-carpeta">
+      <h1>Nuevo Album</h1>
       <v-text-field
         prepend-icon="create_new_folder"
         label="Nombre de carpeta..."
         v-model="nuevaCarpeta.nombre"
         type="text"
       />
+      <v-text-field
+        prepend-icon="local_offer"
+        label="Agregar etiquetas"
+        v-model="nuevaCarpeta.etiquetas"
+        type="text"
+      />
+      <h2>Agregue fotos a la carpeta</h2>
+      <v-text-field
+        prepend-icon="search"
+        label="Filtrar fotos por..."
+        v-model="nuevaCarpeta.nombre"
+        type="text"
+      />
     </form>
-    <h2>Agregue fotos a la carpeta</h2>
     <GrillaFotos :imagenes="imagenes" :selectable="true"></GrillaFotos>
   </div>
 </template>
@@ -26,6 +39,7 @@ export default {
       nuevaCarpeta: {
         nombre: "",
         fechaCreacion: undefined,
+        etiquetas: [],
         fotos: []
       },
       imagenes: [
@@ -50,4 +64,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.formulario-nueva-carpeta {
+  width: 100%;
+  padding: 0 3vw;
+}
+</style>

@@ -1,17 +1,7 @@
 <template>
   <div>
     <v-app-bar app color="negro" dark height="45rem">
-      <div class="d-flex align-center">
-        <!--router-link :to="{ name: 'Home' }">
-          <v-img
-            alt="Vuetify Logo"
-            class="shrink mr-2"
-            contain
-            src="@/assets/logo-tesis.png"
-            transition="scale-transition"
-            width="40"
-          />
-        </router-link-->
+      <!-- <div class="d-flex align-center">
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       </div>
 
@@ -22,8 +12,28 @@
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
       </router-link>
-    </v-app-bar>
+    </v-app-bar> -->
 
+      <div class="navBar-icons">
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <router-link :to="{ name: 'Home' }">
+          <v-img
+            alt="Logo"
+            class="logo"
+            contain
+            src="@/assets/logo-tesis.png"
+            transition="scale-transition"
+            width="39"
+            height="39"
+          />
+        </router-link>
+        <router-link class="link" :to="{}">
+          <v-btn icon>
+            <v-icon>mdi-magnify</v-icon>
+          </v-btn>
+        </router-link>
+      </div>
+    </v-app-bar>
     <!------------------------------------------------------------------->
 
     <v-navigation-drawer v-model="drawer" app temporary color="negro">
@@ -72,7 +82,12 @@ export default {
 }
 
 .logo {
-  margin: 0rem auto 1rem;
-  width: 50%;
+  margin: 0.3vh;
+}
+
+.navBar-icons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 </style>

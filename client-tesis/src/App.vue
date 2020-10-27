@@ -1,7 +1,5 @@
 <template>
   <v-app id="inspire">
-    <p>{{ this.algunaCosa }}</p>
-    <button v-on:click="sendTest()">Mandar</button>
     <div>
       <NavBar v-if="muestroLayout()" />
     </div>
@@ -20,6 +18,7 @@
         </v-icon>
       </v-badge>
     </v-btn>
+    <button v-on:click="sendTest()" id="boton-prueba-mandar">Mandar</button>
     <div>
       <BottomBar v-if="muestroLayout()" />
     </div>
@@ -90,6 +89,12 @@ export default {
   z-index: 2;
   position: fixed;
   bottom: 10vh;
+  right: 5vw;
+}
+
+#boton-prueba-mandar {
+  position: fixed;
+  bottom: 7vh;
   right: 5vw;
 }
 </style>
