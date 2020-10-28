@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import GrillaFotos from "@/components/GrillaFotos";
+import GrillaFotos from "@/components/GrillaFotos_masonry";
 
 export default {
   name: "NuevaCarpeta",

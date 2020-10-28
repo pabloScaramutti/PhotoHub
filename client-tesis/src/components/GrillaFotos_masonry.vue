@@ -1,45 +1,38 @@
 <template>
   <v-container fluid class="grilla">
-    <v-row>
-      <v-col
-        v-for="item in imagenes"
-        :key="item"
-        class="d-flex child-flex"
-        cols="4"
-        sm="4"
-        md="2"
-        style="padding:0"
-      >
+    <div class="grid">
+      <div v-for="item in imagenes" :key="item" class="grid-item">
         <router-link :to="{ name: 'Foto' }" tag="button" :disabled="selectable">
-          <v-img
-            :src="item"
-            :lazy-src="item"
-            class="grey lighten-2 foto"
-            aspect-ratio="1"
-            @click="toggleSelection(item)"
+          <v-icon
+            v-if="selectable && existe(selected, item) == -1"
+            class="selection-checkbox"
+            >check_box_outline_blank</v-icon
           >
-            <template v-slot:placeholder>
+          <v-icon v-else-if="selectable" class="selection-checkbox"
+            >check_box</v-icon
+          >
+          <img
+            :src="item"
+            @click="toggleSelection(item)"
+            class="foto"
+            @load="onImageLoad()"
+          />
+          <!-- <template v-slot:placeholder>
               <v-row class="fill-height" align="center" justify="center">
                 <v-progress-circular indeterminate color="grey lighten-5" />
               </v-row>
-            </template>
-            <v-icon
-              v-if="selectable && existe(selected, item) == -1"
-              class="selection-checkbox"
-              >check_box_outline_blank</v-icon
-            >
-            <v-icon v-else-if="selectable" class="selection-checkbox"
-              >check_box</v-icon
-            >
-          </v-img>
+            </template> -->
         </router-link>
-      </v-col>
-    </v-row>
+      </div>
+    </div>
   </v-container>
 </template>
 
 <script>
+import Masonry from "masonry-layout";
+
 export default {
+  name: "Grilla",
   data() {
     return {
       selected: []
@@ -77,6 +70,18 @@ export default {
         }
         return -1;
       }
+    },
+    onImageLoad() {
+      this.loadMasonry();
+    },
+    loadMasonry() {
+      var grid = document.querySelector(".grid");
+      var msnry = new Masonry(grid, {
+        // options...
+        itemSelector: ".grid-item",
+        gutter: 5
+      });
+      return msnry;
     }
   }
 };
@@ -94,10 +99,30 @@ export default {
   }
 
   .selection-checkbox {
+    position: absolute;
     margin-top: 0;
     padding-top: 0;
     display: flex;
     justify-content: flex-end;
+    z-index: 1;
+  }
+
+  .grid-item {
+    width: 24.5%;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 740px) {
+    .grid-item {
+      width: 49%;
+
+      img {
+        width: 100%;
+      }
+    }
   }
 }
 </style>

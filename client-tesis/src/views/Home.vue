@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import GrillaFotos from "@/components/GrillaFotos";
+import GrillaFotos from "@/components/GrillaFotos_masonry";
 import SlideFotos from "@/components/SlideFotos";
 
 export default {
