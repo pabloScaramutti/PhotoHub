@@ -36,15 +36,20 @@
     </v-app-bar>
     <!------------------------------------------------------------------->
 
-    <v-navigation-drawer v-model="drawer" app temporary color="negro">
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      temporary
+      color="negro"
+      class="drawer"
+    >
       <v-app-bar-nav-icon
         @click.stop="drawer = !drawer"
         style="margin: 10px"
       ></v-app-bar-nav-icon>
       <router-link :to="{ name: 'Home' }">
-        <v-img src="@/assets/logo-tesis.png" class="logo"></v-img>
+        <v-img src="@/assets/logo-tesis.png" class="logo-drawer"></v-img>
       </router-link>
-
       <v-divider></v-divider>
 
       <v-list dense>
@@ -76,13 +81,18 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .link {
   text-decoration: none;
 }
 
 .logo {
   margin: 0.3vh;
+}
+
+.logo-drawer {
+  margin: 0rem auto 1rem;
+  width: 50%;
 }
 
 .navBar-icons {

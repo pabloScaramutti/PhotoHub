@@ -102,11 +102,16 @@ export default {
 .grilla {
   .selected {
     border: 4px solid white;
+    opacity: 0.4;
   }
 
   .foto:hover {
     z-index: 1;
     transform: scale(1.01);
+  }
+
+  img {
+    cursor: pointer;
   }
 
   .checkbox {
@@ -116,6 +121,7 @@ export default {
     display: flex;
     justify-content: flex-end;
     z-index: 1;
+    pointer-events: none;
   }
 
   .selected-checkbox {
