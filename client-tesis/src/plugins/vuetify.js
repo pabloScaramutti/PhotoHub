@@ -18,5 +18,8 @@ export default new Vuetify({
         negro: "#1D1F26"
       }
     }
+  },
+  options: {
+    customProperties: true
   }
 });

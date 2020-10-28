@@ -45,7 +45,7 @@ const routes = [
     component: Nota
   },
   {
-    path: "/foto",
+    path: "/foto/:img",
     name: "Foto",
     component: Foto
   },

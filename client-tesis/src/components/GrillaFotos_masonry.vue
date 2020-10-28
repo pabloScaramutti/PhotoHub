@@ -1,20 +1,22 @@
 <template>
   <v-container fluid class="grilla">
     <div class="grid">
-      <div v-for="item in imagenes" :key="item" class="grid-item">
-        <router-link :to="{ name: 'Foto' }" tag="button" :disabled="selectable">
-          <v-icon
-            v-if="selectable && existe(selected, item) == -1"
-            class="selection-checkbox"
+      <div v-for="item in selected" :key="item.img" class="grid-item">
+        <router-link
+          :to="{ name: 'Foto', params: { img: item.img } }"
+          tag="button"
+          :disabled="selectable"
+        >
+          <v-icon v-if="selectable && !item.selector" class="checkbox"
             >check_box_outline_blank</v-icon
           >
-          <v-icon v-else-if="selectable" class="selection-checkbox"
-            >check_box</v-icon
+          <v-icon v-else-if="selectable" class="selected-checkbox"
+            >check</v-icon
           >
           <img
-            :src="item"
-            @click="toggleSelection(item)"
-            class="foto"
+            :src="item.img"
+            @click="item.selector = !item.selector"
+            :class="[item.selector ? 'selected' : 'foto']"
             @load="onImageLoad()"
           />
           <!-- <template v-slot:placeholder>
@@ -35,7 +37,7 @@ export default {
   name: "Grilla",
   data() {
     return {
-      selected: []
+      selected: this.agregarCheck(this.imagenes)
     };
   },
   props: {
@@ -57,6 +59,15 @@ export default {
         this.selected.push(img);
       }
       return this.selected;
+    },
+
+    agregarCheck: function(imagenes) {
+      var aux = [];
+      for (var i = 0; i < imagenes.length; i++) {
+        var img = { img: imagenes[i], selector: false };
+        aux.push(img);
+      }
+      return (this.imageSelector = aux);
     },
 
     existe(arreglo, img) {
@@ -89,8 +100,8 @@ export default {
 
 <style lang="scss" scope>
 .grilla {
-  .foto {
-    margin: 0.05em;
+  .selected {
+    border: 4px solid white;
   }
 
   .foto:hover {
@@ -98,13 +109,23 @@ export default {
     transform: scale(1.01);
   }
 
-  .selection-checkbox {
+  .checkbox {
     position: absolute;
     margin-top: 0;
     padding-top: 0;
     display: flex;
     justify-content: flex-end;
     z-index: 1;
+  }
+
+  .selected-checkbox {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    font-size: 3em;
+    vertical-align: center;
+    text-align: center;
+    pointer-events: none;
   }
 
   .grid-item {

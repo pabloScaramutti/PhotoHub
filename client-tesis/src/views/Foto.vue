@@ -58,9 +58,10 @@
 
 <script>
 export default {
+  props: {},
   data() {
     return {
-      imagen: require("@/assets/Media/DSC_0338.jpg"),
+      imagen: this.$route.params.img,
       rating: 0.0,
       ratingAnterior: 0.0,
       tactil:
