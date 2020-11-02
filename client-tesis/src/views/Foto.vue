@@ -1,13 +1,11 @@
 <template>
   <div class="foto">
-    <div class="fondo-contenedor-imagen" ref="foto">
-      <v-img
-        max-height="70vh"
-        :src="imagen"
-        :lazy-src="imagen"
-        style="margin: 0.05em"
-        contain
-      >
+    <div
+      class="fondo-contenedor-imagen"
+      ref="foto"
+      @click="informacion = !informacion"
+    >
+      <v-img max-height="90vh" :src="imagen" :lazy-src="imagen" contain>
         <template v-slot:placeholder>
           <v-row class="fill-height" align="center" justify="center">
             <v-progress-circular indeterminate color="grey lighten-5" />
@@ -16,8 +14,12 @@
       </v-img>
     </div>
 
-    <div>
-      <h1>Nombre imagen</h1>
+    <!-- Info -------------------------- -->
+    <div v-if="informacion" class="foto_info">
+      <div class="titulo">
+        <h1>Nombre imagen</h1>
+        <v-icon>delete</v-icon>
+      </div>
 
       <div @click="checkearCero">
         <v-rating
@@ -46,11 +48,6 @@
           <v-icon>local_offer</v-icon>
           etiquetas
         </li>
-
-        <li>
-          <v-icon>delete</v-icon>
-          Borrar
-        </li>
       </ul>
     </div>
   </div>
@@ -68,7 +65,8 @@ export default {
         this.$vuetify.breakpoint.name == "xs" ||
         this.$vuetify.breakpoint.name == "sm"
           ? true
-          : false
+          : false,
+      informacion: true
     };
   },
   methods: {
@@ -89,10 +87,19 @@ export default {
     background: #1b1b1b;
   }
 
+  .titulo {
+    display: flex;
+    align-items: center;
+
+    * {
+      margin-right: 2vw;
+    }
+  }
+
   ul {
     padding: 0;
     margin: 0;
-    width: fit-content;
+    width: 50%;
     list-style-type: none;
     display: flex;
     flex-wrap: wrap;
@@ -100,6 +107,35 @@ export default {
 
     li {
       margin-right: 0.7vw;
+    }
+  }
+
+  .foto_info {
+    padding: 2vw;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100vw;
+    height: 25vh;
+    bottom: 5vh;
+    background: rgba(0, 0, 0, 0.712);
+  }
+
+  @media (max-width: 500px) {
+    h1 {
+      font-size: 1.3em;
+      margin: 0;
+    }
+
+    ul {
+      font-size: 0.8em;
+    }
+
+    .foto_info {
+      height: 25vh;
+      bottom: 8vh;
     }
   }
 }

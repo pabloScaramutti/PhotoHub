@@ -10,9 +10,7 @@
           <v-icon v-if="selectable && !item.selector" class="checkbox"
             >check_box_outline_blank</v-icon
           >
-          <v-icon v-else-if="selectable" class="selected-checkbox"
-            >check</v-icon
-          >
+          <v-icon v-else-if="selectable" class="selected-check">check</v-icon>
           <img
             :src="item.img"
             @click="item.selector = !item.selector"
@@ -51,15 +49,15 @@ export default {
     }
   },
   methods: {
-    toggleSelection(img) {
-      var index = this.existe(this.selected, img);
-      if (index != -1) {
-        this.selected.splice(index, 1);
-      } else {
-        this.selected.push(img);
-      }
-      return this.selected;
-    },
+    // toggleSelection(img) {
+    //   var index = this.existe(this.selected, img);
+    //   if (index != -1) {
+    //     this.selected.splice(index, 1);
+    //   } else {
+    //     this.selected.push(img);
+    //   }
+    //   return this.selected;
+    // },
 
     agregarCheck: function(imagenes) {
       var aux = [];
@@ -70,21 +68,22 @@ export default {
       return (this.imageSelector = aux);
     },
 
-    existe(arreglo, img) {
-      if (arreglo == null || arreglo.length < 1) {
-        return -1;
-      } else {
-        for (var i = 0; i < arreglo.length; i++) {
-          if (arreglo[i].localeCompare(img) == 0) {
-            return i;
-          }
-        }
-        return -1;
-      }
-    },
+    // existe(arreglo, img) {
+    //   if (arreglo == null || arreglo.length < 1) {
+    //     return -1;
+    //   } else {
+    //     for (var i = 0; i < arreglo.length; i++) {
+    //       if (arreglo[i].localeCompare(img) == 0) {
+    //         return i;
+    //       }
+    //     }
+    //     return -1;
+    //   }
+    // },
     onImageLoad() {
       this.loadMasonry();
     },
+
     loadMasonry() {
       var grid = document.querySelector(".grid");
       var msnry = new Masonry(grid, {
@@ -124,9 +123,9 @@ export default {
     pointer-events: none;
   }
 
-  .selected-checkbox {
-    width: 100%;
-    height: 100%;
+  .selected-check {
+    width: 90%;
+    height: 90%;
     position: absolute;
     font-size: 3em;
     vertical-align: center;
@@ -145,6 +144,16 @@ export default {
   @media (max-width: 740px) {
     .grid-item {
       width: 49%;
+
+      img {
+        width: 100%;
+      }
+    }
+  }
+
+  @media (min-width: 700px), (orientation: landscape) {
+    .grid-item {
+      width: 24.3%;
 
       img {
         width: 100%;

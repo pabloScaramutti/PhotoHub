@@ -28,7 +28,9 @@
           </v-row>
         </v-expansion-panel-header>
         <v-divider></v-divider>
-        <v-expansion-panel-content style="padding: 1rem 0 0 0; background-color: #0f0f0f;">
+        <v-expansion-panel-content
+          style="padding: 1rem 0 0 0; background-color: #0f0f0f;"
+        >
           <v-textarea
             outlined
             hide-details
@@ -58,23 +60,16 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-    <v-snackbar
-        v-model="alerta"
-      >
-        "Guarde las notas que estan activas antes de cerrar"
+    <v-snackbar v-model="alerta">
+      "Guarde las notas que estan activas antes de cerrar"
 
-        <template v-slot:action="{ attrs }">
-          <v-btn
-            color="pink"
-            text
-            v-bind="attrs"
-            @click="alerta = false"
-          >
-            Close
-          </v-btn>
-        </template>
-      </v-snackbar>
-    </div>
+      <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="alerta = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </div>
 </template>
 
 <script>
@@ -99,15 +94,15 @@ export default {
     focusTextArea(area) {
       this.$refs[area].$refs.input.focus();
     },
-    avisoGuardado(){
-      if( this.seEstaEditando && event.target.tagName != "INPUT" ){
+    avisoGuardado() {
+      if (this.seEstaEditando && event.target.tagName != "INPUT") {
         this.alerta = true;
       }
     }
   },
   computed: {
     seEstaEditando: function() {
-      return !(this.noEditableNota && this.noEditableTitulo)
+      return !(this.noEditableNota && this.noEditableTitulo);
     }
   }
 };
