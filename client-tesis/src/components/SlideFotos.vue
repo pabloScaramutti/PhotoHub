@@ -22,7 +22,7 @@
 
     <v-slide-group>
       <v-slide-item v-for="item in imagenes" :key="item">
-        <router-link :to="{ name: 'Foto' }">
+        <router-link :to="{ name: 'Foto', params: { img: item } }">
           <v-card
             :height="tamImagenes()"
             :width="tamImagenes()"

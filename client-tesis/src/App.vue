@@ -97,4 +97,13 @@ export default {
   bottom: 7vh;
   right: 5vw;
 }
+
+@media (max-width: 700px) and (orientation: landscape) {
+  #boton-prueba-mandar {
+    bottom: 15vh;
+  }
+  .floating-button {
+    bottom: 20vh;
+  }
+}
 </style>

@@ -5,7 +5,14 @@
       ref="foto"
       @click="informacion = !informacion"
     >
-      <v-img max-height="90vh" :src="imagen" :lazy-src="imagen" contain>
+      <v-img
+        max-height="90vh"
+        max-width="100vw"
+        :src="imagen"
+        :lazy-src="imagen"
+        contain
+        @load="onImageLoad()"
+      >
         <template v-slot:placeholder>
           <v-row class="fill-height" align="center" justify="center">
             <v-progress-circular indeterminate color="grey lighten-5" />
@@ -76,6 +83,9 @@ export default {
       } else {
         this.ratingAnterior = this.rating;
       }
+    },
+    onImageLoad() {
+      console.log(this.imagen);
     }
   }
 };
@@ -83,6 +93,13 @@ export default {
 
 <style lang="scss">
 .foto {
+  height: 100%;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   .fondo-contenedor-imagen {
     background: #1b1b1b;
   }

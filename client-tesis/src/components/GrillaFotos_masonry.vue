@@ -134,7 +134,7 @@ export default {
   }
 
   .grid-item {
-    width: 24.5%;
+    width: 24.7%;
 
     img {
       width: 100%;
@@ -151,7 +151,7 @@ export default {
     }
   }
 
-  @media (min-width: 700px), (orientation: landscape) {
+  @media (max-width: 700px) and (orientation: landscape) {
     .grid-item {
       width: 24.3%;
 

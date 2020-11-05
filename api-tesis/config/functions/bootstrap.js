@@ -33,5 +33,5 @@ module.exports = () => {
   });
 
   strapi.io = io; // register socket io inside strapi main object to use it globally anywhere
-  //cb();
+  //cb();*/
 };
