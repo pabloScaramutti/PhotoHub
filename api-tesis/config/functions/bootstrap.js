@@ -18,7 +18,7 @@ module.exports = () => {
   // listen for user connection
   io.on('connection', function (socket) {
     // send message on user connection
-    socket.emit('bienvenida', JSON.stringify({ message: 'Hello food lover' }));
+    //socket.emit('bienvenida', JSON.stringify({ message: 'Hello food lover' }));
     socket.on('test', data => {
       console.log(data);
       socket.emit('recibido', 1);

@@ -26,21 +26,9 @@
           <v-card
             :height="tamImagenes()"
             :width="tamImagenes()"
-            style="margin:0px; border-radius: 0;"
+            style="margin: 0 2px; border-radius: 3px;"
           >
-            <v-img
-              :src="item"
-              :lazy-src="item"
-              class="grey lighten-2"
-              style="margin: 0.05em"
-              aspect-ratio="1"
-            >
-              <template v-slot:placeholder>
-                <v-row class="fill-height" align="center" justify="center">
-                  <v-progress-circular indeterminate color="grey lighten-5" />
-                </v-row>
-              </template>
-            </v-img>
+            <img :src="item" :alt="item" class="imagen-slider" />
           </v-card>
         </router-link>
       </v-slide-item>
@@ -85,5 +73,15 @@ export default {
 .v-application a {
   text-decoration: none;
   color: white;
+}
+
+.imagen-slider {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.imagen-slider:hover {
+  transform: scale(1.03);
 }
 </style>

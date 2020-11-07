@@ -7,7 +7,13 @@
       <router-view />
     </v-main>
 
-    <v-btn v-if="muestroLayout()" class="floating-button" fab color="primary">
+    <v-btn
+      :to="{ name: 'Notificaciones', params: { notificaciones: noLeidos } }"
+      v-if="muestroLayout()"
+      class="floating-button"
+      fab
+      color="primary"
+    >
       <v-badge
         color="error"
         :value="noLeidos.length"
@@ -53,6 +59,10 @@ export default {
     this.socket.on("recibido", data => {
       this.noLeidos.push(data);
       //console.log(this.noLeidos);
+    });
+    this.socket.on("nuevaFoto", data => {
+      this.noLeidos.push(data);
+      console.log("Recibi una nueva foto", data);
     });
   },
 

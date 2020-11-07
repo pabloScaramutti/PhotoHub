@@ -7,6 +7,7 @@ import Nota from "../views/Nota.vue";
 import Foto from "../views/Foto.vue";
 import Calendario from "../views/Calendario.vue";
 import NuevaCarpeta from "../views/NuevaCarpeta.vue";
+import Notificaciones from "../views/Notificaciones.vue";
 
 Vue.use(VueRouter);
 
@@ -58,6 +59,11 @@ const routes = [
     path: "/nueva-carpeta",
     name: "NuevaCarpeta",
     component: NuevaCarpeta
+  },
+  {
+    path: "/notificaciones",
+    name: "Notificaciones",
+    component: Notificaciones
   }
 ];
 

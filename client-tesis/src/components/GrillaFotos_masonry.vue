@@ -111,6 +111,7 @@ export default {
 
   img {
     cursor: pointer;
+    border-radius: 3px;
   }
 
   .checkbox {
@@ -138,6 +139,16 @@ export default {
 
     img {
       width: 100%;
+    }
+  }
+
+  @media (max-width: 1200px) and (min-width: 741px) {
+    .grid-item {
+      width: 24.5%;
+
+      img {
+        width: 100%;
+      }
     }
   }
 

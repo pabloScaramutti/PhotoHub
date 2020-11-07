@@ -1,5 +1,17 @@
 <template>
   <div>
+    <v-file-input
+      v-model="im"
+      show-size
+      small-chips
+      accept="image/png, image/jpeg, image/bmp"
+      placeholder="Pick an avatar"
+      prepend-icon="mdi-camera"
+      label="Avatar"
+    ></v-file-input>
+
+    <v-btn @click="nuevaFoto()">Crear</v-btn>
+
     <form action="" class="formulario-nueva-carpeta">
       <h1>Nuevo Album</h1>
       <v-text-field
@@ -28,6 +40,8 @@
 
 <script>
 import GrillaFotos from "@/components/GrillaFotos_masonry";
+
+import Axios from "axios";
 
 export default {
   name: "NuevaCarpeta",
@@ -58,8 +72,34 @@ export default {
         require("@/assets/Media/DSC_0397.jpg"),
         require("@/assets/Media/DSC_0423.jpg"),
         require("@/assets/Media/DSC_0449.jpg")
-      ]
+      ],
+      im: undefined
     };
+  },
+  methods: {
+    async nuevaFoto() {
+      const data = new FormData();
+      const info = {
+        nombre: this.im.name,
+        puntuacion: 0,
+        fecha_captura: Date.now()
+      };
+
+      data.append("files.img", this.im);
+      data.append("data", JSON.stringify(info));
+
+      await Axios({
+        method: "POST",
+        url: "http://192.168.0.123:1337/fotos",
+        data
+      })
+        .then(function(response) {
+          console.log(response);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }
   }
 };
 </script>

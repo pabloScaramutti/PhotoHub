@@ -2,20 +2,22 @@
   "kind": "collectionType",
   "collectionName": "fotos",
   "info": {
-    "name": "Fotos"
+    "name": "Fotos",
+    "description": ""
   },
   "options": {
     "increments": true,
-    "timestamps": true
+    "timestamps": true,
+    "draftAndPublish": false
   },
   "attributes": {
     "nombre": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "fecha_captura": {
       "type": "datetime",
-      "required": true
+      "required": false
     },
     "carpeta": {
       "model": "carpetas",
@@ -31,22 +33,21 @@
       "via": "fotos"
     },
     "puntuacion": {
-      "type": "decimal",
+      "type": "integer",
       "default": 0
     },
     "ruta_imagen_disco": {
       "type": "string"
     },
     "img": {
-      "collection": "file",
+      "model": "file",
       "via": "related",
       "allowedTypes": [
-        "files",
         "images",
         "videos"
       ],
       "plugin": "upload",
-      "required": true
+      "required": false
     }
   }
 }
