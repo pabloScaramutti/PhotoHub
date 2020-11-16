@@ -53,7 +53,6 @@ export default {
     return {
       nuevaCarpeta: {
         nombre: "",
-        fechaCreacion: undefined,
         etiquetas: [],
         fotos: [],
       },
@@ -91,7 +90,6 @@ export default {
       const info = {
         nombre: this.im[0].name,
         puntuacion: 0,
-        fecha_captura: Date.now(),
       };
 
       data.append(

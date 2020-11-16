@@ -16,13 +16,9 @@
       "unique": true,
       "required": true
     },
-    "fecha_creacion": {
-      "type": "datetime",
-      "required": true
-    },
     "fotos": {
-      "collection": "fotos",
-      "via": "carpeta"
+      "via": "carpeta",
+      "collection": "fotos"
     },
     "Favoritos": {
       "type": "boolean",

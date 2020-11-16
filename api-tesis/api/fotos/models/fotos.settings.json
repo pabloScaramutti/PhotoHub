@@ -15,13 +15,9 @@
       "type": "string",
       "required": false
     },
-    "fecha_captura": {
-      "type": "datetime",
-      "required": false
-    },
     "carpeta": {
-      "via": "fotos",
-      "model": "carpetas"
+      "model": "carpetas",
+      "via": "fotos"
     },
     "etiquetas": {
       "collection": "etiquetas",
@@ -35,9 +31,6 @@
     "puntuacion": {
       "type": "integer",
       "default": 0
-    },
-    "ruta_imagen_disco": {
-      "type": "string"
     },
     "img": {
       "model": "file",

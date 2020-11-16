@@ -27,13 +27,23 @@
             height="39"
           />
         </router-link>
-        <router-link class="link" :to="{}">
-          <v-btn icon>
-            <v-icon>mdi-magnify</v-icon>
-          </v-btn>
+        <router-link
+          :to="{ name: 'Notificaciones', params: { notificaciones: noLeidos } }"
+        >
+          <v-badge
+            color="error"
+            :value="noLeidos.length"
+            :content="noLeidos.length"
+            overlap
+          >
+            <v-icon> camera_alt </v-icon>
+          </v-badge>
         </router-link>
       </div>
     </v-app-bar>
+
+    <button v-on:click="sendTest()" id="boton-prueba-mandar">Mandar</button>
+
     <!------------------------------------------------------------------->
 
     <v-navigation-drawer
@@ -68,16 +78,47 @@
 </template>
 
 <script>
+import io from "socket.io-client";
+
 export default {
   data() {
     return {
       drawer: null,
       items: [
         { title: "Home", icon: "dashboard" },
-        { title: "About", icon: "question_answer" }
-      ]
+        { title: "About", icon: "question_answer" },
+      ],
+
+      socket: {},
+      algunaCosa: String,
+      noLeidos: [],
     };
-  }
+  },
+
+  created() {
+    this.socket = io.connect("http://192.168.0.123:3000");
+  },
+
+  mounted() {
+    this.socket.on("bienvenida", (data) => {
+      this.algunaCosa = data;
+    });
+    this.socket.on("recibido", (data) => {
+      this.noLeidos.push(data);
+      //console.log(this.noLeidos);
+    });
+    this.socket.on("nuevaFoto", (data) => {
+      this.noLeidos.push(data);
+      console.log("Recibi una nueva foto", data);
+    });
+  },
+
+  methods: {
+    sendTest() {
+      this.socket.emit("test", 123);
+      //console.log("envio test");
+    },
+  },
 };
 </script>
 
@@ -99,5 +140,21 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
+
+// esto borrar cuando saque el boton prueba madnar-----
+#boton-prueba-mandar {
+  z-index: 5;
+  position: fixed;
+  bottom: 7vh;
+  right: 5vw;
+}
+
+@media (max-width: 700px) and (orientation: landscape) {
+  #boton-prueba-mandar {
+    bottom: 15vh;
+  }
+}
+//-----hasta aca--------
 </style>

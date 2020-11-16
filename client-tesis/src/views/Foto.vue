@@ -3,7 +3,7 @@
     <div
       class="fondo-contenedor-imagen"
       ref="foto"
-      @click="fullView = !fullView"
+      @click="informacion = !informacion"
     >
       <v-img
         :max-height="fullView ? '100vh' : '90vh'"
@@ -38,8 +38,8 @@
             v-model="rating"
             color="primary"
             background-color="grey darken-1"
-            empty-icon="$ratingFull"
             :hover="!tactil"
+            size="40"
           ></v-rating>
         </div>
 
@@ -87,7 +87,7 @@ export default {
         this.$vuetify.breakpoint.name == "sm"
           ? true
           : false,
-      informacion: false,
+      informacion: true,
       fullView: false,
     };
   },
@@ -155,16 +155,16 @@ export default {
   }
 
   .foto_info {
-    padding: 9vh 5vw;
+    padding: 2vh 5vw 10vh 5vw;
     position: fixed;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     width: 100vw;
-    height: 99vh;
+    height: 30vh;
     bottom: 0;
-    background: rgb(17, 17, 17);
+    background: rgb(17, 17, 17, 0.7);
   }
 
   .arrow {
