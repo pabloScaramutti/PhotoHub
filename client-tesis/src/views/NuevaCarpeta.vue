@@ -3,8 +3,9 @@
     <v-file-input
       v-model="im"
       show-size
+      multiple
       small-chips
-      accept="image/png, image/jpeg, image/bmp"
+      accept="image/png, image/jpeg, image/bmp, video/mp4, video/mov"
       placeholder="Pick an avatar"
       prepend-icon="mdi-camera"
       label="Avatar"
@@ -46,7 +47,7 @@ import Axios from "axios";
 export default {
   name: "NuevaCarpeta",
   components: {
-    GrillaFotos
+    GrillaFotos,
   },
   data() {
     return {
@@ -54,7 +55,7 @@ export default {
         nombre: "",
         fechaCreacion: undefined,
         etiquetas: [],
-        fotos: []
+        fotos: [],
       },
       imagenes: [
         require("@/assets/Media/DSC_0615.jpg"),
@@ -71,36 +72,51 @@ export default {
         require("@/assets/Media/DSC_0380.jpg"),
         require("@/assets/Media/DSC_0397.jpg"),
         require("@/assets/Media/DSC_0423.jpg"),
-        require("@/assets/Media/DSC_0449.jpg")
+        require("@/assets/Media/DSC_0449.jpg"),
       ],
-      im: undefined
+      im: [],
     };
   },
+
+  /*watch: {
+    im: function () {
+      this.im.forEach((item) => console.log("tipo de imagen", item.type));
+      console.log(this.im.filter((item) => item.type === "image/NEF"));
+    },
+  },*/
+
   methods: {
     async nuevaFoto() {
       const data = new FormData();
       const info = {
-        nombre: this.im.name,
+        nombre: this.im[0].name,
         puntuacion: 0,
-        fecha_captura: Date.now()
+        fecha_captura: Date.now(),
       };
 
-      data.append("files.img", this.im);
+      data.append(
+        "files.img",
+        this.im.filter((item) => item.type === "image/NEF")[0]
+      );
+      data.append(
+        "files.thumbnail",
+        this.im.filter((item) => item.type === "image/jpeg")[0]
+      );
       data.append("data", JSON.stringify(info));
 
       await Axios({
         method: "POST",
         url: "http://192.168.0.123:1337/fotos",
-        data
+        data,
       })
-        .then(function(response) {
+        .then(function (response) {
           console.log(response);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

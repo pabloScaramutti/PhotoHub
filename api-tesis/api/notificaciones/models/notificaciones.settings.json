@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "notificaciones",
+  "info": {
+    "name": "Notificaciones",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "foto": {
+      "model": "fotos"
+    },
+    "Leido": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

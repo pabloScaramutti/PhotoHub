@@ -35,18 +35,18 @@ export default {
   name: "Grilla",
   data() {
     return {
-      selected: this.agregarCheck(this.imagenes)
+      selected: this.agregarCheck(this.imagenes),
     };
   },
   props: {
     imagenes: {
       type: Array,
-      required: true
+      required: true,
     },
     selectable: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
     // toggleSelection(img) {
@@ -59,7 +59,7 @@ export default {
     //   return this.selected;
     // },
 
-    agregarCheck: function(imagenes) {
+    agregarCheck: function (imagenes) {
       var aux = [];
       for (var i = 0; i < imagenes.length; i++) {
         var img = { img: imagenes[i], selector: false };
@@ -87,13 +87,12 @@ export default {
     loadMasonry() {
       var grid = document.querySelector(".grid");
       var msnry = new Masonry(grid, {
-        // options...
         itemSelector: ".grid-item",
-        gutter: 5
+        gutter: 5,
       });
       return msnry;
-    }
-  }
+    },
+  },
 };
 </script>
 

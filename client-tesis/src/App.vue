@@ -19,9 +19,7 @@
         :value="noLeidos.length"
         :content="noLeidos.length"
       >
-        <v-icon>
-          camera_alt
-        </v-icon>
+        <v-icon> camera_alt </v-icon>
       </v-badge>
     </v-btn>
     <button v-on:click="sendTest()" id="boton-prueba-mandar">Mandar</button>
@@ -44,7 +42,7 @@ export default {
     return {
       socket: {},
       algunaCosa: String,
-      noLeidos: []
+      noLeidos: [],
     };
   },
 
@@ -53,14 +51,14 @@ export default {
   },
 
   mounted() {
-    this.socket.on("bienvenida", data => {
+    this.socket.on("bienvenida", (data) => {
       this.algunaCosa = data;
     });
-    this.socket.on("recibido", data => {
+    this.socket.on("recibido", (data) => {
       this.noLeidos.push(data);
       //console.log(this.noLeidos);
     });
-    this.socket.on("nuevaFoto", data => {
+    this.socket.on("nuevaFoto", (data) => {
       this.noLeidos.push(data);
       console.log("Recibi una nueva foto", data);
     });
@@ -68,7 +66,7 @@ export default {
 
   components: {
     NavBar,
-    BottomBar
+    BottomBar,
   },
 
   methods: {
@@ -85,8 +83,8 @@ export default {
     sendTest() {
       this.socket.emit("test", 123);
       //console.log("envio test");
-    }
-  }
+    },
+  },
 
   /*data: () => ({
     //

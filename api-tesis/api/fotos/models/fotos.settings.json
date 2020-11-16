@@ -20,8 +20,8 @@
       "required": false
     },
     "carpeta": {
-      "model": "carpetas",
-      "via": "fotos"
+      "via": "fotos",
+      "model": "carpetas"
     },
     "etiquetas": {
       "collection": "etiquetas",
@@ -43,8 +43,18 @@
       "model": "file",
       "via": "related",
       "allowedTypes": [
+        "files",
         "images",
         "videos"
+      ],
+      "plugin": "upload",
+      "required": false
+    },
+    "thumbnail": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images"
       ],
       "plugin": "upload",
       "required": false

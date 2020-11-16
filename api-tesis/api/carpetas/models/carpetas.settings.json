@@ -2,11 +2,13 @@
   "kind": "collectionType",
   "collectionName": "carpetas",
   "info": {
-    "name": "Carpetas"
+    "name": "Carpetas",
+    "description": ""
   },
   "options": {
     "increments": true,
-    "timestamps": true
+    "timestamps": true,
+    "draftAndPublish": false
   },
   "attributes": {
     "nombre": {
@@ -19,8 +21,12 @@
       "required": true
     },
     "fotos": {
-      "via": "carpeta",
-      "collection": "fotos"
+      "collection": "fotos",
+      "via": "carpeta"
+    },
+    "Favoritos": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

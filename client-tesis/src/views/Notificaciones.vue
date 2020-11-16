@@ -1,7 +1,7 @@
 <template>
   <div class="notificaciones">
     <h1>Notificaciones</h1>
-    <GrillaFotos v-if="notificaciones" :imagenes="imagenes"></GrillaFotos>
+    <GrillaFotos v-if="imagenes" :imagenes="imagenes"></GrillaFotos>
   </div>
 </template>
 
@@ -13,14 +13,19 @@ export default {
   data() {
     return {
       notificaciones: this.$route.params.notificaciones,
-      imagenes: this.$route.params.notificaciones.map(
-        item => `http://192.168.0.123:1337${item.img.url}`
-      )
+      imagenes: undefined,
     };
   },
+  mounted: function () {
+    if (this.$route.params.notificaciones) {
+      this.imagenes = this.$route.params.notificaciones.map(
+        (item) => `http://192.168.0.123:1337${item.thumbnail.url}`
+      );
+    }
+  },
   components: {
-    GrillaFotos
-  }
+    GrillaFotos,
+  },
 };
 </script>
 

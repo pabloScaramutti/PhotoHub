@@ -1,0 +1,17 @@
+{
+  "kind": "collectionType",
+  "collectionName": "controllers",
+  "info": {
+    "name": "Controller"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "Data": {
+      "type": "json"
+    }
+  }
+}
