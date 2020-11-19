@@ -17,16 +17,18 @@ module.exports = {
       for (let k = 0; k < split[i].length; k++) {
         if (split[i][k].includes('Encryption key:')) {
           encryptionKey = split[i][k];
+          encryptionKey = encryptionKey.replace('Encryption key:', '');
         }
         if (split[i][k].includes('ESSID:')) {
           ESSID = split[i][k];
+          ESSID = ESSID.replace('ESSID:', '');
+          ESSID = ESSID.replace(/"/g, '');
         }
       }
-      result.push({ encryptionKey: encryptionKey, ESSID: ESSID });
+      if (ESSID && encryptionKey) {
+        result.push({ encryptionKey: encryptionKey, ESSID: ESSID });
+      }
     }
-
-    let ssid = data.stdout.split('"');
-    ssid = ssid.filter((item) => { return !(item.includes('ESSID:') || item.includes('\n')) });
 
     // ---- Para conectarme a una red ----
     //  iwconfig wlan0 essid name key password

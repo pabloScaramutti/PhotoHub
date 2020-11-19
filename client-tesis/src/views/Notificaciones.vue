@@ -16,7 +16,7 @@ export default {
       imagenes: undefined,
     };
   },
-  mounted: function () {
+  mounted() {
     if (this.$route.params.notificaciones) {
       this.imagenes = this.$route.params.notificaciones.map(
         (item) => `http://192.168.0.123:1337${item.thumbnail.url}`

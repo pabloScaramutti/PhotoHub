@@ -33,15 +33,12 @@
           <v-icon>delete</v-icon>
         </div>
 
-        <div @click="checkearCero">
-          <v-rating
-            v-model="rating"
-            color="primary"
-            background-color="grey darken-1"
-            :hover="!tactil"
-            size="40"
-          ></v-rating>
-        </div>
+        <Puntaje
+          :size="40"
+          :puntajeInicial="puntaje"
+          v-on:nuevoPuntaje="nuevoPuntaje"
+        >
+        </Puntaje>
 
         <ul>
           <li>
@@ -61,6 +58,9 @@
             etiquetas
           </li>
         </ul>
+        <div class="mapa">
+          <Mapa> </Mapa>
+        </div>
       </div>
       <v-icon
         v-else
@@ -75,32 +75,30 @@
 </template>
 
 <script>
+import Puntaje from "@/components/Puntaje";
+import Mapa from "@/components/Mapa";
+
 export default {
+  components: {
+    Puntaje,
+    Mapa,
+  },
   props: {},
   data() {
     return {
       imagen: this.$route.params.img,
-      rating: 0.0,
-      ratingAnterior: 0.0,
-      tactil:
-        this.$vuetify.breakpoint.name == "xs" ||
-        this.$vuetify.breakpoint.name == "sm"
-          ? true
-          : false,
       informacion: true,
       fullView: false,
+      puntaje: undefined,
     };
   },
   methods: {
-    checkearCero() {
-      if (this.rating == this.ratingAnterior && this.ratingAnterior == 1) {
-        this.rating = this.ratingAnterior = 0.0;
-      } else {
-        this.ratingAnterior = this.rating;
-      }
-    },
     onImageLoad() {
       //console.log(this.imagen);
+    },
+    nuevoPuntaje(e) {
+      console.log("agarre el evento");
+      this.puntaje = e;
     },
   },
 };
@@ -140,6 +138,12 @@ export default {
     }
   }
 
+  .mapa {
+    width: 100vw;
+    height: 25vh;
+    margin-top: 1vh;
+  }
+
   ul {
     padding: 0;
     margin: 0;
@@ -162,7 +166,7 @@ export default {
     justify-content: flex-start;
     align-items: center;
     width: 100vw;
-    height: 30vh;
+    height: 40vh;
     bottom: 0;
     background: rgb(17, 17, 17, 0.7);
   }

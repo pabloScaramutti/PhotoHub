@@ -55,7 +55,7 @@
     >
       <v-app-bar-nav-icon
         @click.stop="drawer = !drawer"
-        style="margin: 10px"
+        style="margin: 8px 20px"
       ></v-app-bar-nav-icon>
       <router-link :to="{ name: 'Home' }">
         <v-img src="@/assets/logo-tesis.png" class="logo-drawer"></v-img>

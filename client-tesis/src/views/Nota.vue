@@ -21,15 +21,17 @@
                   paneles = 0;
                 "
                 :readonly="noEditableTitulo"
-                style="width:98%"
+                style="width: 98%"
               ></v-text-field>
-              <p class="fecha">{{ fechaCreacion }}</p>
+              <p class="fecha">
+                {{ fechaCreacion }}
+              </p>
             </v-col>
           </v-row>
         </v-expansion-panel-header>
         <v-divider></v-divider>
         <v-expansion-panel-content
-          style="padding: 1rem 0 0 0; background-color: #0f0f0f;"
+          style="padding: 1rem 0 0 0; background-color: #0f0f0f"
         >
           <v-textarea
             outlined
@@ -79,11 +81,11 @@ export default {
     return {
       texto: "",
       titulo: "",
-      fechaCreacion: "01/09/2020",
       noEditableNota: true,
+      fechaCreacion: new Date().toLocaleString(),
       noEditableTitulo: true,
       paneles: undefined,
-      alerta: false
+      alerta: false,
     };
   },
   methods: {
@@ -98,13 +100,13 @@ export default {
       if (this.seEstaEditando && event.target.tagName != "INPUT") {
         this.alerta = true;
       }
-    }
+    },
   },
   computed: {
-    seEstaEditando: function() {
+    seEstaEditando: function () {
       return !(this.noEditableNota && this.noEditableTitulo);
-    }
-  }
+    },
+  },
 };
 </script>
 
