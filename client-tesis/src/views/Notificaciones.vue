@@ -1,7 +1,10 @@
 <template>
   <div class="notificaciones">
     <h1>Notificaciones</h1>
-    <GrillaFotos v-if="imagenes" :imagenes="imagenes"></GrillaFotos>
+    <GrillaFotos
+      v-if="imagenes"
+      :imagenes="imagenes.slice().reverse()"
+    ></GrillaFotos>
   </div>
 </template>
 

@@ -34,7 +34,7 @@
         </div>
 
         <Puntaje
-          :size="40"
+          :size="35"
           :puntajeInicial="puntaje"
           v-on:nuevoPuntaje="nuevoPuntaje"
         >

@@ -36,13 +36,29 @@ export default {
     };
   },
 
-  /*mounted() {
-    this.$nextTick(() => {
-      this.$refs.myMap.mapObject.ANY_LEAFLET_MAP_METHOD();
-    });
-  },*/
+  created() {
+    //this.getGeolocation();
+  },
+
+  methods: {
+    getGeolocation() {
+      navigator.geolocation.getCurrentPosition(function (location) {
+        console.log(location.coords.latitude);
+        console.log(location.coords.longitude);
+        console.log(location.coords.accuracy);
+      });
+    },
+  },
 };
 </script>
 
 <style>
+.leaflet-pane {
+  z-index: 1;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 2;
+}
 </style>

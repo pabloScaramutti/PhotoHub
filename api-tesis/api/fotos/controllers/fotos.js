@@ -1,11 +1,11 @@
 const { parseMultipartData, sanitizeEntity } = require('strapi-utils');
 
 //EXIF
-const fs = require('fs')
 const ExifTool = require('exiftool-kit/lib/exiftool-wrapper')
 
 module.exports = {
   async create(ctx) {
+
     //EXIF
     const exiftool = new ExifTool()
 
@@ -15,19 +15,15 @@ module.exports = {
       //entity = await strapi.services.fotos.create(data, { files });
 
       //Reading EXIF data
-      //let img = `public/${entity.img.url}`;
+      const exifPath = (files.img ? files.img.path : (files.thumbnail ? files.thumbnail.path : null));
 
-      await getImageWithBuffer(files.img.path)
-        .then(buf => {
-          return exiftool.getTags({
-            source: buf
-          })
-        })
-        .then((exif) => {
-          console.log('a ver si esto es lo que me devuelve', exif);
+      if (exifPath) {
+        await exiftool.getTags({
+          source: exifPath
+        }).then((exif) => {
           data.exif = exif;
-
         })
+      }
 
       console.log('data', data)
       console.log('files', files)
@@ -43,16 +39,3 @@ module.exports = {
     return sanitizeEntity(entity, { model: strapi.models.fotos });
   },
 };
-
-
-function getImageWithBuffer(img) {
-  return new Promise((resolve, reject) => {
-    return fs.readFile(img, (err, data) => {
-      if (err != null) {
-        return reject(new Error(err))
-      }
-
-      return resolve(data)
-    })
-  })
-}

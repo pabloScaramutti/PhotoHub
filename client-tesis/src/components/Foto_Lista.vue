@@ -15,19 +15,35 @@
         >
         </Puntaje>
         <div class="translate-up pad-left ul-flex-info">
-          <div v-if="state === 'especificaciones'">
+          <ul v-if="state === 'especificaciones'">
+            <li>
+              <v-icon small>camera</v-icon>
+              f18
+            </li>
+            <li>
+              <v-icon small>shutter_speed</v-icon>
+              1/32
+            </li>
+            <li>
+              <v-icon small>iso</v-icon>
+              1200
+            </li>
+          </ul>
+          <ul v-if="state === 'datosCamara'">
+            <li>
+              <v-icon small>camera_alt</v-icon>
+              Nikon D3500
+            </li>
+            <li>
+              <v-icon small>camera_alt</v-icon>
+              55-300mm f/4.5-5.6
+            </li>
+          </ul>
+          <div v-if="state === 'ubicacion'">
             <ul>
               <li>
-                <v-icon small>camera</v-icon>
-                f18
-              </li>
-              <li>
-                <v-icon small>shutter_speed</v-icon>
-                1/32
-              </li>
-              <li>
-                <v-icon small>iso</v-icon>
-                1200
+                <v-icon small>location_on</v-icon>
+                Bariloche, Rio Negro
               </li>
             </ul>
             <ul>
@@ -41,22 +57,6 @@
               </li>
             </ul>
           </div>
-          <ul v-if="state === 'datosCamara'">
-            <li>
-              <v-icon small>camera_alt</v-icon>
-              Nikon D3500
-            </li>
-            <li>
-              <v-icon small>camera_alt</v-icon>
-              55-300mm f/4.5-5.6
-            </li>
-          </ul>
-          <ul v-if="state === 'ubicacion'">
-            <li>
-              <v-icon small>location_on</v-icon>
-              Bariloche, Rio Negro
-            </li>
-          </ul>
           <ul v-if="state === 'etiquetas'">
             <li>
               <v-icon small>local_offer</v-icon>
