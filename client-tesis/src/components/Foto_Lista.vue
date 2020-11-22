@@ -52,7 +52,7 @@
                 11/09/20
               </li>
               <li>
-                <v-icon small>alarm</v-icon>
+                <v-icon small>schedule</v-icon>
                 12:20am
               </li>
             </ul>

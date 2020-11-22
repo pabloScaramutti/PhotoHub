@@ -88,6 +88,7 @@ export default {
       var grid = document.querySelector(".grid");
       var msnry = new Masonry(grid, {
         itemSelector: ".grid-item",
+        horizontalOrder: true,
         gutter: 5,
       });
       return msnry;
