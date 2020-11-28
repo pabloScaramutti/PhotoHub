@@ -14,7 +14,7 @@ Vue.config.productionTip = false;
 Vue.use(
   {
     install(Vue) {
-      Vue.prototype.$urlApi = apiUrl;
+      Vue.prototype.$apiUrl = apiUrl;
       Vue.prototype.$http = instanciaAxios;
     }
   });

@@ -15,8 +15,8 @@ export default {
   name: "Puntaje",
   props: {
     size: {
-      type: Number,
-      default: 40,
+      type: String,
+      default: "3vh",
     },
     puntajeInicial: {
       type: Number,

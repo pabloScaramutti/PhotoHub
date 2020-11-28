@@ -3,13 +3,15 @@
     class="foto-lista"
     :style="`width: ${width}; border-right: 8px solid ${color}`"
   >
-    <img :src="img" alt="" />
+    <router-link :to="{ name: 'Foto', params: { img: img } }">
+      <img :src="img" alt="" />
+    </router-link>
     <div class="w98 h100 flex">
       <div class="detalles w98">
         <h2 class="pad-left">Nombre de la imagen</h2>
         <Puntaje
           class="translate-up"
-          :size="18"
+          :size="'18'"
           :puntajeInicial="rating"
           v-on:nuevoPuntaje="nuevoPuntaje"
         >
