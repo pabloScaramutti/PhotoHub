@@ -24,6 +24,7 @@
     <!-- Info -------------------------- -->
     <template v-if="!fullView">
       <div class="image-info-container" v-if="informacion">
+        <div class="open-info-icon" @click="informacion = !informacion"></div>
         <div class="general-info">
           <h1>Nombre imagen</h1>
 
@@ -62,47 +63,112 @@
           </li>
         </ul>
 
-        <div v-if="tabSelected === 'tags'">
+        <div v-if="tabSelected === 'tags'" class="tags-countainer">
           <Puntaje
             :size="'6vh'"
             :puntajeInicial="puntaje"
             v-on:nuevoPuntaje="nuevoPuntaje"
+            class="align-center"
           >
           </Puntaje>
+          <div>
+            <v-icon>folder</v-icon>
+            <div class="divider" />
+            <p>Una carpeta / Otra carpeta / Otra</p>
+          </div>
+          <div>
+            <v-icon>palette</v-icon>
+            <div class="divider" />
+            <div class="flex">
+              <div
+                v-for="color in colors"
+                :key="color"
+                @click="colorSelected = color"
+                :style="`background-color: ${color}; border: ${
+                  colorSelected === color ? '4px solid white' : 'none'
+                }`"
+                class="m-top-10px color-tag"
+              ></div>
+            </div>
+          </div>
+          <div class="m-top-20px">
+            <v-icon>local_offer</v-icon>
+            <div class="divider" />
+            <div class="flex">
+              <v-chip
+                v-for="tag in tags"
+                :key="tag"
+                close
+                @click:close="chip1 = false"
+                class="m-top-10px m-right-10px"
+                color="#49c1f1"
+              >
+                {{ tag }}
+              </v-chip>
+            </div>
+            <div class="grid">
+              <v-checkbox
+                v-for="i in 37"
+                :key="i"
+                :label="`Etiqueta ${i}`"
+              ></v-checkbox>
+            </div>
+          </div>
         </div>
 
-        <ul class="image-info" v-if="tabSelected === 'image-details'">
-          <li>
-            <v-icon size="50px">camera</v-icon>
-            apertura
-          </li>
-          <li>
-            <v-icon size="50px">shutter_speed</v-icon>
-            velocidad
-          </li>
-          <li>
-            <v-icon size="50px">iso</v-icon>
-            iso
-          </li>
-          <li>
-            <v-icon size="50px">flash_off</v-icon>
-            off
-          </li>
-          <li>
-            <v-icon size="50px">wb_sunny</v-icon>
-            1500k
-          </li>
-        </ul>
+        <div v-if="tabSelected === 'image-details'" class="w-80">
+          <ul class="image-info">
+            <li>
+              <v-icon size="50px">camera</v-icon>
+              f1.8
+            </li>
+            <li>
+              <v-icon size="50px">shutter_speed</v-icon>
+              1/60
+            </li>
+            <li>
+              <v-icon size="50px">iso</v-icon>
+              800
+            </li>
+            <li>
+              <v-icon size="50px">flash_off</v-icon>
+              off
+            </li>
+            <li>
+              <v-icon size="50px">wb_sunny</v-icon>
+              1500k
+            </li>
+            <li>
+              <img src="@/assets/lens-icon.svg" width="50px" height="50px" />
+              50mm
+            </li>
+          </ul>
+          <div class="divider"></div>
+          <ul class="camera-info">
+            <li>
+              <v-icon size="40px">camera_alt</v-icon>
+              Nikon D5300
+            </li>
+            <li class="flex align-center" style="transform: translateX(-5px)">
+              <img src="@/assets/lens-icon.svg" width="50px" height="50px" />
+              Nikkor 55-300mm f4.5/6.5
+            </li>
+          </ul>
+        </div>
+
         <div class="mapa" v-if="tabSelected === 'location'">
+          <div class="location">
+            <v-icon>location_on</v-icon> Un lugar, Argentina
+          </div>
           <Mapa> </Mapa>
         </div>
       </div>
-      <v-icon
-        v-else
-        class="arrow arrow-info"
-        @click="informacion = !informacion"
-        >keyboard_arrow_up</v-icon
-      >
+
+      <!-- Flechas y ui ---------------------- -->
+
+      <div v-else class="open-info" @click="informacion = !informacion">
+        <div class="open-info-icon"></div>
+      </div>
       <v-icon class="arrow next">keyboard_arrow_right</v-icon>
       <v-icon class="arrow previous">keyboard_arrow_left</v-icon>
     </template>
@@ -122,10 +188,13 @@ export default {
   data() {
     return {
       imagen: this.$route.params.img,
-      informacion: true,
+      informacion: false,
       fullView: false,
       puntaje: undefined,
       tabSelected: "tags",
+      colorSelected: "cyan",
+      colors: ["red", "blue", "green", "cyan"],
+      tags: ["montaña", "rio", "viejoManzano", "naturaleza"],
     };
   },
   methods: {
@@ -165,20 +234,45 @@ export default {
     background: black;
   }
 
+  .open-info-icon {
+    width: 35px;
+    height: 5px;
+    margin-bottom: 0.3rem;
+    border-radius: 5px;
+    background-color: #bbbbbd;
+    cursor: pointer;
+  }
+
+  .open-info {
+    position: fixed;
+    height: 30px;
+    background-color: #1d2027;
+    padding: 10px;
+    border-radius: 10px;
+    bottom: 50px;
+    //left: 50%;
+    cursor: pointer;
+  }
+
   .image-info-container {
     //padding: 2vh 5vw 10vh 5vw;
-    padding-top: 4vh;
+    padding-top: 2vh;
     position: fixed;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     width: 100vw;
-    height: 80vh;
+    height: 84%;
     bottom: 0;
     background: #141519;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
+    margin-bottom: 56px;
+
+    p {
+      font-weight: 100;
+    }
 
     .general-info {
       width: 100%;
@@ -201,6 +295,7 @@ export default {
 
     .tabs {
       width: 100%;
+      height: 30px;
       display: flex;
       justify-content: space-around;
       list-style-type: none;
@@ -221,17 +316,25 @@ export default {
           color: #bcbcbf;
         }
       }
+
+      .active-tab {
+        border-bottom: 2px solid #49c1f1;
+      }
     }
 
-    .active-tab {
-      border-bottom: 2px solid #49c1f1;
+    .tags-countainer {
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+
+      overflow: scroll;
     }
 
     .image-info {
       padding: 0;
       margin: 0;
       list-style-type: none;
-      width: 80%;
+      width: 100%;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
@@ -244,10 +347,21 @@ export default {
       }
     }
 
+    .camera-info {
+      li {
+        margin: 2vh;
+        list-style-type: none;
+        align-items: center;
+      }
+    }
+
     .mapa {
       width: 100%;
       height: 100%;
-      margin-top: 1vh;
+
+      .location {
+        margin: 0 1vh 2vh 1vh;
+      }
     }
   }
 
@@ -273,9 +387,56 @@ export default {
     bottom: 50%;
   }
 
-  .arrow-info {
-    bottom: 9vh;
-    left: 50%;
+  .divider {
+    width: 100%;
+    border-bottom: 1px solid white;
+  }
+
+  .color-tag {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+
+  .flex {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .jc-space-around {
+    justify-content: space-between;
+  }
+
+  .flex-row {
+    flex-direction: row;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 120px);
+    grid-gap: 0px;
+    justify-content: space-between;
+  }
+
+  .m-top-10px {
+    margin-top: 10px;
+  }
+
+  .w-80 {
+    width: 80%;
+  }
+
+  .m-top-20px {
+    margin-top: 20px;
+  }
+
+  .m-right-10px {
+    margin-right: 10px;
+  }
+
+  .align-center {
+    align-self: center;
   }
 
   @media (max-width: 500px) {

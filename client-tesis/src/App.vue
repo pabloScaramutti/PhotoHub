@@ -47,5 +47,19 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  border: none;
+  overflow: visible;
+}
+
+::-webkit-scrollbar-track {
+  background: #141519;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4e4e4e;
+}
 </style>

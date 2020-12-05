@@ -8,6 +8,7 @@ import Foto from "../views/Foto.vue";
 import Calendario from "../views/Calendario.vue";
 import NuevaCarpeta from "../views/NuevaCarpeta.vue";
 import Notificaciones from "../views/Notificaciones.vue";
+import Conexion from "../views/Conexion.vue";
 
 Vue.use(VueRouter);
 
@@ -64,6 +65,11 @@ const routes = [
     path: "/notificaciones",
     name: "Notificaciones",
     component: Notificaciones
+  },
+  {
+    path: "/conexion",
+    name: "Conexion",
+    component: Conexion
   }
 ];
 

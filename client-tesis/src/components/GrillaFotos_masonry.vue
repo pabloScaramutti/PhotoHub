@@ -98,6 +98,10 @@ export default {
 </script>
 
 <style lang="scss" scope>
+.container {
+  padding: 0px !important;
+}
+
 .grilla {
   .selected {
     border: 4px solid white;

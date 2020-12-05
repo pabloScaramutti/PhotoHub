@@ -4,7 +4,7 @@
     :style="`width: ${width}; border-right: 8px solid ${color}`"
   >
     <router-link :to="{ name: 'Foto', params: { img: img } }">
-      <img :src="img" alt="" />
+      <img :src="img" alt="" class="photo" />
     </router-link>
     <div class="w98 h100 flex">
       <div class="detalles w98">
@@ -31,13 +31,13 @@
               1200
             </li>
           </ul>
-          <ul v-if="state === 'datosCamara'">
+          <ul v-if="state === 'datosCamara'" class="flex flex-column">
             <li>
               <v-icon small>camera_alt</v-icon>
               Nikon D3500
             </li>
-            <li>
-              <v-icon small>camera_alt</v-icon>
+            <li class="flex align-center" style="transform: translateX(-3px)">
+              <img src="@/assets/lens-icon.svg" width="22rem" height="22rem" />
               55-300mm f/4.5-5.6
             </li>
           </ul>
@@ -153,7 +153,7 @@ export default {
     margin-left: 0.5vw;
   }
 
-  img {
+  .photo {
     height: 12vh;
     width: 12vh;
     object-fit: cover;
@@ -178,8 +178,16 @@ export default {
     display: flex;
   }
 
+  .flex-column {
+    flex-direction: column;
+  }
+
   .justify-space-around {
     justify-content: space-around;
+  }
+
+  .align-center {
+    align-items: center;
   }
 
   .w98 {
@@ -224,7 +232,7 @@ export default {
       font-size: 1.1rem;
     }
 
-    img {
+    .photo {
       height: 115px;
       width: 115px;
     }

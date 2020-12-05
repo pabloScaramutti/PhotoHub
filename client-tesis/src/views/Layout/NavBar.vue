@@ -15,7 +15,14 @@
     </v-app-bar> -->
 
       <div class="navBar-icons">
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <div>
+          <v-icon v-if="showBack" @click="$router.go(-1)"
+            >keyboard_backspace</v-icon
+          >
+          <v-app-bar-nav-icon
+            @click.stop="drawer = !drawer"
+          ></v-app-bar-nav-icon>
+        </div>
         <router-link :to="{ name: 'Home' }">
           <v-img
             alt="Logo"
@@ -27,9 +34,7 @@
             height="39"
           />
         </router-link>
-        <router-link
-          :to="{ name: 'Notificaciones', params: { notificaciones: noLeidos } }"
-        >
+        <div @click="cleanNotifications()" class="pointer">
           <v-badge
             color="error"
             :value="noLeidos.length"
@@ -38,7 +43,7 @@
           >
             <v-icon> camera_alt </v-icon>
           </v-badge>
-        </router-link>
+        </div>
       </div>
     </v-app-bar>
 
@@ -92,6 +97,7 @@ export default {
       socket: {},
       algunaCosa: String,
       noLeidos: [],
+      showBack: this.checkRoute(),
     };
   },
 
@@ -113,10 +119,23 @@ export default {
     });
   },
 
+  watch: {
+    $route() {
+      this.showBack = this.checkRoute();
+    },
+  },
+
   methods: {
     sendTest() {
       this.socket.emit("test", 123);
       //console.log("envio test");
+    },
+    checkRoute() {
+      return this.$router.currentRoute.name != "Home";
+    },
+    cleanNotifications() {
+      this.noLeidos = [];
+      this.$router.push({ name: "Notificaciones" });
     },
   },
 };
@@ -125,6 +144,10 @@ export default {
 <style lang="scss" scoped>
 .link {
   text-decoration: none;
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 .logo {
