@@ -160,7 +160,7 @@
           <div class="location">
             <v-icon>location_on</v-icon> Un lugar, Argentina
           </div>
-          <Mapa> </Mapa>
+          <Mapa></Mapa>
         </div>
       </div>
 

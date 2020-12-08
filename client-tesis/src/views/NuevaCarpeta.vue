@@ -15,7 +15,11 @@
 
     <form action="" class="formulario-nueva-carpeta">
       <h1>Nuevo Album</h1>
+      <v-alert v-model="alert.state" dense :type="alert.type" dismissible>
+        {{ alert.message }}
+      </v-alert>
       <v-text-field
+        ref="nombreCarpeta"
         prepend-icon="create_new_folder"
         label="Nombre de carpeta..."
         v-model="nuevaCarpeta.nombre"
@@ -36,6 +40,10 @@
       />
     </form>
     <GrillaFotos :imagenes="imagenes" :selectable="true"></GrillaFotos>
+
+    <v-btn @click="createFolder()" fab color="primary" class="floating-btn"
+      ><v-icon>done</v-icon></v-btn
+    >
   </div>
 </template>
 
@@ -74,6 +82,7 @@ export default {
         require("@/assets/Media/DSC_0449.jpg"),
       ],
       im: [],
+      alert: { state: false, message: "Ocurrio un error", type: "error" },
     };
   },
 
@@ -85,6 +94,37 @@ export default {
   },*/
 
   methods: {
+    createFolder() {
+      if (this.nuevaCarpeta.nombre != "") {
+        const data = new FormData();
+        const info = {
+          nombre: this.nuevaCarpeta.nombre,
+        };
+
+        data.append("data", JSON.stringify(info));
+        this.$http
+          .post("/carpetas", data)
+          .then((response) => {
+            console.log("Folder created:", response);
+            this.alert.state = true;
+            this.alert.type = "success";
+            this.alert.message =
+              "Se creo la carpeta '" + this.nuevaCarpeta.nombre + "'";
+          })
+          .catch((error) => {
+            console.log("Error ocurred when creating the folder:", error);
+            this.nuevaCarpeta.nombre = "";
+            this.alert.state = true;
+            this.alert.message = "Ocurrio un error";
+          });
+      } else {
+        this.nuevaCarpeta.nombre = "";
+        this.alert.state = true;
+        this.alert.message = "Agregar un nombre a la carpeta";
+        this.$refs.nombreCarpeta.focus();
+      }
+    },
+
     async nuevaFoto() {
       const data = new FormData();
       const info = {
@@ -122,5 +162,11 @@ export default {
 .formulario-nueva-carpeta {
   width: 100%;
   padding: 0 3vw;
+}
+
+.floating-btn {
+  position: fixed;
+  bottom: 80px;
+  right: 5vw;
 }
 </style>

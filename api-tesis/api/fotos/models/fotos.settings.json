@@ -16,8 +16,8 @@
       "required": false
     },
     "carpeta": {
-      "model": "carpetas",
-      "via": "fotos"
+      "via": "fotos",
+      "model": "carpetas"
     },
     "etiquetas": {
       "collection": "etiquetas",

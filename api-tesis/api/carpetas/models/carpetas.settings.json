@@ -17,12 +17,17 @@
       "required": true
     },
     "fotos": {
-      "via": "carpeta",
-      "collection": "fotos"
+      "collection": "fotos",
+      "via": "carpeta"
     },
     "Favoritos": {
       "type": "boolean",
       "default": false
+    },
+    "etiquetas": {
+      "collection": "etiquetas",
+      "via": "carpetas",
+      "dominant": true
     }
   }
 }

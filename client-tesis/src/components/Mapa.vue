@@ -1,7 +1,7 @@
 <template>
   <l-map ref="myMap" :zoom="zoom" :center="center">
     <l-tile-layer :url="url"> </l-tile-layer>
-    <l-marker :lat-lng="marker"></l-marker>
+    <l-marker v-if="marker" :lat-lng="marker"></l-marker>
   </l-map>
 </template>
 
@@ -27,17 +27,28 @@ export default {
     LMarker,
   },
 
+  props: {
+    lat: undefined,
+    long: undefined,
+  },
+
   data: () => {
     return {
       zoom: 6,
-      center: L.latLng(-34.920954, -57.954425),
-      marker: L.latLng(-34.920954, -57.954425),
+      center: undefined,
+      marker: undefined,
       url: "http://{s}.tile.osm.org/{z}/{x}/{y}.png",
     };
   },
 
   created() {
-    //this.getGeolocation();
+    if (this.lat && this.long) {
+      this.center = L.latLng(this.lat, this.long);
+      this.marker = L.latLng(this.lat, this.long);
+    } else {
+      //this.getGeolocation();
+      console.log("Ubicacion por dispositivo sin marcador");
+    }
   },
 
   methods: {

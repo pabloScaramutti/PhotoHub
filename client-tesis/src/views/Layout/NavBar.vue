@@ -134,8 +134,10 @@ export default {
       return this.$router.currentRoute.name != "Home";
     },
     cleanNotifications() {
-      this.noLeidos = [];
-      this.$router.push({ name: "Notificaciones" });
+      if (this.$router.currentRoute.name != "Notificaciones") {
+        this.noLeidos = [];
+        this.$router.push({ name: "Notificaciones" });
+      }
     },
   },
 };

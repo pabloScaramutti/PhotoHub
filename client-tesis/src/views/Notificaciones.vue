@@ -7,12 +7,12 @@
         </v-btn>
         <p>Conectarse</p>
       </router-link>
-      <div>
+      <router-link class="router-link" :to="{ name: 'EtiquetasRapidas' }">
         <v-btn fab color="primary">
           <v-icon>local_offer</v-icon>
         </v-btn>
         <p>Etiquetas rápidas</p>
-      </div>
+      </router-link>
       <div>
         <v-btn fab color="primary">
           <v-icon>settings</v-icon>
@@ -21,7 +21,11 @@
       </div>
     </div>
     <h2>Notificaciones</h2>
-    <FotoLista v-for="item in imagenes" :key="item" :img="item" />
+    <FotoLista
+      v-for="(item, index) in notificaciones"
+      :key="index"
+      :img="item.foto"
+    />
   </div>
 </template>
 
@@ -43,10 +47,11 @@ export default {
     this.$http
       .get("/notificaciones?_sort=created_at:DESC&_limit=15")
       .then((response) => {
-        this.notificaciones = response;
+        //console.log(response);
+        this.notificaciones = response.data;
         if (this.notificaciones) {
           //console.log(this.notificaciones);
-          this.imagenes = this.notificaciones.data.map((item) =>
+          this.imagenes = this.notificaciones.map((item) =>
             this.$apiUrl(item.foto.thumbnail.url)
           );
           //console.log(this.imagenes);

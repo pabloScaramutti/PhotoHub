@@ -38,6 +38,10 @@ export default {
     this.rating = this.puntajeInicial;
   },
   watch: {
+    puntajeInicial: function () {
+      //console.log(change);
+      this.rating = this.puntajeInicial;
+    },
     rating: function (newRating) {
       this.$emit("nuevoPuntaje", newRating);
     },

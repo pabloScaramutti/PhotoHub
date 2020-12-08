@@ -1,17 +1,19 @@
 <template>
   <div class="conection">
-    <div class="settings-buttons">
-      <router-link class="router-link" :to="{ name: 'Conexion' }">
-        <v-btn fab color="primary">
-          <v-icon size="35">wifi</v-icon>
-        </v-btn>
-        <p>Conectarse con</p>
-        <p class="bold">WPS</p>
-      </router-link>
+    <div class="settings-buttons" @click="activateWPS()">
+      <v-btn fab color="primary">
+        <v-icon size="35">wifi</v-icon>
+      </v-btn>
+      <p>Conectarse con</p>
+      <p class="bold">WPS</p>
     </div>
     <h2>Redes</h2>
     <div v-if="redes" class="networks">
-      <div v-for="(red, index) in redes" :key="index">
+      <div
+        v-for="(red, index) in redes"
+        :key="index"
+        @click.stop="conectTo(red)"
+      >
         <div class="network">
           <v-icon v-if="red.encryptionKey === 'off'" class="icon"
             >signal_wifi_4_bar</v-icon
@@ -29,6 +31,40 @@
         color="primary"
       ></v-progress-circular>
     </div>
+
+    <!-- Dialogo -->
+    <v-dialog v-if="selectedNet" v-model="dialog" width="500">
+      <div class="dialog">
+        <h3>Conectarse a {{ selectedNet.ESSID }}</h3>
+        <v-text-field
+          ref="passordInput"
+          label="Contraseña"
+          v-model="password"
+          :type="showPassword ? 'text' : 'password'"
+          prepend-icon="mdi-lock"
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          @click:append="showPassword = !showPassword"
+        />
+        <v-btn fab color="primary" small class="dialog-button"
+          ><v-icon>send</v-icon></v-btn
+        >
+      </div>
+    </v-dialog>
+
+    <!-- Dialogo WPS -->
+    <v-dialog v-model="dialogWPS" width="500">
+      <div class="dialogWPS">
+        <h3>Conectarse por WPS</h3>
+        <p>Active el WPS en la cámara</p>
+        <v-progress-circular
+          :size="70"
+          :width="7"
+          color="primary"
+          indeterminate
+        ></v-progress-circular>
+        <v-btn @click="dialogWPS = false" class="mt-10">Cancelar</v-btn>
+      </div>
+    </v-dialog>
   </div>
 </template>
 
@@ -37,11 +73,26 @@ export default {
   data() {
     return {
       redes: undefined,
+      dialog: false,
+      dialogWPS: false,
+      selectedNet: undefined,
+      showPassword: false,
+      password: "",
     };
   },
 
   created() {
     this.getNetworks();
+  },
+
+  watch: {
+    dialog: {
+      handler(value) {
+        if (!value) {
+          this.password = "";
+        }
+      },
+    },
   },
 
   methods: {
@@ -54,6 +105,15 @@ export default {
         .catch((error) => {
           console.log("Ocurrio un error:", error);
         });
+    },
+    conectTo(red) {
+      if (red.encryptionKey === "on") {
+        this.dialog = true;
+        this.selectedNet = red;
+      }
+    },
+    activateWPS() {
+      this.dialogWPS = true;
     },
   },
 };
@@ -70,6 +130,7 @@ export default {
   }
 
   .networks {
+    cursor: pointer;
     padding: 10px 20px;
 
     .network {
@@ -101,28 +162,47 @@ export default {
 
   .settings-buttons {
     display: flex;
-    justify-content: space-evenly;
 
-    .router-link {
-      //width: 100px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      margin: 20px;
-      text-decoration: none;
-      color: inherit;
+    //width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: 20px;
+    text-decoration: none;
+    color: inherit;
 
-      p {
-        margin-top: 5px;
-        font-size: 15px;
-        line-height: 1.2;
-      }
-
-      .bold {
-        font-weight: 500;
-      }
+    p {
+      margin-top: 5px;
+      font-size: 15px;
+      line-height: 1.2;
     }
+
+    .bold {
+      font-weight: 500;
+    }
+  }
+}
+
+.dialog {
+  padding: 20px;
+  background-color: #1d2027;
+
+  .dialog-button {
+    float: right;
+  }
+}
+
+.dialogWPS {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 20px;
+  background-color: #1d2027;
+
+  .mt-10 {
+    margin-top: 10px;
   }
 }
 </style>

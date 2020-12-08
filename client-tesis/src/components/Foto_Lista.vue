@@ -3,12 +3,12 @@
     class="foto-lista"
     :style="`width: ${width}; border-right: 8px solid ${color}`"
   >
-    <router-link :to="{ name: 'Foto', params: { img: img } }">
-      <img :src="img" alt="" class="photo" />
+    <router-link :to="{ name: 'Foto', params: { img: getURL() } }">
+      <img :src="getURL()" alt="" class="photo" />
     </router-link>
     <div class="w98 h100 flex">
       <div class="detalles w98">
-        <h2 class="pad-left">Nombre de la imagen</h2>
+        <h2 class="pad-left">{{ img.nombre }}</h2>
         <Puntaje
           class="translate-up"
           :size="'18'"
@@ -20,25 +20,25 @@
           <ul v-if="state === 'especificaciones'">
             <li>
               <v-icon small>camera</v-icon>
-              f18
+              f{{ img.exif.Aperture }}
             </li>
             <li>
               <v-icon small>shutter_speed</v-icon>
-              1/32
+              {{ img.exif.ShutterSpeed }}
             </li>
             <li>
               <v-icon small>iso</v-icon>
-              1200
+              {{ img.exif.ISO }}
             </li>
           </ul>
           <ul v-if="state === 'datosCamara'" class="flex flex-column">
             <li>
               <v-icon small>camera_alt</v-icon>
-              Nikon D3500
+              {{ img.exif.Model }}
             </li>
             <li class="flex align-center" style="transform: translateX(-3px)">
               <img src="@/assets/lens-icon.svg" width="22rem" height="22rem" />
-              55-300mm f/4.5-5.6
+              {{ img.exif.Lens }}
             </li>
           </ul>
           <div v-if="state === 'ubicacion'">
@@ -51,11 +51,11 @@
             <ul>
               <li>
                 <v-icon small>today</v-icon>
-                11/09/20
+                {{ getDate() }}
               </li>
               <li>
                 <v-icon small>schedule</v-icon>
-                12:20am
+                {{ getTime() }}
               </li>
             </ul>
           </div>
@@ -123,17 +123,29 @@ export default {
   },
   data: () => {
     return {
-      rating: 3,
+      rating: 0,
       color: "blue",
       state: "especificaciones",
     };
   },
+  mounted() {
+    this.rating = this.img.exif.Rating;
+  },
   methods: {
-    // getImageSrc() {
-    //   return `http://192.168.0.123:1337${this.img.thumbnail.url}`;
-    // },
     nuevoPuntaje(valor) {
       this.rating = valor;
+    },
+    getURL() {
+      return this.$apiUrl(this.img.thumbnail.url);
+    },
+    getTime() {
+      return this.img.exif.DateTimeOriginal.split(" ")[1];
+    },
+    getDate() {
+      return this.img.exif.DateTimeOriginal.split(" ")[0]
+        .split(":")
+        .reverse()
+        .join("/");
     },
   },
 };

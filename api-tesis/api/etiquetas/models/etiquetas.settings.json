@@ -17,6 +17,10 @@
     "fotos": {
       "via": "etiquetas",
       "collection": "fotos"
+    },
+    "carpetas": {
+      "via": "etiquetas",
+      "collection": "carpetas"
     }
   }
 }

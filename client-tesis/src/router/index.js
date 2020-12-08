@@ -9,6 +9,7 @@ import Calendario from "../views/Calendario.vue";
 import NuevaCarpeta from "../views/NuevaCarpeta.vue";
 import Notificaciones from "../views/Notificaciones.vue";
 import Conexion from "../views/Conexion.vue";
+import EtiquetasRapidas from "../views/EtiquetasRapidas.vue";
 
 Vue.use(VueRouter);
 
@@ -70,6 +71,11 @@ const routes = [
     path: "/conexion",
     name: "Conexion",
     component: Conexion
+  },
+  {
+    path: "/etiquetas-rapidas",
+    name: "EtiquetasRapidas",
+    component: EtiquetasRapidas
   }
 ];
 
