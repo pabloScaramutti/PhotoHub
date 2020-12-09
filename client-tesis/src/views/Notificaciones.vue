@@ -13,12 +13,12 @@
         </v-btn>
         <p>Etiquetas rápidas</p>
       </router-link>
-      <div>
+      <router-link class="router-link" :to="{ name: 'AjustesAutomaticos' }">
         <v-btn fab color="primary">
           <v-icon>settings</v-icon>
         </v-btn>
         <p>Ajustes automáticos</p>
-      </div>
+      </router-link>
     </div>
     <h2>Notificaciones</h2>
     <FotoLista
@@ -51,9 +51,10 @@ export default {
         this.notificaciones = response.data;
         if (this.notificaciones) {
           //console.log(this.notificaciones);
-          this.imagenes = this.notificaciones.map((item) =>
-            this.$apiUrl(item.foto.thumbnail.url)
-          );
+          this.imagenes = this.notificaciones.map((item) => {
+            item.foto;
+          });
+
           //console.log(this.imagenes);
         }
       })
@@ -68,10 +69,6 @@ export default {
 <style lang="scss" scoped>
 .notificaciones {
   padding: 1vw;
-
-  p {
-    font-weight: 100;
-  }
 
   h2 {
     margin-left: 20px;
@@ -90,21 +87,6 @@ export default {
       margin: 20px;
       text-decoration: none;
       color: inherit;
-
-      p {
-        margin-top: 5px;
-        font-size: 15px;
-        line-height: 1.2;
-      }
-    }
-
-    div {
-      width: 56px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      margin: 20px;
 
       p {
         margin-top: 5px;

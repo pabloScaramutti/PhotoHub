@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="grilla">
     <div class="grid">
-      <div v-for="item in selected" :key="item.img" class="grid-item">
+      <div v-for="item in selected" :key="item.id" class="grid-item">
         <router-link
           :to="{ name: 'Foto', params: { img: item.img } }"
           tag="button"
@@ -12,7 +12,7 @@
           >
           <v-icon v-else-if="selectable" class="selected-check">check</v-icon>
           <img
-            :src="item.img"
+            :src="$apiUrl(item.img.thumbnail.url)"
             @click="item.selector = !item.selector"
             :class="[item.selector ? 'selected' : 'foto']"
             @load="onImageLoad()"
@@ -104,8 +104,8 @@ export default {
 
 .grilla {
   .selected {
-    border: 4px solid white;
     opacity: 0.4;
+    border: 4px solid white;
   }
 
   .foto:hover {
@@ -136,6 +136,7 @@ export default {
     vertical-align: center;
     text-align: center;
     pointer-events: none;
+    z-index: 2;
   }
 
   .grid-item {

@@ -125,7 +125,6 @@ export default {
   padding: 30px;
 
   p {
-    font-weight: 100;
     margin: 0;
   }
 

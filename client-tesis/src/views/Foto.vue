@@ -1,177 +1,188 @@
 <template>
-  <div :class="[fullView ? 'foto fullscreen' : 'foto']">
-    <div
-      class="fondo-contenedor-imagen"
-      ref="foto"
-      @click="informacion = !informacion"
-    >
-      <v-img
-        :max-height="fullView ? '100vh' : '90vh'"
-        max-width="100vw"
-        :src="imagen"
-        :lazy-src="imagen"
-        contain
-        @load="onImageLoad()"
+  <div style="height: 100%">
+    <div v-if="imagen" :class="[fullView ? 'foto fullscreen' : 'foto']">
+      <div
+        class="fondo-contenedor-imagen"
+        ref="foto"
+        @click="informacion = !informacion"
       >
-        <template v-slot:placeholder>
-          <v-row class="fill-height" align="center" justify="center">
-            <v-progress-circular indeterminate color="grey lighten-5" />
-          </v-row>
-        </template>
-      </v-img>
+        <v-img
+          :max-height="fullView ? '100vh' : '90vh'"
+          max-width="100vw"
+          :src="$apiUrl(imagen.thumbnail.url)"
+          :lazy-src="$apiUrl(imagen.thumbnail.url)"
+          contain
+          @load="onImageLoad()"
+        >
+          <template v-slot:placeholder>
+            <v-row class="fill-height" align="center" justify="center">
+              <v-progress-circular indeterminate color="grey lighten-5" />
+            </v-row>
+          </template>
+        </v-img>
+      </div>
+
+      <!-- Info -------------------------- -->
+      <template v-if="!fullView">
+        <div class="image-info-container" v-if="informacion">
+          <div class="open-info-icon" @click="informacion = !informacion"></div>
+          <div class="general-info">
+            <h1>{{ imagen.nombre }}</h1>
+
+            <ul class="time-date">
+              <li>
+                <v-icon>today</v-icon>
+                {{ getDate() }}
+              </li>
+              <li>
+                <v-icon>schedule</v-icon>
+                {{ getTime() }}
+              </li>
+            </ul>
+          </div>
+
+          <ul class="tabs">
+            <li
+              :class="tabSelected === 'tags' ? 'active-tab' : 'inactive-tab'"
+              @click="tabSelected = 'tags'"
+            >
+              <v-icon>local_offer</v-icon>
+            </li>
+            <li
+              :class="
+                tabSelected === 'image-details' ? 'active-tab' : 'inactive-tab'
+              "
+              @click="tabSelected = 'image-details'"
+            >
+              <v-icon>image_search</v-icon>
+            </li>
+            <li
+              :class="
+                tabSelected === 'location' ? 'active-tab' : 'inactive-tab'
+              "
+              @click="tabSelected = 'location'"
+            >
+              <v-icon>location_on</v-icon>
+            </li>
+          </ul>
+
+          <div v-if="tabSelected === 'tags'" class="tags-countainer">
+            <Puntaje
+              :size="'6vh'"
+              :puntajeInicial="puntaje"
+              v-on:nuevoPuntaje="nuevoPuntaje"
+              class="align-center"
+            >
+            </Puntaje>
+            <div>
+              <v-icon>folder</v-icon>
+              <div class="divider" />
+              <p>Una carpeta / Otra carpeta / Otra</p>
+            </div>
+            <div>
+              <v-icon>palette</v-icon>
+              <div class="divider" />
+              <div class="flex">
+                <div
+                  v-for="color in colors"
+                  :key="color"
+                  @click="colorSelected = color"
+                  :style="`background-color: ${color}; border: ${
+                    colorSelected === color ? '4px solid white' : 'none'
+                  }`"
+                  class="m-top-10px color-tag"
+                ></div>
+              </div>
+            </div>
+            <div class="m-top-20px">
+              <v-icon>local_offer</v-icon>
+              <div class="divider" />
+              <div class="flex">
+                <v-chip
+                  v-for="tag in tags"
+                  :key="tag"
+                  close
+                  @click:close="chip1 = false"
+                  class="m-top-10px m-right-10px"
+                  color="#49c1f1"
+                >
+                  {{ tag }}
+                </v-chip>
+              </div>
+              <div class="grid">
+                <v-checkbox
+                  v-for="i in 37"
+                  :key="i"
+                  :label="`Etiqueta ${i}`"
+                ></v-checkbox>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="tabSelected === 'image-details'" class="w-80">
+            <ul class="image-info">
+              <li>
+                <v-icon size="50px">camera</v-icon>
+                f{{ imagen.exif.Aperture }}
+              </li>
+              <li>
+                <v-icon size="50px">shutter_speed</v-icon>
+                {{ imagen.exif.ShutterSpeed }}
+              </li>
+              <li>
+                <v-icon size="50px">iso</v-icon>
+                {{ imagen.exif.ISO }}
+              </li>
+              <li>
+                <v-icon size="50px">flash_off</v-icon>
+                {{ imagen.exif.Flash }}
+              </li>
+              <li>
+                <v-icon size="50px">wb_sunny</v-icon>
+                1500k
+              </li>
+              <li>
+                <img src="@/assets/lens-icon.svg" width="50px" height="50px" />
+                {{ imagen.exif.FocalLength }}
+              </li>
+            </ul>
+            <div class="divider"></div>
+            <ul class="camera-info">
+              <li>
+                <v-icon size="40px">camera_alt</v-icon>
+                {{ imagen.exif.Model }}
+              </li>
+              <li class="flex align-center" style="transform: translateX(-5px)">
+                <img src="@/assets/lens-icon.svg" width="50px" height="50px" />
+                {{ imagen.exif.Lens }}
+              </li>
+            </ul>
+          </div>
+
+          <div class="mapa" v-if="tabSelected === 'location'">
+            <div class="location">
+              <v-icon>location_on</v-icon> Un lugar, Argentina
+            </div>
+            <Mapa></Mapa>
+          </div>
+        </div>
+
+        <!-- Flechas y ui ---------------------- -->
+
+        <div v-else class="open-info" @click="informacion = !informacion">
+          <div class="open-info-icon"></div>
+        </div>
+        <v-icon class="arrow next">keyboard_arrow_right</v-icon>
+        <v-icon class="arrow previous">keyboard_arrow_left</v-icon>
+      </template>
     </div>
-
-    <!-- Info -------------------------- -->
-    <template v-if="!fullView">
-      <div class="image-info-container" v-if="informacion">
-        <div class="open-info-icon" @click="informacion = !informacion"></div>
-        <div class="general-info">
-          <h1>Nombre imagen</h1>
-
-          <ul class="time-date">
-            <li>
-              <v-icon>today</v-icon>
-              01/10/20
-            </li>
-            <li>
-              <v-icon>schedule</v-icon>
-              12:20am
-            </li>
-          </ul>
-        </div>
-
-        <ul class="tabs">
-          <li
-            :class="tabSelected === 'tags' ? 'active-tab' : 'inactive-tab'"
-            @click="tabSelected = 'tags'"
-          >
-            <v-icon>local_offer</v-icon>
-          </li>
-          <li
-            :class="
-              tabSelected === 'image-details' ? 'active-tab' : 'inactive-tab'
-            "
-            @click="tabSelected = 'image-details'"
-          >
-            <v-icon>image_search</v-icon>
-          </li>
-          <li
-            :class="tabSelected === 'location' ? 'active-tab' : 'inactive-tab'"
-            @click="tabSelected = 'location'"
-          >
-            <v-icon>location_on</v-icon>
-          </li>
-        </ul>
-
-        <div v-if="tabSelected === 'tags'" class="tags-countainer">
-          <Puntaje
-            :size="'6vh'"
-            :puntajeInicial="puntaje"
-            v-on:nuevoPuntaje="nuevoPuntaje"
-            class="align-center"
-          >
-          </Puntaje>
-          <div>
-            <v-icon>folder</v-icon>
-            <div class="divider" />
-            <p>Una carpeta / Otra carpeta / Otra</p>
-          </div>
-          <div>
-            <v-icon>palette</v-icon>
-            <div class="divider" />
-            <div class="flex">
-              <div
-                v-for="color in colors"
-                :key="color"
-                @click="colorSelected = color"
-                :style="`background-color: ${color}; border: ${
-                  colorSelected === color ? '4px solid white' : 'none'
-                }`"
-                class="m-top-10px color-tag"
-              ></div>
-            </div>
-          </div>
-          <div class="m-top-20px">
-            <v-icon>local_offer</v-icon>
-            <div class="divider" />
-            <div class="flex">
-              <v-chip
-                v-for="tag in tags"
-                :key="tag"
-                close
-                @click:close="chip1 = false"
-                class="m-top-10px m-right-10px"
-                color="#49c1f1"
-              >
-                {{ tag }}
-              </v-chip>
-            </div>
-            <div class="grid">
-              <v-checkbox
-                v-for="i in 37"
-                :key="i"
-                :label="`Etiqueta ${i}`"
-              ></v-checkbox>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="tabSelected === 'image-details'" class="w-80">
-          <ul class="image-info">
-            <li>
-              <v-icon size="50px">camera</v-icon>
-              f1.8
-            </li>
-            <li>
-              <v-icon size="50px">shutter_speed</v-icon>
-              1/60
-            </li>
-            <li>
-              <v-icon size="50px">iso</v-icon>
-              800
-            </li>
-            <li>
-              <v-icon size="50px">flash_off</v-icon>
-              off
-            </li>
-            <li>
-              <v-icon size="50px">wb_sunny</v-icon>
-              1500k
-            </li>
-            <li>
-              <img src="@/assets/lens-icon.svg" width="50px" height="50px" />
-              50mm
-            </li>
-          </ul>
-          <div class="divider"></div>
-          <ul class="camera-info">
-            <li>
-              <v-icon size="40px">camera_alt</v-icon>
-              Nikon D5300
-            </li>
-            <li class="flex align-center" style="transform: translateX(-5px)">
-              <img src="@/assets/lens-icon.svg" width="50px" height="50px" />
-              Nikkor 55-300mm f4.5/6.5
-            </li>
-          </ul>
-        </div>
-
-        <div class="mapa" v-if="tabSelected === 'location'">
-          <div class="location">
-            <v-icon>location_on</v-icon> Un lugar, Argentina
-          </div>
-          <Mapa></Mapa>
-        </div>
-      </div>
-
-      <!-- Flechas y ui ---------------------- -->
-
-      <div v-else class="open-info" @click="informacion = !informacion">
-        <div class="open-info-icon"></div>
-      </div>
-      <v-icon class="arrow next">keyboard_arrow_right</v-icon>
-      <v-icon class="arrow previous">keyboard_arrow_left</v-icon>
-    </template>
+    <v-progress-circular
+      v-else
+      indeterminate
+      size="50"
+      color="primary"
+      class="loading"
+    ></v-progress-circular>
   </div>
 </template>
 
@@ -187,7 +198,7 @@ export default {
   props: {},
   data() {
     return {
-      imagen: this.$route.params.img,
+      imagen: undefined,
       informacion: false,
       fullView: false,
       puntaje: undefined,
@@ -197,6 +208,19 @@ export default {
       tags: ["montaña", "rio", "viejoManzano", "naturaleza"],
     };
   },
+
+  created() {
+    this.$http
+      .get(this.$route.path)
+      .then((result) => {
+        this.imagen = result.data;
+        console.log(this.imagen);
+      })
+      .catch((error) => {
+        console.log("Ocurrio un error", error);
+      });
+  },
+
   methods: {
     onImageLoad() {
       //console.log(this.imagen);
@@ -204,6 +228,15 @@ export default {
     nuevoPuntaje(e) {
       //console.log("agarre el evento");
       this.puntaje = e;
+    },
+    getTime() {
+      return this.imagen.exif.DateTimeOriginal.split(" ")[1];
+    },
+    getDate() {
+      return this.imagen.exif.DateTimeOriginal.split(" ")[0]
+        .split(":")
+        .reverse()
+        .join("/");
     },
   },
 };
@@ -269,10 +302,6 @@ export default {
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     margin-bottom: 56px;
-
-    p {
-      font-weight: 100;
-    }
 
     .general-info {
       width: 100%;

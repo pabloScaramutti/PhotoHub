@@ -3,103 +3,118 @@
     class="foto-lista"
     :style="`width: ${width}; border-right: 8px solid ${color}`"
   >
-    <router-link :to="{ name: 'Foto', params: { img: getURL() } }">
-      <img :src="getURL()" alt="" class="photo" />
-    </router-link>
-    <div class="w98 h100 flex">
-      <div class="detalles w98">
-        <h2 class="pad-left">{{ img.nombre }}</h2>
-        <Puntaje
-          class="translate-up"
-          :size="'18'"
-          :puntajeInicial="rating"
-          v-on:nuevoPuntaje="nuevoPuntaje"
-        >
-        </Puntaje>
-        <div class="translate-up pad-left ul-flex-info">
-          <ul v-if="state === 'especificaciones'">
-            <li>
-              <v-icon small>camera</v-icon>
-              f{{ img.exif.Aperture }}
-            </li>
-            <li>
-              <v-icon small>shutter_speed</v-icon>
-              {{ img.exif.ShutterSpeed }}
-            </li>
-            <li>
-              <v-icon small>iso</v-icon>
-              {{ img.exif.ISO }}
-            </li>
-          </ul>
-          <ul v-if="state === 'datosCamara'" class="flex flex-column">
-            <li>
-              <v-icon small>camera_alt</v-icon>
-              {{ img.exif.Model }}
-            </li>
-            <li class="flex align-center" style="transform: translateX(-3px)">
-              <img src="@/assets/lens-icon.svg" width="22rem" height="22rem" />
-              {{ img.exif.Lens }}
-            </li>
-          </ul>
-          <div v-if="state === 'ubicacion'">
-            <ul>
+    <template v-if="this.img.thumbnail">
+      <router-link :to="{ name: 'Foto', params: { img: getURL() } }">
+        <img :src="getURL()" alt="" class="photo" />
+      </router-link>
+      <div class="w98 h100 flex">
+        <div class="detalles w98">
+          <h2 class="pad-left">{{ img.nombre }}</h2>
+          <Puntaje
+            class="translate-up"
+            :size="'18'"
+            :puntajeInicial="rating"
+            v-on:nuevoPuntaje="nuevoPuntaje"
+          >
+          </Puntaje>
+          <div class="translate-up pad-left ul-flex-info">
+            <ul v-if="state === 'especificaciones'">
               <li>
-                <v-icon small>location_on</v-icon>
-                Bariloche, Rio Negro
+                <v-icon small>camera</v-icon>
+                f{{ img.exif.Aperture }}
+              </li>
+              <li>
+                <v-icon small>shutter_speed</v-icon>
+                {{ img.exif.ShutterSpeed }}
+              </li>
+              <li>
+                <v-icon small>iso</v-icon>
+                {{ img.exif.ISO }}
               </li>
             </ul>
-            <ul>
+            <ul v-if="state === 'datosCamara'" class="flex flex-column">
               <li>
-                <v-icon small>today</v-icon>
-                {{ getDate() }}
+                <v-icon small>camera_alt</v-icon>
+                {{ img.exif.Model }}
               </li>
+              <li class="flex align-center" style="transform: translateX(-3px)">
+                <img
+                  src="@/assets/lens-icon.svg"
+                  width="22rem"
+                  height="22rem"
+                />
+                {{ img.exif.Lens }}
+              </li>
+            </ul>
+            <div v-if="state === 'ubicacion'">
+              <ul>
+                <li>
+                  <v-icon small>location_on</v-icon>
+                  Bariloche, Rio Negro
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <v-icon small>today</v-icon>
+                  {{ getDate() }}
+                </li>
+                <li>
+                  <v-icon small>schedule</v-icon>
+                  {{ getTime() }}
+                </li>
+              </ul>
+            </div>
+            <ul v-if="state === 'etiquetas'">
               <li>
-                <v-icon small>schedule</v-icon>
-                {{ getTime() }}
+                <v-icon small>local_offer</v-icon>
+                etiquetas
               </li>
             </ul>
           </div>
-          <ul v-if="state === 'etiquetas'">
-            <li>
-              <v-icon small>local_offer</v-icon>
-              etiquetas
+        </div>
+        <div class="flex justify-space-around h100 state-items">
+          <ul style="padding-left: 2px">
+            <li @click="state = 'especificaciones'">
+              <v-icon
+                size="20"
+                :color="
+                  state === 'especificaciones' ? 'white' : 'grey darken-3'
+                "
+                >image_search</v-icon
+              >
+            </li>
+            <li @click="state = 'datosCamara'">
+              <v-icon
+                size="20"
+                :color="state === 'datosCamara' ? 'white' : 'grey darken-3'"
+                >camera_alt</v-icon
+              >
+            </li>
+            <li @click="state = 'ubicacion'">
+              <v-icon
+                size="20"
+                :color="state === 'ubicacion' ? 'white' : 'grey darken-3'"
+                >location_on</v-icon
+              >
+            </li>
+            <li @click="state = 'etiquetas'">
+              <v-icon
+                size="20"
+                :color="state === 'etiquetas' ? 'white' : 'grey darken-3'"
+                >local_offer</v-icon
+              >
             </li>
           </ul>
         </div>
       </div>
-      <div class="flex justify-space-around h100 state-items">
-        <ul style="padding-left: 2px">
-          <li @click="state = 'especificaciones'">
-            <v-icon
-              size="20"
-              :color="state === 'especificaciones' ? 'white' : 'grey darken-3'"
-              >image_search</v-icon
-            >
-          </li>
-          <li @click="state = 'datosCamara'">
-            <v-icon
-              size="20"
-              :color="state === 'datosCamara' ? 'white' : 'grey darken-3'"
-              >camera_alt</v-icon
-            >
-          </li>
-          <li @click="state = 'ubicacion'">
-            <v-icon
-              size="20"
-              :color="state === 'ubicacion' ? 'white' : 'grey darken-3'"
-              >location_on</v-icon
-            >
-          </li>
-          <li @click="state = 'etiquetas'">
-            <v-icon
-              size="20"
-              :color="state === 'etiquetas' ? 'white' : 'grey darken-3'"
-              >local_offer</v-icon
-            >
-          </li>
-        </ul>
-      </div>
-    </div>
+    </template>
+    <v-progress-circular
+      v-else
+      indeterminate
+      size="50"
+      color="primary"
+      class="loading"
+    ></v-progress-circular>
   </div>
 </template>
 
@@ -129,7 +144,11 @@ export default {
     };
   },
   mounted() {
-    this.rating = this.img.exif.Rating;
+    if (this.img.rating) {
+      this.rating = this.img.exif.Rating;
+    } else {
+      this.rating = 0;
+    }
   },
   methods: {
     nuevoPuntaje(valor) {

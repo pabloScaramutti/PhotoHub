@@ -10,6 +10,9 @@ import NuevaCarpeta from "../views/NuevaCarpeta.vue";
 import Notificaciones from "../views/Notificaciones.vue";
 import Conexion from "../views/Conexion.vue";
 import EtiquetasRapidas from "../views/EtiquetasRapidas.vue";
+import AjustesAutomaticos from "../views/AjustesAutomaticos.vue";
+import NuevaAutomatizacion from "../views/NuevaAutomatizacion.vue";
+
 
 Vue.use(VueRouter);
 
@@ -48,7 +51,7 @@ const routes = [
     component: Nota
   },
   {
-    path: "/foto/:img",
+    path: "/fotos/:img",
     name: "Foto",
     component: Foto
   },
@@ -76,6 +79,16 @@ const routes = [
     path: "/etiquetas-rapidas",
     name: "EtiquetasRapidas",
     component: EtiquetasRapidas
+  },
+  {
+    path: "/ajustes-automaticos",
+    name: "AjustesAutomaticos",
+    component: AjustesAutomaticos
+  },
+  {
+    path: "/nueva-automatizacion",
+    name: "NuevaAutomatizacion",
+    component: NuevaAutomatizacion
   }
 ];
 

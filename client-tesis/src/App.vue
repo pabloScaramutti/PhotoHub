@@ -48,6 +48,22 @@ export default {
 </script>
 
 <style >
+p {
+  font-weight: 100;
+}
+
+.loading {
+  padding: 30px;
+  display: flex;
+  margin: auto;
+}
+
+.floating-btn {
+  position: fixed;
+  bottom: 80px;
+  right: 5vw;
+}
+
 ::-webkit-scrollbar {
   width: 4px;
   height: 4px;

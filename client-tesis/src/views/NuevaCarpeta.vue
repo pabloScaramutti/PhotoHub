@@ -39,7 +39,17 @@
         type="text"
       />
     </form>
-    <GrillaFotos :imagenes="imagenes" :selectable="true"></GrillaFotos>
+    <GrillaFotos
+      v-if="imagenes"
+      :imagenes="imagenes"
+      :selectable="true"
+    ></GrillaFotos>
+    <v-progress-circular
+      v-else
+      indeterminate
+      size="50"
+      color="primary"
+    ></v-progress-circular>
 
     <v-btn @click="createFolder()" fab color="primary" class="floating-btn"
       ><v-icon>done</v-icon></v-btn
@@ -64,26 +74,21 @@ export default {
         etiquetas: [],
         fotos: [],
       },
-      imagenes: [
-        require("@/assets/Media/DSC_0615.jpg"),
-        require("@/assets/Media/DSC_0171.jpg"),
-        require("@/assets/Media/DSC_0288.jpg"),
-        require("@/assets/Media/DSC_0294.jpg"),
-        require("@/assets/Media/DSC_0338.jpg"),
-        require("@/assets/Media/DSC_0342.jpg"),
-        require("@/assets/Media/DSC_0353.jpg"),
-        require("@/assets/Media/DSC_0362.jpg"),
-        require("@/assets/Media/DSC_0370.jpg"),
-        require("@/assets/Media/DSC_0373.jpg"),
-        require("@/assets/Media/DSC_0374.jpg"),
-        require("@/assets/Media/DSC_0380.jpg"),
-        require("@/assets/Media/DSC_0397.jpg"),
-        require("@/assets/Media/DSC_0423.jpg"),
-        require("@/assets/Media/DSC_0449.jpg"),
-      ],
+      imagenes: undefined,
       im: [],
       alert: { state: false, message: "Ocurrio un error", type: "error" },
     };
+  },
+
+  created() {
+    this.$http
+      .get("/fotos?_sort=created_at:DESC")
+      .then((response) => {
+        this.imagenes = response.data;
+      })
+      .catch((error) => {
+        console.log("Error al cargar las imagenes", error);
+      });
   },
 
   /*watch: {
@@ -162,11 +167,5 @@ export default {
 .formulario-nueva-carpeta {
   width: 100%;
   padding: 0 3vw;
-}
-
-.floating-btn {
-  position: fixed;
-  bottom: 80px;
-  right: 5vw;
 }
 </style>

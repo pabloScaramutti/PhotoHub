@@ -8,23 +8,26 @@
       cuando quieras.
     </p>
 
-    <v-autocomplete
-      label="Nombre del set"
-      prepend-icon="local_offer"
-      ref="Nombre del set"
-      :items="['Trevor Handsen', 'Alex Nelson']"
-      full-width
-      hide-details
-      hide-no-data
-      hide-selected
-      single-line
-    >
-      <template v-slot:append-item>
-        <v-btn fab small color="primary" id="add-set"
-          ><v-icon>add</v-icon></v-btn
-        >
-      </template>
-    </v-autocomplete>
+    <div class="flex">
+      <v-autocomplete
+        label="Nombre del set"
+        prepend-icon="local_offer"
+        ref="Nombre del set"
+        :items="['Trevor Handsen', 'Alex Nelson']"
+        full-width
+        hide-details
+        hide-no-data
+        hide-selected
+        single-line
+      >
+        <template v-slot:append-item>
+          <v-btn fab small color="primary" id="add-set"
+            ><v-icon>add</v-icon></v-btn
+          >
+        </template>
+      </v-autocomplete>
+      <v-icon class="m-left-10">mdi-dots-vertical</v-icon>
+    </div>
 
     <v-chip-group column>
       <v-chip
@@ -73,9 +76,6 @@ export default {};
 <style lang="scss" scoped>
 .etiquetas-rapidas {
   margin: 1.5rem 1rem;
-  p {
-    font-weight: 100;
-  }
 
   .grid {
     margin: 1.5rem 1.5rem;
@@ -85,10 +85,13 @@ export default {};
     justify-content: space-between;
   }
 
-  .floating-btn {
-    position: fixed;
-    bottom: 80px;
-    right: 5vw;
+  .flex {
+    display: flex;
+    align-items: baseline;
+  }
+
+  .m-left-10 {
+    margin-left: 10px;
   }
 }
 
