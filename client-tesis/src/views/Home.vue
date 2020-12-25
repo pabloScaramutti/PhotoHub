@@ -2,7 +2,7 @@
   <div class="home">
     <!-- <SlideFotos :imagenes="imagenes" titulo="Nombre del album"></SlideFotos> -->
     <!-- <FotoLista :img="imagenes[0]"> </FotoLista> -->
-    <GrillaFotos :imagenes="imagenes"></GrillaFotos>
+    <GrillaFotos :imagenes="imagenes" style="width: 100%"></GrillaFotos>
     <Mapa class="mapa"> </Mapa>
     <router-link :to="{ name: 'Login' }">
       <v-btn block rounded color="primary"> Login </v-btn>

@@ -76,8 +76,9 @@
             </Puntaje>
             <div>
               <v-icon>folder</v-icon>
-              <div class="divider" />
+              <div class="divider flex" />
               <p>Una carpeta / Otra carpeta / Otra</p>
+              <v-icon small>create</v-icon>
             </div>
             <div>
               <v-icon>palette</v-icon>
@@ -92,6 +93,42 @@
                   }`"
                   class="m-top-10px color-tag"
                 ></div>
+                <div
+                  @click.stop="createNewColor.dialog = true"
+                  class="m-top-10px color-tag"
+                  style="background-color: white"
+                >
+                  <p
+                    style="
+                      color: black;
+                      font-weight: 300;
+                      text-align: center;
+                      transform: translateY(-8px);
+                      font-size: 1.5em;
+                    "
+                  >
+                    +
+                  </p>
+                </div>
+
+                <!-- Color Picker -->
+                <v-dialog v-model="createNewColor.dialog" max-width="290">
+                  <v-card>
+                    <v-color-picker
+                      v-model="createNewColor.color"
+                      hide-inputs
+                    ></v-color-picker>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn @click="createNewColor.dialog = false">
+                        <v-icon>close</v-icon>
+                      </v-btn>
+                      <v-btn @click="createColor()" color="primary">
+                        <v-icon>done</v-icon>
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </div>
             </div>
             <div class="m-top-20px">
@@ -104,7 +141,7 @@
                   close
                   @click:close="chip1 = false"
                   class="m-top-10px m-right-10px"
-                  color="#49c1f1"
+                  color="primary"
                 >
                   {{ tag }}
                 </v-chip>
@@ -119,7 +156,7 @@
             </div>
           </div>
 
-          <div v-if="tabSelected === 'image-details'" class="w-80">
+          <div v-if="tabSelected === 'image-details'" class="w-80 scroll">
             <ul class="image-info">
               <li>
                 <v-icon size="50px">camera</v-icon>
@@ -139,7 +176,7 @@
               </li>
               <li>
                 <v-icon size="50px">wb_sunny</v-icon>
-                1500k
+                No es el valor real
               </li>
               <li>
                 <img src="@/assets/lens-icon.svg" width="50px" height="50px" />
@@ -202,9 +239,13 @@ export default {
       informacion: false,
       fullView: false,
       puntaje: undefined,
+      createNewColor: {
+        dialog: false,
+        color: "#FF0000",
+      },
       tabSelected: "tags",
       colorSelected: "cyan",
-      colors: ["red", "blue", "green", "cyan"],
+      colors: ["red", "blue", "green", "cyan", "#28DAC3"],
       tags: ["montaña", "rio", "viejoManzano", "naturaleza"],
     };
   },
@@ -214,7 +255,7 @@ export default {
       .get(this.$route.path)
       .then((result) => {
         this.imagen = result.data;
-        console.log(this.imagen);
+        //console.log(this.imagen);
       })
       .catch((error) => {
         console.log("Ocurrio un error", error);
@@ -237,6 +278,10 @@ export default {
         .split(":")
         .reverse()
         .join("/");
+    },
+    createColor() {
+      this.colors.push(this.createNewColor.color);
+      this.createNewColor.dialog = false;
     },
   },
 };
@@ -359,6 +404,10 @@ export default {
       overflow: scroll;
     }
 
+    .scroll {
+      overflow: scroll;
+    }
+
     .image-info {
       padding: 0;
       margin: 0;
@@ -422,6 +471,7 @@ export default {
   }
 
   .color-tag {
+    cursor: pointer;
     width: 20px;
     height: 20px;
     border-radius: 50%;

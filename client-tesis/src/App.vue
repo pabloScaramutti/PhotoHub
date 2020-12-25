@@ -52,6 +52,22 @@ p {
   font-weight: 100;
 }
 
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.justify-space-around {
+  justify-content: space-around;
+}
+
+.align-center {
+  align-items: center;
+}
+
 .loading {
   padding: 30px;
   display: flex;

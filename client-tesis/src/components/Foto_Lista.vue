@@ -3,8 +3,8 @@
     class="foto-lista"
     :style="`width: ${width}; border-right: 8px solid ${color}`"
   >
-    <template v-if="this.img.thumbnail">
-      <router-link :to="{ name: 'Foto', params: { img: getURL() } }">
+    <template v-if="img.thumbnail">
+      <router-link :to="`/fotos/${img.id}`">
         <img :src="getURL()" alt="" class="photo" />
       </router-link>
       <div class="w98 h100 flex">
@@ -203,22 +203,6 @@ export default {
 
   .pad-left {
     padding-left: $rating-padding;
-  }
-
-  .flex {
-    display: flex;
-  }
-
-  .flex-column {
-    flex-direction: column;
-  }
-
-  .justify-space-around {
-    justify-content: space-around;
-  }
-
-  .align-center {
-    align-items: center;
   }
 
   .w98 {

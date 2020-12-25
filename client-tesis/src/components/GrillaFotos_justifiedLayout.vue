@@ -1,11 +1,23 @@
 <template>
   <v-container fluid class="justified-layout">
     <template v-if="pros_img">
+      <v-btn text small @click="sizeUp()" :disabled="!(imgSize < 500)"
+        ><v-icon>zoom_in</v-icon></v-btn
+      >
+      <v-btn text small @click="sizeDown()" :disabled="!(imgSize > 50)"
+        ><v-icon>zoom_out</v-icon></v-btn
+      >
+      <v-btn v-if="selectable" fab small @click="selectAll()"
+        ><v-icon>done</v-icon></v-btn
+      >
+      <v-btn v-if="selectable" fab small @click="deselectAll()"
+        ><v-icon>check_box_outline_blank</v-icon></v-btn
+      >
       <vue-justified-layout
         :items="pros_img"
         v-slot="{ item }"
         :options="{
-          targetRowHeight: 200,
+          targetRowHeight: imgSize,
           boxSpacing: 5,
         }"
       >
@@ -15,28 +27,17 @@
           :disabled="selectable"
           class="item-jl"
         >
-          <img :src="item.url" />
+          <v-icon v-if="selectable && !item.selected" class="checkbox"
+            >check_box_outline_blank</v-icon
+          >
+          <v-icon v-else-if="selectable" class="selected-check">check</v-icon>
+          <img
+            :src="item.url"
+            @click="item.selected = !item.selected"
+            :class="[item.selected ? 'foto selected' : 'foto']"
+          />
         </router-link>
       </vue-justified-layout>
-      <!-- <div>
-      <router-link
-        :to="{ name: 'Foto', params: { img: item.img } }"
-        tag="button"
-        :disabled="selectable"
-      >
-        <v-icon v-if="selectable && !item.selector" class="checkbox"
-          >check_box_outline_blank</v-icon
-        >
-        <v-icon v-else-if="selectable" class="selected-check">check</v-icon>
-        <img
-          :src="item.img"
-          @click="item.selector = !item.selector"
-          :class="[item.selector ? 'selected' : 'foto']"
-          @load="onImageLoad()"
-        />
-        
-      </router-link>
-    </div> -->
     </template>
     <v-progress-circular
       v-else
@@ -57,6 +58,7 @@ export default {
     return {
       selected: undefined,
       pros_img: undefined,
+      imgSize: 200,
     };
   },
   components: {
@@ -82,6 +84,7 @@ export default {
             height: img.exif.ImageHeight,
             url: this.$apiUrl(img.thumbnail.url),
             id: img.id,
+            selected: false,
           };
           return nImg;
         });
@@ -97,12 +100,30 @@ export default {
       }
       return (this.imageSelector = aux);
     },
+    sizeUp() {
+      this.imgSize < 500 ? (this.imgSize += 50) : undefined;
+    },
+    sizeDown() {
+      this.imgSize > 50 ? (this.imgSize -= 50) : undefined;
+    },
+    selectAll() {
+      this.pros_img.forEach((element) => {
+        element.selected = true;
+      });
+    },
+    deselectAll() {
+      this.pros_img.forEach((element) => {
+        element.selected = false;
+      });
+    },
   },
 };
 </script>
 
 <style lang="scss" scope>
 .justified-layout {
+  padding: 0 !important;
+
   .selected {
     border: 4px solid white;
     opacity: 0.4;
@@ -135,13 +156,15 @@ export default {
   }
 
   .selected-check {
-    width: 90%;
-    height: 90%;
+    width: 100%;
+    transform: translateX(-50%);
+    height: 100%;
     position: absolute;
-    font-size: 3em;
+    font-size: 3.5em;
     vertical-align: center;
     text-align: center;
     pointer-events: none;
+    z-index: 2;
   }
 }
 </style>

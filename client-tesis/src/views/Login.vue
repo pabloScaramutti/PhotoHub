@@ -43,6 +43,17 @@
         </v-form>
       </div>
     </div>
+
+    <!-- SNACKBAR -->
+    <v-snackbar v-model="snackbar" :multi-line="true">
+      {{ snackbar_text }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -58,13 +69,15 @@ export default {
       } else {
         return false;
       }
-    }
+    },
   },
   data() {
     return {
       mail: undefined,
       password: undefined,
-      showPassword: false
+      showPassword: false,
+      snackbar: false,
+      snackbar_text: "Error",
     };
   },
   methods: {
@@ -73,20 +86,22 @@ export default {
       this.$store
         .dispatch(AccionesNombres.Login, {
           identifier: this.mail.toLowerCase(),
-          password: this.password
+          password: this.password,
         })
-        .then(response => {
+        .then((response) => {
           console.log("User profile", response.data.user);
           console.log("User token", response.data.jwt);
           this.$router.push({ name: "Home" });
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("An error occurred:", error.response);
           this.mail = "";
           this.password = "";
+          this.snackbar = true;
+          this.snackbar_text = "Usuario o contraseña erroneo";
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

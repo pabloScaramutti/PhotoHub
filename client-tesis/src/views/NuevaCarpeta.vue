@@ -25,12 +25,21 @@
         v-model="nuevaCarpeta.nombre"
         type="text"
       />
-      <v-text-field
+
+      <v-autocomplete
+        label="Etiquetas"
         prepend-icon="local_offer"
-        label="Agregar etiquetas"
-        v-model="nuevaCarpeta.etiquetas"
-        type="text"
-      />
+        :items="['Trevor Handsen', 'Alex Nelson']"
+        full-width
+        hide-details
+        hide-no-data
+        hide-selected
+        multiple
+        chips
+        deletable-chips
+        clearable
+      ></v-autocomplete>
+
       <h2>Agregue fotos a la carpeta</h2>
       <v-text-field
         prepend-icon="search"
@@ -39,17 +48,7 @@
         type="text"
       />
     </form>
-    <GrillaFotos
-      v-if="imagenes"
-      :imagenes="imagenes"
-      :selectable="true"
-    ></GrillaFotos>
-    <v-progress-circular
-      v-else
-      indeterminate
-      size="50"
-      color="primary"
-    ></v-progress-circular>
+    <GrillaFotos :imagenes="imagenes" :selectable="true"></GrillaFotos>
 
     <v-btn @click="createFolder()" fab color="primary" class="floating-btn"
       ><v-icon>done</v-icon></v-btn
@@ -58,7 +57,7 @@
 </template>
 
 <script>
-import GrillaFotos from "@/components/GrillaFotos_masonry";
+import GrillaFotos from "@/components/GrillaFotos_justifiedLayout";
 
 import Axios from "axios";
 
