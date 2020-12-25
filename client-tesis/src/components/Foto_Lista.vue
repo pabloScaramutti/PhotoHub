@@ -7,7 +7,7 @@
       <router-link :to="`/fotos/${img.id}`">
         <img :src="getURL()" alt="" class="photo" />
       </router-link>
-      <div class="w98 h100 flex">
+      <div class="w98 h100 flex margin-auto">
         <div class="detalles w98">
           <h2 class="pad-left">{{ img.nombre }}</h2>
           <Puntaje
@@ -65,9 +65,11 @@
               </ul>
             </div>
             <ul v-if="state === 'etiquetas'">
-              <li>
+              <li class="flex align-center tags-information flex-wrap">
                 <v-icon small>local_offer</v-icon>
-                etiquetas
+                <p v-for="(tag, index) in img.etiquetas" :key="index">
+                  {{ `${tag.nombre}, ` }}
+                </p>
               </li>
             </ul>
           </div>
@@ -139,7 +141,7 @@ export default {
   data: () => {
     return {
       rating: 0,
-      color: "blue",
+      color: "gray",
       state: "especificaciones",
     };
   },
@@ -149,6 +151,8 @@ export default {
     } else {
       this.rating = 0;
     }
+
+    this.color = this.img.color.nombre;
   },
   methods: {
     nuevoPuntaje(valor) {
@@ -171,6 +175,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.foto-lista:hover {
+  background: #ffffff17;
+}
+
 .foto-lista {
   height: fit-content;
   //width: 100%;
@@ -213,7 +221,16 @@ export default {
     height: 100%;
   }
 
+  .tags-information {
+    p {
+      margin-bottom: 0;
+      margin-left: 5px;
+    }
+  }
+
   .state-items {
+    cursor: pointer;
+
     li {
       margin-bottom: 4px;
       margin-right: 2px;

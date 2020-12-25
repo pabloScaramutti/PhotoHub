@@ -56,6 +56,10 @@ p {
   display: flex;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
 .flex-column {
   flex-direction: column;
 }
@@ -66,6 +70,10 @@ p {
 
 .align-center {
   align-items: center;
+}
+
+.margin-auto {
+  margin: auto;
 }
 
 .loading {

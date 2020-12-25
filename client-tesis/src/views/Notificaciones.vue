@@ -21,11 +21,7 @@
       </router-link>
     </div>
     <h2>Notificaciones</h2>
-    <FotoLista
-      v-for="(item, index) in notificaciones"
-      :key="index"
-      :img="item.foto"
-    />
+    <FotoLista v-for="(item, index) in imagenes" :key="index" :img="item" />
   </div>
 </template>
 
@@ -51,8 +47,12 @@ export default {
         this.notificaciones = response.data;
         if (this.notificaciones) {
           //console.log(this.notificaciones);
-          this.imagenes = this.notificaciones.map((item) => {
-            item.foto;
+          this.imagenes = [];
+          this.notificaciones.map((item) => {
+            this.$http.get(`/fotos/${item.foto.id}`).then((response) => {
+              this.imagenes.push(response.data);
+            });
+            //item.foto;
           });
 
           //console.log(this.imagenes);

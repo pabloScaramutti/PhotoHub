@@ -85,11 +85,13 @@
               <div class="divider" />
               <div class="flex">
                 <div
-                  v-for="color in colors"
-                  :key="color"
-                  @click="colorSelected = color"
-                  :style="`background-color: ${color}; border: ${
-                    colorSelected === color ? '4px solid white' : 'none'
+                  v-for="(color, index) in colors"
+                  :key="index"
+                  @click="imagen.color = color"
+                  :style="`background-color: ${color.nombre}; border: ${
+                    imagen.color.nombre === color.nombre
+                      ? '4px solid white'
+                      : 'none'
                   }`"
                   class="m-top-10px color-tag"
                 ></div>
@@ -136,14 +138,14 @@
               <div class="divider" />
               <div class="flex">
                 <v-chip
-                  v-for="tag in tags"
-                  :key="tag"
+                  v-for="(tag, index) in imagen.etiquetas"
+                  :key="index"
                   close
                   @click:close="chip1 = false"
                   class="m-top-10px m-right-10px"
                   color="primary"
                 >
-                  {{ tag }}
+                  {{ tag.nombre }}
                 </v-chip>
               </div>
               <div class="grid">
@@ -244,7 +246,6 @@ export default {
         color: "#FF0000",
       },
       tabSelected: "tags",
-      colorSelected: "cyan",
       colors: ["red", "blue", "green", "cyan", "#28DAC3"],
       tags: ["montaña", "rio", "viejoManzano", "naturaleza"],
     };
@@ -259,6 +260,13 @@ export default {
       })
       .catch((error) => {
         console.log("Ocurrio un error", error);
+      });
+
+    this.$http
+      .get("/colores")
+      .then((result) => (this.colors = result.data))
+      .catch((error) => {
+        console.log("No se pudieron cargar los colores", error);
       });
   },
 
@@ -280,7 +288,22 @@ export default {
         .join("/");
     },
     createColor() {
-      this.colors.push(this.createNewColor.color);
+      this.$http
+        .post("/colores", {
+          nombre: this.createNewColor.color,
+        })
+        .then((result) => {
+          console.log(
+            "Se creó la etiqueta de color:",
+            this.createNewColor.color,
+            "en la base de datos",
+            result
+          );
+          this.colors.push(result.data);
+        })
+        .catch((error) =>
+          console.log("Hubo un problema creando la etiqueta de color", error)
+        );
       this.createNewColor.dialog = false;
     },
   },
