@@ -84,6 +84,7 @@
 
 <script>
 import io from "socket.io-client";
+import servidor from "@/config/servidor.json"
 
 export default {
   data() {
@@ -102,7 +103,7 @@ export default {
   },
 
   created() {
-    this.socket = io.connect("http://192.168.0.123:3000");
+    this.socket = io.connect(`${servidor.host}:3000`);
   },
 
   mounted() {

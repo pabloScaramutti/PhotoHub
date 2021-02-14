@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/set-etiquetas",
+      "handler": "set-etiquetas.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/set-etiquetas/count",
+      "handler": "set-etiquetas.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/set-etiquetas/:id",
+      "handler": "set-etiquetas.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/set-etiquetas",
+      "handler": "set-etiquetas.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/set-etiquetas/:id",
+      "handler": "set-etiquetas.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/set-etiquetas/:id",
+      "handler": "set-etiquetas.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Registro from "../views/Registro.vue";
-import Nota from "../views/Nota.vue";
+import Notas from "../views/Notas.vue";
 import Foto from "../views/Foto.vue";
 import Calendario from "../views/Calendario.vue";
 import NuevaCarpeta from "../views/NuevaCarpeta.vue";
@@ -46,9 +46,9 @@ const routes = [
     component: Registro
   },
   {
-    path: "/nota",
-    name: "Nota",
-    component: Nota
+    path: "/notas",
+    name: "Notas",
+    component: Notas
   },
   {
     path: "/fotos/:img",

@@ -5,7 +5,7 @@
   >
     <template v-if="img.thumbnail">
       <router-link :to="`/fotos/${img.id}`">
-        <img :src="getURL()" alt="" class="photo" />
+        <img :src="getURL" alt="" class="photo" />
       </router-link>
       <div class="w98 h100 flex margin-auto">
         <div class="detalles w98">
@@ -13,7 +13,7 @@
           <Puntaje
             class="translate-up"
             :size="'18'"
-            :puntajeInicial="rating"
+            :puntajeInicial="img.exif.Rating"
             v-on:nuevoPuntaje="nuevoPuntaje"
           >
           </Puntaje>
@@ -56,11 +56,11 @@
               <ul>
                 <li>
                   <v-icon small>today</v-icon>
-                  {{ getDate() }}
+                  {{ getDate }}
                 </li>
                 <li>
                   <v-icon small>schedule</v-icon>
-                  {{ getTime() }}
+                  {{ getTime }}
                 </li>
               </ul>
             </div>
@@ -140,26 +140,24 @@ export default {
   },
   data: () => {
     return {
-      rating: 0,
       color: "gray",
       state: "especificaciones",
     };
   },
   mounted() {
-    if (this.img.rating) {
-      this.rating = this.img.exif.Rating;
-    } else {
-      this.rating = 0;
+    if (!this.img.exif.Rating) {
+      this.img.exif.Rating = 0;
     }
 
-    this.color = this.img.color.nombre;
+    if( this.img.color ){
+      this.color = this.img.color.nombre;
+    }
+
+    console.log(this.img)
   },
-  methods: {
-    nuevoPuntaje(valor) {
-      this.rating = valor;
-    },
+  computed: {
     getURL() {
-      return this.$apiUrl(this.img.thumbnail.url);
+      return this.$apiUrl(this.img.thumbnail.formats.small.url);
     },
     getTime() {
       return this.img.exif.DateTimeOriginal.split(" ")[1];
@@ -169,6 +167,12 @@ export default {
         .split(":")
         .reverse()
         .join("/");
+    },
+  },
+
+  methods: {
+    nuevoPuntaje(valor) {
+      this.rating = valor;
     },
   },
 };
@@ -193,8 +197,8 @@ export default {
   }
 
   .photo {
-    height: 12vh;
-    width: 12vh;
+    height: 115px;
+    width: 115px;
     object-fit: cover;
     object-position: center;
     border-radius: 3px;
@@ -264,10 +268,6 @@ export default {
       font-size: 1.1rem;
     }
 
-    .photo {
-      height: 115px;
-      width: 115px;
-    }
   }
 }
 </style>

@@ -9,68 +9,117 @@
     </p>
 
     <div class="flex">
-      <v-autocomplete
+      <Search
+        v-on:item-selected="setEtiquetas = $event"
+        v-on:item-created="setEtiquetas = $event"
+        v-on:text-changed="setEtiquetas.nombre = $event"
+        url="/set-etiquetas"
         label="Nombre del set"
-        prepend-icon="local_offer"
-        ref="Nombre del set"
-        :items="['Trevor Handsen', 'Alex Nelson']"
-        full-width
-        hide-details
-        hide-no-data
-        hide-selected
-        single-line
-      >
-        <template v-slot:append-item>
-          <v-btn fab small color="primary" id="add-set"
-            ><v-icon>add</v-icon></v-btn
-          >
-        </template>
-      </v-autocomplete>
+        prependIcon="local_offer"
+      />
       <v-icon class="m-left-10">mdi-dots-vertical</v-icon>
     </div>
 
-    <v-chip-group column>
+    <v-chip-group column class="chip-group">
       <v-chip
-        v-for="i in 5"
+        v-for="(item, i) in setEtiquetas.etiquetas"
         :key="i"
         class="ma-2"
         close
         color="primary"
-        @click:close="chip1 = false"
+        @click:close="setEtiquetas.etiquetas.splice(i, 1)"
       >
-        Etiqueta {{ i }}
+        {{ item.nombre }}
       </v-chip>
     </v-chip-group>
 
-    <v-autocomplete
-      label="Buscar etiqueta"
-      prepend-icon="search"
-      ref="Nombre de la etiqueta"
-      :items="['Trevor Handsen', 'Alex Nelson']"
-      full-width
-      hide-details
-      hide-no-data
-      hide-selected
-      single-line
-      clearable
-    ></v-autocomplete>
+    <Search
+      v-on:item-created="todasLasEtiquetas.push($event)"
+      url="/etiquetas"
+      label="Buscar una etiqueta"
+    />
 
     <div class="grid">
       <v-checkbox
-        v-for="i in 37"
+        v-for="(etiqueta, i) in todasLasEtiquetas"
         :key="i"
-        :label="`Etiqueta ${i}`"
+        :label="`${etiqueta.nombre}`"
+        :value="etiqueta"
+        v-model="setEtiquetas.etiquetas"
       ></v-checkbox>
     </div>
 
-    <v-btn fab color="primary" class="floating-btn"
+    <v-btn fab color="primary" class="floating-btn" @click="createSet()"
       ><v-icon>done</v-icon></v-btn
     >
+
+    <div class="pop-up-alert">
+      <v-alert dense v-model="alert.show" :type="alert.type" dismissable>
+        {{ alert.text }}
+      </v-alert>
+    </div>
   </div>
 </template>
 
 <script>
-export default {};
+import Search from "../components/Search";
+
+export default {
+  components: {
+    Search,
+  },
+  data() {
+    return {
+      setEtiquetas: {
+        nombre: "",
+        etiquetas: [],
+      },
+      todasLasEtiquetas: [],
+      alert: {
+        text: "",
+        type: "success",
+        show: false,
+      },
+    };
+  },
+
+  created() {
+    this.$http
+      .get("/etiquetas")
+      .then((response) => (this.todasLasEtiquetas = response.data))
+      .catch((error) =>
+        this.setAlert("Hubo un error cargando las etiquetas", error)
+      );
+  },
+
+  methods: {
+    createSet() {
+      if (this.setEtiquetas.nombre) {
+        const data = new FormData();
+        const info = {
+          nombre: this.setEtiquetas.nombre,
+          etiquetas: this.setEtiquetas.etiquetas,
+        };
+
+        data.append("data", JSON.stringify(info));
+
+        this.$http
+          .post("/set-etiquetas", data)
+          .then((r) =>
+            this.setAlert(`Se creo el Set: "${r.data.nombre}"`, "success")
+          )
+          .catch((e) => this.setAlert(`Se produjo un error: ${e}`, "error"));
+      } else {
+        this.setAlert("Ingrese un nombre para el set", "error");
+      }
+    },
+    setAlert(text, type) {
+      this.alert.text = text;
+      this.alert.type = type;
+      this.alert.show = true;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -78,11 +127,12 @@ export default {};
   margin: 1.5rem 1rem;
 
   .grid {
-    margin: 1.5rem 1.5rem;
+    margin: 5px 5px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, 120px);
+    grid-template-columns: repeat(auto-fill, 150px);
     grid-gap: 0px;
     justify-content: space-between;
+    align-items: center;
   }
 
   .flex {
@@ -92,6 +142,10 @@ export default {};
 
   .m-left-10 {
     margin-left: 10px;
+  }
+
+  .chip-group {
+    min-height: 120px;
   }
 }
 

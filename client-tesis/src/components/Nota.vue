@@ -79,8 +79,8 @@ export default {
   name: "Nota",
   data() {
     return {
-      texto: "",
-      titulo: "",
+      texto: this.text,
+      titulo: this.title,
       noEditableNota: true,
       fechaCreacion: new Date().toLocaleString(),
       noEditableTitulo: true,
@@ -88,10 +88,23 @@ export default {
       alerta: false,
     };
   },
+  props: {
+    text: String,
+    title: String,
+  },
   methods: {
     guardar() {
-      this.noEditableNota = true;
-      this.noEditableTitulo = true;
+      this.$http
+        .post("/notas", {
+          titulo: this.titulo,
+          contenido: this.texto,
+        })
+        .then((response) => {
+          console.log("Se creo la nota", response);
+          this.noEditableNota = true;
+          this.noEditableTitulo = true;
+        })
+        .catch((error) => console.log("No se pudo crear la nota", error));
     },
     focusTextArea(area) {
       this.$refs[area].$refs.input.focus();

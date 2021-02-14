@@ -46,18 +46,25 @@ export default {
       this.center = L.latLng(this.lat, this.long);
       this.marker = L.latLng(this.lat, this.long);
     } else {
-      //this.getGeolocation();
+      this.getGeolocation(this.center, this.marker);
       console.log("Ubicacion por dispositivo sin marcador");
     }
   },
 
   methods: {
+    saveCoordinates(latitude, longitude) {
+      this.center = L.latLng(latitude, longitude);
+      this.marker = L.latLng(latitude, longitude);
+    },
     getGeolocation() {
-      navigator.geolocation.getCurrentPosition(function (location) {
-        console.log(location.coords.latitude);
-        console.log(location.coords.longitude);
-        console.log(location.coords.accuracy);
-      });
+      if ("geolocation" in navigator) {
+        let setCoordinates = this.saveCoordinates;
+        navigator.geolocation.getCurrentPosition(function (location) {
+          setCoordinates(location.coords.latitude, location.coords.longitude);
+        });
+      } else {
+        console.log("La geolocalización no esta disponible en este navegador");
+      }
     },
   },
 };

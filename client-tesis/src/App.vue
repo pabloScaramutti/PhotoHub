@@ -88,8 +88,13 @@ p {
   right: 5vw;
 }
 
+.pop-up-alert {
+  position: fixed;
+  bottom: 10vh;
+}
+
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 5px;
   height: 4px;
   border: none;
   overflow: visible;

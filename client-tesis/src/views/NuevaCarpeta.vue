@@ -26,19 +26,24 @@
         type="text"
       />
 
-      <v-autocomplete
-        label="Etiquetas"
-        prepend-icon="local_offer"
-        :items="['Trevor Handsen', 'Alex Nelson']"
-        full-width
-        hide-details
-        hide-no-data
-        hide-selected
-        multiple
-        chips
-        deletable-chips
-        clearable
-      ></v-autocomplete>
+      <Search
+        v-on:item-created="taggSelected"
+        v-on:item-selected="taggSelected"
+        url="/etiquetas"
+        label="Buscar una etiqueta"
+      />
+
+      <v-chip-group column>
+        <v-chip
+          v-for="(tagg, i) in nuevaCarpeta.etiquetas"
+          :key="i"
+          close
+          color="primary"
+          @click:close="nuevaCarpeta.etiquetas.splice(i, 1)"
+        >
+          {{ tagg.nombre }}
+        </v-chip>
+      </v-chip-group>
 
       <h2>Agregue fotos a la carpeta</h2>
       <v-text-field
@@ -48,7 +53,11 @@
         type="text"
       />
     </form>
-    <GrillaFotos :imagenes="imagenes" :selectable="true"></GrillaFotos>
+    <GrillaFotos
+      v-on:selectedPhotos="getSelectedImages"
+      :imagenes="imagenes"
+      :selectable="true"
+    ></GrillaFotos>
 
     <v-btn @click="createFolder()" fab color="primary" class="floating-btn"
       ><v-icon>done</v-icon></v-btn
@@ -58,6 +67,7 @@
 
 <script>
 import GrillaFotos from "@/components/GrillaFotos_justifiedLayout";
+import Search from "../components/Search";
 
 import Axios from "axios";
 
@@ -65,6 +75,7 @@ export default {
   name: "NuevaCarpeta",
   components: {
     GrillaFotos,
+    Search,
   },
   data() {
     return {
@@ -98,11 +109,21 @@ export default {
   },*/
 
   methods: {
+    getSelectedImages(e) {
+      this.nuevaCarpeta.fotos = e;
+    },
+
+    taggSelected(e) {
+      this.nuevaCarpeta.etiquetas.push({ id: e.id, nombre: e.nombre });
+    },
+
     createFolder() {
       if (this.nuevaCarpeta.nombre != "") {
         const data = new FormData();
         const info = {
           nombre: this.nuevaCarpeta.nombre,
+          fotos: this.nuevaCarpeta.fotos,
+          etiquetas: this.nuevaCarpeta.etiquetas.map((e) => e.id),
         };
 
         data.append("data", JSON.stringify(info));
@@ -119,11 +140,13 @@ export default {
             console.log("Error ocurred when creating the folder:", error);
             this.nuevaCarpeta.nombre = "";
             this.alert.state = true;
+            this.alert.type = "error";
             this.alert.message = "Ocurrio un error";
           });
       } else {
         this.nuevaCarpeta.nombre = "";
         this.alert.state = true;
+        this.alert.type = "error";
         this.alert.message = "Agregar un nombre a la carpeta";
         this.$refs.nombreCarpeta.focus();
       }
@@ -132,7 +155,7 @@ export default {
     async nuevaFoto() {
       const data = new FormData();
       const info = {
-        nombre: this.im[0].name,
+        nombre: this.im[0] ? this.im[0].name : this.im[1].name,
         puntuacion: 0,
       };
 

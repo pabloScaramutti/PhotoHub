@@ -15,9 +15,8 @@
       "type": "string",
       "required": true
     },
-    "fecha_creacion": {
-      "required": true,
-      "type": "datetime"
+    "titulo": {
+      "type": "string"
     }
   }
 }

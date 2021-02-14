@@ -19,7 +19,7 @@
       <v-icon>create_new_folder</v-icon>
     </v-btn>
 
-    <v-btn :to="{ name: 'Nota' }">
+    <v-btn :to="{ name: 'Notas' }">
       <v-icon>description</v-icon>
     </v-btn>
 

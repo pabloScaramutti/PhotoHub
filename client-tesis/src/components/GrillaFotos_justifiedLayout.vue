@@ -33,7 +33,7 @@
           <v-icon v-else-if="selectable" class="selected-check">check</v-icon>
           <img
             :src="item.url"
-            @click="item.selected = !item.selected"
+            @click="changeStatusSelected(item)"
             :class="[item.selected ? 'foto selected' : 'foto']"
           />
         </router-link>
@@ -56,7 +56,7 @@ export default {
   name: "Grilla",
   data() {
     return {
-      selected: undefined,
+      // selected: undefined,
       pros_img: undefined,
       imgSize: 200,
     };
@@ -77,12 +77,12 @@ export default {
   watch: {
     imagenes: function () {
       if (this.imagenes) {
-        this.selected = this.agregarCheck(this.imagenes);
+        // this.agregarCheck(this.imagenes);
         this.pros_img = this.imagenes.map((img) => {
           let nImg = {
             width: img.exif.ImageWidth,
             height: img.exif.ImageHeight,
-            url: this.$apiUrl(img.thumbnail.url),
+            url: this.$apiUrl(img.thumbnail.formats.large.url),
             id: img.id,
             selected: false,
           };
@@ -110,11 +110,20 @@ export default {
       this.pros_img.forEach((element) => {
         element.selected = true;
       });
+      this.$emit("selectedPhotos", this.pros_img);
     },
     deselectAll() {
       this.pros_img.forEach((element) => {
         element.selected = false;
       });
+      this.$emit("selectedPhotos", []);
+    },
+    changeStatusSelected(item) {
+      item.selected = !item.selected;
+      let sendData = this.pros_img
+        .filter((e) => e.selected)
+        .map((obj) => obj.id);
+      this.$emit("selectedPhotos", sendData);
     },
   },
 };

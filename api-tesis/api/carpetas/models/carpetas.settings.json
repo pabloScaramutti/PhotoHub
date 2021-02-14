@@ -20,7 +20,7 @@
       "collection": "fotos",
       "via": "carpeta"
     },
-    "Favoritos": {
+    "favoritos": {
       "type": "boolean",
       "default": false
     },

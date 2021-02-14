@@ -14,7 +14,7 @@
     "foto": {
       "model": "fotos"
     },
-    "Leido": {
+    "leido": {
       "type": "boolean",
       "default": false
     }

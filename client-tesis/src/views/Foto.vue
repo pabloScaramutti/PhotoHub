@@ -32,11 +32,11 @@
             <ul class="time-date">
               <li>
                 <v-icon>today</v-icon>
-                {{ getDate() }}
+                {{ getDate }}
               </li>
               <li>
                 <v-icon>schedule</v-icon>
-                {{ getTime() }}
+                {{ getTime }}
               </li>
             </ul>
           </div>
@@ -69,7 +69,7 @@
           <div v-if="tabSelected === 'tags'" class="tags-countainer">
             <Puntaje
               :size="'6vh'"
-              :puntajeInicial="puntaje"
+              :puntajeInicial="imagen.puntuacion"
               v-on:nuevoPuntaje="nuevoPuntaje"
               class="align-center"
             >
@@ -89,7 +89,7 @@
                   :key="index"
                   @click="imagen.color = color"
                   :style="`background-color: ${color.nombre}; border: ${
-                    imagen.color.nombre === color.nombre
+                    imagen.color && imagen.color.nombre === color.nombre
                       ? '4px solid white'
                       : 'none'
                   }`"
@@ -136,23 +136,24 @@
             <div class="m-top-20px">
               <v-icon>local_offer</v-icon>
               <div class="divider" />
-              <div class="flex">
+              <div class="flex" v-if="imagen.etiquetas">
                 <v-chip
                   v-for="(tag, index) in imagen.etiquetas"
                   :key="index"
                   close
-                  @click:close="chip1 = false"
+                  @click:close="removeTag(index)"
                   class="m-top-10px m-right-10px"
                   color="primary"
                 >
                   {{ tag.nombre }}
                 </v-chip>
               </div>
+
               <div class="grid">
                 <v-checkbox
-                  v-for="i in 37"
+                  v-for="(tags, i) in allTags"
                   :key="i"
-                  :label="`Etiqueta ${i}`"
+                  :label="`${tags.nombre}`"
                 ></v-checkbox>
               </div>
             </div>
@@ -200,9 +201,14 @@
 
           <div class="mapa" v-if="tabSelected === 'location'">
             <div class="location">
-              <v-icon>location_on</v-icon> Un lugar, Argentina
+              <v-icon>location_on</v-icon>
+              {{
+                imagen.exif.GPSPosition
+                  ? "un lugar, Argentina"
+                  : "No tiene una ubicación guardada"
+              }}
             </div>
-            <Mapa></Mapa>
+            <Mapa :lat="getImgLat" :long="getImgLong"></Mapa>
           </div>
         </div>
 
@@ -246,8 +252,8 @@ export default {
         color: "#FF0000",
       },
       tabSelected: "tags",
-      colors: ["red", "blue", "green", "cyan", "#28DAC3"],
-      tags: ["montaña", "rio", "viejoManzano", "naturaleza"],
+      colors: [],
+      allTags: [],
     };
   },
 
@@ -268,6 +274,47 @@ export default {
       .catch((error) => {
         console.log("No se pudieron cargar los colores", error);
       });
+
+    this.$http
+      .get("/etiquetas")
+      .then((result) => (this.allTags = result.data))
+      .catch((error) =>
+        console.log("No se pudieron cargar las etiquetas", error)
+      );
+  },
+
+  watch: {
+    imagen: () => {},
+  },
+
+  computed: {
+    getTime() {
+      return this.imagen.exif.DateTimeOriginal.split(" ")[1];
+    },
+    getDate() {
+      return this.imagen.exif.DateTimeOriginal.split(" ")[0]
+        .split(":")
+        .reverse()
+        .join("/");
+    },
+    getImgLat() {
+      if ("GPSLatitude" in this.imagen.exif) {
+        let lat = this.imagen.exif.GPSLatitude.split(" ");
+        lat[1] == "S" ? (lat[0] *= -1) : "";
+        return lat[0];
+      } else {
+        return undefined;
+      }
+    },
+    getImgLong() {
+      if ("GPSLongitude" in this.imagen.exif) {
+        let long = this.imagen.exif.GPSLongitude.split(" ");
+        long[1] == "W" ? (long[0] *= -1) : "";
+        return long[0];
+      } else {
+        return undefined;
+      }
+    },
   },
 
   methods: {
@@ -278,15 +325,7 @@ export default {
       //console.log("agarre el evento");
       this.puntaje = e;
     },
-    getTime() {
-      return this.imagen.exif.DateTimeOriginal.split(" ")[1];
-    },
-    getDate() {
-      return this.imagen.exif.DateTimeOriginal.split(" ")[0]
-        .split(":")
-        .reverse()
-        .join("/");
-    },
+
     createColor() {
       this.$http
         .post("/colores", {
@@ -305,6 +344,9 @@ export default {
           console.log("Hubo un problema creando la etiqueta de color", error)
         );
       this.createNewColor.dialog = false;
+    },
+    removeTag(index) {
+      this.imagen.etiquetas.splice(index, 1);
     },
   },
 };
@@ -398,6 +440,7 @@ export default {
       list-style-type: none;
       padding: 0;
       margin: 2vh 0;
+      cursor: pointer;
 
       li {
         width: 33%;
@@ -516,7 +559,7 @@ export default {
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 120px);
+    grid-template-columns: repeat(auto-fill, 150px);
     grid-gap: 0px;
     justify-content: space-between;
   }
