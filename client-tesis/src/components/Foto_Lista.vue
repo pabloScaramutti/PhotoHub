@@ -9,11 +9,16 @@
       </router-link>
       <div class="w98 h100 flex margin-auto">
         <div class="detalles w98">
-          <h2 class="pad-left">{{ img.nombre }}</h2>
+          <router-link class="link" :to="`/fotos/${img.id}`">
+            <h2 class="pad-left">{{ img.nombre }}</h2>
+          </router-link>
+
+          <!-- tenia puesto para sacar desde el exif directamente :puntajeInicial="img.exif.Rating" -->
           <Puntaje
             class="translate-up"
+            :id="img.id"
             :size="'18'"
-            :puntajeInicial="img.exif.Rating"
+            :puntajeInicial="img.puntuacion"
             v-on:nuevoPuntaje="nuevoPuntaje"
           >
           </Puntaje>
@@ -149,11 +154,11 @@ export default {
       this.img.exif.Rating = 0;
     }
 
-    if( this.img.color ){
+    if (this.img.color) {
       this.color = this.img.color.nombre;
     }
 
-    console.log(this.img)
+    console.log(this.img);
   },
   computed: {
     getURL() {
@@ -261,13 +266,16 @@ export default {
       }
     }
   }
+  .link {
+    color: inherit;
+    text-decoration: none;
+  }
 
   @media (max-width: 700px) and (orientation: portrait) {
     h2 {
       font-weight: 500;
       font-size: 1.1rem;
     }
-
   }
 }
 </style>

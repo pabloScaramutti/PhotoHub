@@ -35,31 +35,9 @@
       </div>
     </v-menu>
 
-    <v-autocomplete
-      label="Etiquetas"
-      prepend-icon="local_offer"
-      :items="['Trevor Handsen', 'Alex Nelson']"
-      full-width
-      hide-details
-      hide-no-data
-      hide-selected
-      multiple
-      chips
-      deletable-chips
-    ></v-autocomplete>
+    <Search label="Etiquetas" prependIcon="local_offer" url="/etiquetas" />
 
-    <v-autocomplete
-      label="Carpeta"
-      prepend-icon="folder"
-      :items="['Trevor Handsen', 'Alex Nelson']"
-      full-width
-      hide-details
-      hide-no-data
-      hide-selected
-      multiple
-      chips
-      deletable-chips
-    ></v-autocomplete>
+    <Search label="Carpeta" prependIcon="folder" url="/carpetas" />
 
     <v-btn fab class="floating-btn" color="primary"
       ><v-icon>done</v-icon></v-btn
@@ -68,7 +46,13 @@
 </template>
 
 <script>
+import Search from "@/components/Search";
+
 export default {
+  components: {
+    Search,
+  },
+
   data() {
     return {
       date: undefined,

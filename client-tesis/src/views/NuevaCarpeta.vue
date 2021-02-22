@@ -59,9 +59,9 @@
       :selectable="true"
     ></GrillaFotos>
 
-    <v-btn @click="createFolder()" fab color="primary" class="floating-btn"
-      ><v-icon>done</v-icon></v-btn
-    >
+    <v-btn @click="createFolder()" fab color="primary" class="floating-btn">
+      <v-icon>done</v-icon>
+    </v-btn>
   </div>
 </template>
 

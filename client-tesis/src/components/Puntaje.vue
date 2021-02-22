@@ -22,6 +22,10 @@ export default {
       type: Number,
       default: 0,
     },
+    id: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {
@@ -38,12 +42,16 @@ export default {
     this.rating = this.puntajeInicial;
   },
   watch: {
-    puntajeInicial: function () {
-      //console.log(change);
-      this.rating = this.puntajeInicial;
-    },
     rating: function (newRating) {
-      this.$emit("nuevoPuntaje", newRating);
+      if (newRating != this.puntajeInicial) {
+        this.$http
+          .put(`/fotos/${this.id}`, { puntuacion: this.rating })
+          .then((r) => console.log("Se actualizó el puntaje:", r))
+          .catch((e) =>
+            console.log("Hubo un problema al actualizar el puntaje:", e)
+          );
+        this.$emit("nuevoPuntaje", newRating);
+      }
     },
   },
   methods: {

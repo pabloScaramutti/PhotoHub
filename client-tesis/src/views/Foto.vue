@@ -70,15 +70,18 @@
             <Puntaje
               :size="'6vh'"
               :puntajeInicial="imagen.puntuacion"
+              :id="imagen.id"
               v-on:nuevoPuntaje="nuevoPuntaje"
               class="align-center"
             >
             </Puntaje>
             <div>
               <v-icon>folder</v-icon>
-              <div class="divider flex" />
-              <p>Una carpeta / Otra carpeta / Otra</p>
-              <v-icon small>create</v-icon>
+              <div class="divider" />
+              <div class="flex jc-space-between">
+                <p>Una carpeta / Otra carpeta / Otra</p>
+                <v-icon small>create</v-icon>
+              </div>
             </div>
             <div>
               <v-icon>palette</v-icon>
@@ -87,7 +90,7 @@
                 <div
                   v-for="(color, index) in colors"
                   :key="index"
-                  @click="imagen.color = color"
+                  @click="saveColor(color)"
                   :style="`background-color: ${color.nombre}; border: ${
                     imagen.color && imagen.color.nombre === color.nombre
                       ? '4px solid white'
@@ -134,8 +137,14 @@
               </div>
             </div>
             <div class="m-top-20px">
-              <v-icon>local_offer</v-icon>
-              <div class="divider" />
+              <Search
+                v-on:item-created="addTag($event)"
+                v-on:item-selected="addSearchTag($event)"
+                url="/etiquetas"
+                label="Búsqueda de etiquetas"
+                prependIcon="local_offer"
+                :clearBeforeSelect="true"
+              />
               <div class="flex" v-if="imagen.etiquetas">
                 <v-chip
                   v-for="(tag, index) in imagen.etiquetas"
@@ -151,9 +160,12 @@
 
               <div class="grid">
                 <v-checkbox
-                  v-for="(tags, i) in allTags"
+                  v-for="(tag, i) in allTags"
                   :key="i"
-                  :label="`${tags.nombre}`"
+                  :value="tag"
+                  v-model="tagSelected"
+                  :label="`${tag.nombre}`"
+                  @click="addTag(tag)"
                 ></v-checkbox>
               </div>
             </div>
@@ -234,11 +246,13 @@
 <script>
 import Puntaje from "@/components/Puntaje";
 import Mapa from "@/components/Mapa";
+import Search from "@/components/Search";
 
 export default {
   components: {
     Puntaje,
     Mapa,
+    Search,
   },
   props: {},
   data() {
@@ -254,6 +268,8 @@ export default {
       tabSelected: "tags",
       colors: [],
       allTags: [],
+      tagSelected: [],
+      normalizeTagsSelected: false,
     };
   },
 
@@ -262,7 +278,6 @@ export default {
       .get(this.$route.path)
       .then((result) => {
         this.imagen = result.data;
-        //console.log(this.imagen);
       })
       .catch((error) => {
         console.log("Ocurrio un error", error);
@@ -277,14 +292,34 @@ export default {
 
     this.$http
       .get("/etiquetas")
-      .then((result) => (this.allTags = result.data))
+      .then((result) => {
+        this.allTags = result.data;
+      })
       .catch((error) =>
         console.log("No se pudieron cargar las etiquetas", error)
       );
   },
 
   watch: {
-    imagen: () => {},
+    imagen: function () {
+      if (!this.normalizeTagsSelected && this.allTags.length > 0) {
+        this.imagen.etiquetas.forEach((e) => {
+          let exist = this.existInArrayById(this.allTags, e);
+          if (exist !== -1) this.tagSelected.push(this.allTags[exist]);
+        });
+        this.normalizeTagsSelected = true;
+      }
+    },
+
+    allTags: function () {
+      if (!this.normalizeTagsSelected && this.imagen) {
+        this.imagen.etiquetas.forEach((e) => {
+          let exist = this.existInArrayById(this.allTags, e);
+          if (exist !== -1) this.tagSelected.push(this.allTags[exist]);
+        });
+        this.normalizeTagsSelected = true;
+      }
+    },
   },
 
   computed: {
@@ -324,6 +359,11 @@ export default {
     nuevoPuntaje(e) {
       //console.log("agarre el evento");
       this.puntaje = e;
+      // envio el nuevo puntaje al serv
+      // this.$http
+      //   .put(this.$route.path, { puntuacion: this.puntaje })
+      //   .then((r) => console.log(r))
+      //   .catch((e) => console.log(e));
     },
 
     createColor() {
@@ -345,8 +385,55 @@ export default {
         );
       this.createNewColor.dialog = false;
     },
+
+    saveColor(c) {
+      this.imagen.color = c;
+      this.$http
+        .put(`/fotos/${this.imagen.id}`, { color: c.id })
+        .then((r) => {
+          console.log("Se actualizó el color de la foto:", r);
+          this.imagen.color = c;
+        })
+        .catch((e) =>
+          console.log("Ocurrió un error actualizando el color:", e)
+        );
+    },
+
     removeTag(index) {
-      this.imagen.etiquetas.splice(index, 1);
+      let element = this.imagen.etiquetas.splice(index, 1);
+
+      let exist = this.existInArrayById(this.tagSelected, element[0]);
+
+      if (exist !== -1) this.tagSelected.splice(exist, 1);
+    },
+
+    addTag(e) {
+      console.log(e);
+      let exist = this.existInArrayById(this.imagen.etiquetas, e);
+
+      if (exist !== -1) {
+        this.removeTag(exist);
+      } else {
+        this.imagen.etiquetas.push(e);
+      }
+    },
+
+    addSearchTag(e) {
+      console.log("recibi", e);
+      if (this.existInArrayById(this.tagSelected, e) == -1)
+        this.tagSelected.push(e);
+      if (this.existInArrayById(this.imagen.etiquetas, e) == -1)
+        this.imagen.etiquetas.push(e);
+    },
+
+    existInArrayById(array, tag) {
+      let exist = -1;
+
+      array.forEach((elem, i) => {
+        if (elem.id == tag.id) exist = i;
+      });
+
+      return exist;
     },
   },
 };
@@ -549,7 +636,7 @@ export default {
     flex-wrap: wrap;
   }
 
-  .jc-space-around {
+  .jc-space-between {
     justify-content: space-between;
   }
 

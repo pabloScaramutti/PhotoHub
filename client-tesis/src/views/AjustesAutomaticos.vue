@@ -5,41 +5,78 @@
       Podés programar ajustes automáticos que se aplicarán a las fotos nuevas.
     </p>
 
-    <v-autocomplete
+    <Search
       label="Nombre de la automatización"
-      prepend-icon="tune"
-      ref="Nombre de la automatización"
-      :items="['Trevor Handsen', 'Alex Nelson']"
-      full-width
-      hide-details
-      hide-no-data
-      hide-selected
-      single-line
-    ></v-autocomplete>
+      prependIcon="tune"
+      url="/automatizacions"
+    />
 
-    <div id="automatizaciones-titulo">
-      <h3>Automatizaciones</h3>
-      <router-link class="router-link" :to="{ name: 'NuevaAutomatizacion' }">
-        <h3 class="pointer">+</h3>
-      </router-link>
-    </div>
+    <h3 id="automatizaciones-titulo">Automatizaciones</h3>
+
     <div class="automatizaciones">
-      <div v-for="i in 5" :key="i" class="auto-item">
-        <div>
-          <p>Automatización {{ i }}</p>
-          <p class="details">29/10/20 - Siempre</p>
-        </div>
+      <div
+        v-for="(automatization, i) in automatizations"
+        :key="i"
+        class="auto-item"
+      >
         <div class="flex-icons">
-          <v-icon large>toggle_on</v-icon>
-          <v-icon class="m-left-10">mdi-dots-vertical</v-icon>
+          <p>{{ automatization.nombre }}</p>
+          <div class="flex-icons">
+            <v-icon
+              large
+              :color="automatization.activa ? 'primary' : 'grey darken-2'"
+              @click="automatization.activa = !automatization.activa"
+              >{{ automatization.activa ? "toggle_on" : "toggle_off" }}</v-icon
+            >
+            <v-icon class="m-left-10">mdi-dots-vertical</v-icon>
+          </div>
         </div>
+        <p class="details">
+          <!-- {{ getDate(automatization.inicio) }} -
+            {{ getDate(automatization.fin) }} -->
+          {{ automatization.descripcion }}
+        </p>
       </div>
     </div>
+
+    <v-btn
+      :to="{ name: 'NuevaAutomatizacion' }"
+      fab
+      color="primary"
+      class="floating-btn"
+    >
+      <v-icon>add</v-icon>
+    </v-btn>
   </div>
 </template>
 
 <script>
-export default {};
+import Search from "@/components/Search";
+
+export default {
+  components: {
+    Search,
+  },
+
+  data() {
+    return {
+      automatizations: undefined,
+    };
+  },
+
+  created() {
+    this.$http
+      .get("/automatizacions")
+      .then((r) => (this.automatizations = r.data))
+      .catch((e) => console.log(e));
+  },
+
+  methods: {
+    getDate(d) {
+      return d.split("T")[0];
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -48,8 +85,6 @@ export default {};
 
   #automatizaciones-titulo {
     margin: 2rem 0 1rem 0;
-    display: flex;
-    justify-content: space-between;
   }
 
   .pointer {
@@ -60,12 +95,14 @@ export default {};
     .auto-item {
       border-bottom: 1px solid gray;
       padding: 0.5em;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      // display: flex;
+      // justify-content: space-between;
+      // align-items: center;
 
       .flex-icons {
         display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
 
       .m-left-10 {

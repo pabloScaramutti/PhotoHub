@@ -1,6 +1,6 @@
 {
   "kind": "collectionType",
-  "collectionName": "automatizacions",
+  "collectionName": "automatizaciones",
   "info": {
     "name": "Automatizacion",
     "description": ""
@@ -29,6 +29,13 @@
     },
     "etiquetas": {
       "collection": "etiquetas"
+    },
+    "activa": {
+      "type": "boolean",
+      "default": false
+    },
+    "descripcion": {
+      "type": "string"
     }
   }
 }
