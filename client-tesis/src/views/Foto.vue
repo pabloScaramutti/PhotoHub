@@ -79,7 +79,13 @@
               <v-icon>folder</v-icon>
               <div class="divider" />
               <div class="flex jc-space-between">
-                <p>Una carpeta / Otra carpeta / Otra</p>
+                <p>
+                  {{
+                    imagen.carpeta
+                      ? imagen.carpeta.nombre
+                      : "No esta dentro de ningún album"
+                  }}
+                </p>
                 <v-icon small>create</v-icon>
               </div>
             </div>
@@ -168,6 +174,16 @@
                   @click="addTag(tag)"
                 ></v-checkbox>
               </div>
+
+              <v-btn
+                v-if="editBtn.edit"
+                fab
+                color="primary"
+                class="floating-btn"
+                :loading="editBtn.loading"
+                @click="updateTags()"
+                ><v-icon>done</v-icon></v-btn
+              >
             </div>
           </div>
 
@@ -270,6 +286,10 @@ export default {
       allTags: [],
       tagSelected: [],
       normalizeTagsSelected: false,
+      editBtn: {
+        edit: false,
+        loading: false,
+      },
     };
   },
 
@@ -291,7 +311,7 @@ export default {
       });
 
     this.$http
-      .get("/etiquetas")
+      .get("/etiquetas?_sort=nombre:ASC")
       .then((result) => {
         this.allTags = result.data;
       })
@@ -308,6 +328,12 @@ export default {
           if (exist !== -1) this.tagSelected.push(this.allTags[exist]);
         });
         this.normalizeTagsSelected = true;
+      }
+    },
+
+    "imagen.etiquetas": function () {
+      if (this.normalizeTagsSelected) {
+        this.editBtn.edit = true;
       }
     },
 
@@ -408,7 +434,6 @@ export default {
     },
 
     addTag(e) {
-      console.log(e);
       let exist = this.existInArrayById(this.imagen.etiquetas, e);
 
       if (exist !== -1) {
@@ -419,7 +444,6 @@ export default {
     },
 
     addSearchTag(e) {
-      console.log("recibi", e);
       if (this.existInArrayById(this.tagSelected, e) == -1)
         this.tagSelected.push(e);
       if (this.existInArrayById(this.imagen.etiquetas, e) == -1)
@@ -434,6 +458,30 @@ export default {
       });
 
       return exist;
+    },
+
+    updateTags() {
+      const data = new FormData();
+      const info = {
+        etiquetas: this.imagen.etiquetas.map((e) => e.id),
+      };
+
+      console.log(info.etiquetas);
+      this.editBtn.loading = true;
+
+      data.append("data", JSON.stringify(info));
+
+      this.$http
+        .put(`/fotos/${this.imagen.id}`, data)
+        .then((r) => {
+          console.log("Se actualizaron las etiquetas de la foto:", r);
+          this.editBtn.edit = false;
+          this.editBtn.loading = false;
+        })
+        .catch((e) => {
+          alert("Ocurrio un error en la actualización de las etiquetas", e);
+          this.editBtn.loading = false;
+        });
     },
   },
 };

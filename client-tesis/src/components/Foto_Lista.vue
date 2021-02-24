@@ -158,7 +158,7 @@ export default {
       this.color = this.img.color.nombre;
     }
 
-    console.log(this.img);
+    //console.log(this.img);
   },
   computed: {
     getURL() {

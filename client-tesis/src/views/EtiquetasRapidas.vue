@@ -10,9 +10,10 @@
 
     <div class="flex">
       <Search
-        v-on:item-selected="setEtiquetas = $event"
+        v-on:item-selected="seleccionDeEvento_Handler($event)"
         v-on:item-created="setEtiquetas = $event"
         v-on:text-changed="setEtiquetas.nombre = $event"
+        :disabled="disableSearch"
         url="/set-etiquetas"
         label="Nombre del set"
         prependIcon="local_offer"
@@ -27,30 +28,39 @@
         class="ma-2"
         close
         color="primary"
-        @click:close="setEtiquetas.etiquetas.splice(i, 1)"
+        @click:close="setEdited && removeTag(i)"
       >
         {{ item.nombre }}
       </v-chip>
     </v-chip-group>
 
-    <Search
-      v-on:item-created="todasLasEtiquetas.push($event)"
-      url="/etiquetas"
-      label="Buscar una etiqueta"
-    />
+    <div v-if="setEdited">
+      <Search
+        v-on:item-created="addTag($event)"
+        v-on:item-selected="addSearchTag($event)"
+        url="/etiquetas"
+        label="Buscar una etiqueta"
+      />
 
-    <div class="grid">
-      <v-checkbox
-        v-for="(etiqueta, i) in todasLasEtiquetas"
-        :key="i"
-        :label="`${etiqueta.nombre}`"
-        :value="etiqueta"
-        v-model="setEtiquetas.etiquetas"
-      ></v-checkbox>
+      <div class="grid">
+        <v-checkbox
+          v-for="(etiqueta, i) in todasLasEtiquetas"
+          :key="i"
+          :label="`${etiqueta.nombre}`"
+          :value="etiqueta"
+          v-model="etiquetasSeleccionadas"
+          @click="addTag(etiqueta)"
+        ></v-checkbox>
+      </div>
     </div>
 
-    <v-btn fab color="primary" class="floating-btn" @click="createSet()"
-      ><v-icon>done</v-icon></v-btn
+    <v-btn
+      fab
+      color="primary"
+      class="floating-btn"
+      @click="!setEdited ? (setEdited = true) : updateSet()"
+      :loading="loadingDoneBtn"
+      ><v-icon>{{ !setEdited ? "edit" : "done" }}</v-icon></v-btn
     >
 
     <div class="pop-up-alert">
@@ -75,6 +85,10 @@ export default {
         etiquetas: [],
       },
       todasLasEtiquetas: [],
+      etiquetasSeleccionadas: [],
+      setEdited: false,
+      disableSearch: false,
+      loadingDoneBtn: false,
       alert: {
         text: "",
         type: "success",
@@ -85,16 +99,31 @@ export default {
 
   created() {
     this.$http
-      .get("/etiquetas")
+      .get("/etiquetas?_sort=nombre:ASC")
       .then((response) => (this.todasLasEtiquetas = response.data))
       .catch((error) =>
         this.setAlert("Hubo un error cargando las etiquetas", error)
       );
   },
 
+  watch: {
+    "setEtiquetas.etiquetas": function () {
+      this.setEdited = true;
+    },
+
+    "alert.show": function (v) {
+      if (v) {
+        setTimeout(() => {
+          this.alert.show = false;
+        }, 5000);
+      }
+    },
+  },
+
   methods: {
     createSet() {
       if (this.setEtiquetas.nombre) {
+        this.loadingDoneBtn = true;
         const data = new FormData();
         const info = {
           nombre: this.setEtiquetas.nombre,
@@ -105,18 +134,102 @@ export default {
 
         this.$http
           .post("/set-etiquetas", data)
-          .then((r) =>
-            this.setAlert(`Se creo el Set: "${r.data.nombre}"`, "success")
-          )
-          .catch((e) => this.setAlert(`Se produjo un error: ${e}`, "error"));
+          .then((r) => {
+            this.setAlert(`Se creo el Set: "${r.data.nombre}"`, "success");
+            this.loadingDoneBtn = false;
+          })
+          .catch((e) => {
+            this.setAlert(`Se produjo un error: ${e}`, "error");
+            this.loadingDoneBtn = false;
+          });
       } else {
         this.setAlert("Ingrese un nombre para el set", "error");
       }
     },
+
+    updateSet() {
+      this.loadingDoneBtn = true;
+      this.$http
+        .put(`/set-etiquetas/${this.setEtiquetas.id}`, {
+          etiquetas: this.setEtiquetas.etiquetas,
+          nombre: this.setEtiquetas.nombre,
+        })
+        .then(() => {
+          this.setAlert(
+            `Se actualizó el set ${this.setEtiquetas.nombre}`,
+            "success"
+          );
+          this.setEdited = false;
+          this.loadingDoneBtn = false;
+        })
+        .catch((e) => {
+          this.setAlert(
+            `Se produjo un error al actualizar la etiqueta: ${e}`,
+            "error"
+          );
+          this.loadingDoneBtn = false;
+        });
+    },
+
     setAlert(text, type) {
       this.alert.text = text;
       this.alert.type = type;
       this.alert.show = true;
+    },
+
+    removeTag(index) {
+      let element = this.setEtiquetas.etiquetas.splice(index, 1);
+
+      let exist = this.existInArrayById(
+        this.etiquetasSeleccionadas,
+        element[0]
+      );
+
+      if (exist !== -1) this.etiquetasSeleccionadas.splice(exist, 1);
+    },
+
+    addTag(e) {
+      let exist = this.existInArrayById(this.setEtiquetas.etiquetas, e);
+
+      if (exist !== -1) {
+        this.removeTag(exist);
+      } else {
+        this.setEtiquetas.etiquetas.push(e);
+      }
+    },
+
+    addSearchTag(e) {
+      if (this.existInArrayById(this.etiquetasSeleccionadas, e) == -1)
+        this.etiquetasSeleccionadas.push(e);
+      if (this.existInArrayById(this.setEtiquetas.etiquetas, e) == -1)
+        this.setEtiquetas.etiquetas.push(e);
+    },
+
+    existInArrayById(array, tag) {
+      let exist = -1;
+
+      array.forEach((elem, i) => {
+        if (elem.id == tag.id) exist = i;
+      });
+
+      return exist;
+    },
+
+    seleccionDeEvento_Handler(setSeleccionado) {
+      this.disableSearch = true;
+      this.setEtiquetas = setSeleccionado;
+      this.etiquetasSeleccionadas = [];
+      if (this.todasLasEtiquetas.length > 0) {
+        this.setEtiquetas.etiquetas.forEach((e) => {
+          let exist = this.existInArrayById(this.todasLasEtiquetas, e);
+          if (exist !== -1)
+            this.etiquetasSeleccionadas.push(this.todasLasEtiquetas[exist]);
+        });
+      }
+
+      this.$nextTick(() => {
+        this.setEdited = false;
+      });
     },
   },
 };

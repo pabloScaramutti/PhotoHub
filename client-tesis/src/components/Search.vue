@@ -2,7 +2,7 @@
   <div class="search">
     <v-text-field
       @focus="inputFocus"
-      @click.stop="dialog = true"
+      @click.stop="!disabled && openDialog()"
       :prepend-icon="prependIcon"
       :append-icon="appendIcon"
       :label="label"
@@ -38,6 +38,7 @@
             :label="label"
             v-model="input.nombre"
             autocomplete="off"
+            ref="inputName"
           ></v-text-field>
           <!-- <div v-if="suggestion.length > 0 || loading == true "> -->
           <ul v-if="loading != true">
@@ -94,6 +95,11 @@ export default {
       required: false,
       default: false,
     },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
 
   data() {
@@ -144,30 +150,40 @@ export default {
           nombre: this.input.nombre,
         })
         .then((result) => {
-          this.input = result.data;
+          //this.input = result.data;
           this.sendEvent("item-created", result.data);
-          console.log("se creo ", result);
-          this.clearText();
+          console.log("se creo la etiqueta:", result);
+          this.clearText(result.data);
         })
-        .catch((error) => console.log("Error al crear", error));
+        .catch((error) => console.log("Error al crear la etiqueta", error));
     },
     setItem(item) {
-      this.input = item;
+      //this.input = item;
       this.sendEvent("item-selected", item);
       this.dialog = false;
-      this.clearText();
+      this.clearText(item);
     },
     sendEvent(name, element) {
       this.$emit(name, element);
     },
 
-    clearText() {
-      console.log(this.clearBeforeSelect);
-      if (this.clearBeforeSelect)
+    clearText(data) {
+      // console.log(this.clearBeforeSelect);
+      if (this.clearBeforeSelect) {
         setTimeout(() => {
           this.input.nombre = "";
           console.log(this.clearBeforeSelect);
         }, 1000);
+      } else {
+        this.input = data;
+      }
+    },
+
+    openDialog() {
+      this.dialog = true;
+      setTimeout(() => {
+        this.$refs.inputName.focus();
+      }, 500);
     },
 
     serverRequest() {

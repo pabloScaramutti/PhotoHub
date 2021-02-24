@@ -7,12 +7,15 @@
     <router-link :to="{ name: 'Login' }">
       <v-btn block rounded color="primary"> Login </v-btn>
     </router-link>
+    <div v-for="(carpeta, i) in carpetas" :key="i">
+      <SlideFotos v-if="carpeta.fotos.length > 0" :carpeta="carpeta" />
+    </div>
   </div>
 </template>
 
 <script>
 import GrillaFotos from "@/components/GrillaFotos_justifiedLayout";
-// import SlideFotos from "@/components/SlideFotos";
+import SlideFotos from "@/components/SlideFotos";
 import Mapa from "@/components/Mapa";
 // import FotoLista from "@/components/Foto_Lista";
 
@@ -20,7 +23,7 @@ export default {
   name: "Home",
   components: {
     GrillaFotos,
-    // SlideFotos,
+    SlideFotos,
     Mapa,
     // FotoLista,
   },
@@ -28,6 +31,7 @@ export default {
     return {
       imagenes: undefined,
       cadena: undefined,
+      carpetas: undefined,
     };
   },
 
@@ -40,6 +44,11 @@ export default {
       .catch((error) => {
         console.log("Error al cargar las imagenes", error);
       });
+
+    this.$http
+      .get("/carpetas")
+      .then((r) => (this.carpetas = r.data))
+      .catch((e) => console.log("Error al cargar las carpetas", e));
   },
 };
 </script>
