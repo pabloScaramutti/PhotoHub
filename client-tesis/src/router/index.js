@@ -12,6 +12,7 @@ import Conexion from "../views/Conexion.vue";
 import EtiquetasRapidas from "../views/EtiquetasRapidas.vue";
 import AjustesAutomaticos from "../views/AjustesAutomaticos.vue";
 import NuevaAutomatizacion from "../views/NuevaAutomatizacion.vue";
+import SetEtiqueta from "../views/SetEtiqueta.vue";
 
 
 Vue.use(VueRouter);
@@ -89,6 +90,11 @@ const routes = [
     path: "/nueva-automatizacion",
     name: "NuevaAutomatizacion",
     component: NuevaAutomatizacion
+  },
+  {
+    path: "/set-etiquetas/:set",
+    name: "SetEtiqueta",
+    component: SetEtiqueta
   }
 ];
 

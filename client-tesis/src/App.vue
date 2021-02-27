@@ -85,7 +85,13 @@ p {
 .floating-btn {
   position: fixed;
   bottom: 80px;
-  right: 5vw;
+  right: 25px;
+}
+
+.floating-btn-secondary {
+  position: fixed;
+  bottom: 145px;
+  right: 30px;
 }
 
 .pop-up-alert {

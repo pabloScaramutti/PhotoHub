@@ -45,9 +45,17 @@
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           @click:append="showPassword = !showPassword"
         />
-        <v-btn fab color="primary" small class="dialog-button"
-          ><v-icon>send</v-icon></v-btn
+        <v-btn
+          @click="
+            requestConnection({ SSID: selectedNet.ESSID, password: password })
+          "
+          fab
+          color="primary"
+          small
+          class="dialog-button"
         >
+          <v-icon>send</v-icon>
+        </v-btn>
       </div>
     </v-dialog>
 
@@ -114,6 +122,10 @@ export default {
     },
     activateWPS() {
       this.dialogWPS = true;
+    },
+
+    requestConnection(e) {
+      this.$http.post("/controllers/connect", e);
     },
   },
 };

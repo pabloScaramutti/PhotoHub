@@ -33,6 +33,14 @@
       }
     },
     {
+      "method": "POST",
+      "path": "/controllers/connect",
+      "handler": "controller.connect",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "PUT",
       "path": "/controllers/:id",
       "handler": "controller.update",

@@ -153,18 +153,23 @@ export default {
           //this.input = result.data;
           this.sendEvent("item-created", result.data);
           console.log("se creo la etiqueta:", result);
-          this.clearText(result.data);
+          //this.clearText(result.data);
+          this.input.nombre = "";
+          this.dialog = false;
         })
         .catch((error) => console.log("Error al crear la etiqueta", error));
     },
+
     setItem(item) {
       //this.input = item;
       this.sendEvent("item-selected", item);
       this.dialog = false;
-      this.clearText(item);
+      this.input.nombre = "";
     },
+
     sendEvent(name, element) {
-      this.$emit(name, element);
+      let sendingElement = JSON.parse(JSON.stringify(element));
+      this.$emit(name, sendingElement);
     },
 
     clearText(data) {
