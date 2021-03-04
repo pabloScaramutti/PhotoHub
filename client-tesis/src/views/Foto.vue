@@ -7,6 +7,7 @@
         @click="informacion = !informacion"
       >
         <v-img
+          v-if="imagen.thumbnail"
           :max-height="fullView ? '100vh' : '90vh'"
           max-width="100vw"
           :src="$apiUrl(imagen.thumbnail.url)"
@@ -20,6 +21,9 @@
             </v-row>
           </template>
         </v-img>
+        <video v-else controls :width="videoWidth()">
+          <source :src="$apiUrl(imagen.img.url)" type="video/mp4" />
+        </video>
       </div>
 
       <!-- Info -------------------------- -->
@@ -187,7 +191,12 @@
             </div>
           </div>
 
-          <div v-if="tabSelected === 'image-details'" class="w-80 scroll">
+          <!-- Detalles de las imagenes -->
+
+          <div
+            v-if="tabSelected === 'image-details' && imagen.thumbnail"
+            class="w-80 scroll"
+          >
             <ul class="image-info">
               <li>
                 <v-icon size="50px">camera</v-icon>
@@ -226,6 +235,8 @@
               </li>
             </ul>
           </div>
+
+          <!-- Mapa -->
 
           <div class="mapa" v-if="tabSelected === 'location'">
             <div class="location">
@@ -350,13 +361,16 @@ export default {
 
   computed: {
     getTime() {
-      return this.imagen.exif.DateTimeOriginal.split(" ")[1];
+      if (this.imagen.exif) return this.imagen.exif.CreateDate.split(" ")[1];
+      else return this.imagen.created_at.split("T")[1].split(".")[0];
     },
     getDate() {
-      return this.imagen.exif.DateTimeOriginal.split(" ")[0]
-        .split(":")
-        .reverse()
-        .join("/");
+      if (this.imagen.exif)
+        return this.imagen.exif.CreateDate.split(" ")[0]
+          .split(":")
+          .reverse()
+          .join("/");
+      else return this.imagen.created_at.split("T")[0];
     },
     getImgLat() {
       if ("GPSLatitude" in this.imagen.exif) {
@@ -482,6 +496,10 @@ export default {
           alert("Ocurrio un error en la actualización de las etiquetas", e);
           this.editBtn.loading = false;
         });
+    },
+
+    videoWidth() {
+      return window.innerWidth - 200;
     },
   },
 };

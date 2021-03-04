@@ -7,7 +7,7 @@ module.exports = {
     const exec = promisify(require("child_process").exec);
 
     //const data = await exec("sudo iwlist wlan0 scan|grep SSID");
-    const data = await exec("sudo iwlist wlan1 scan | grep -oE '(Cell|ESSID:|Encryption key:).*'");
+    const data = await exec("sudo iwlist wlan0 scan | grep -oE '(Cell|ESSID:|Encryption key:).*'");
 
     let split = data.stdout.split('Cell ');
     split = split.map(item => item.split('\n'));
@@ -62,7 +62,3 @@ module.exports = {
     // return "Hello world!";
   },
 };
-
-
-
-

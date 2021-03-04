@@ -32,10 +32,36 @@
           >
           <v-icon v-else-if="selectable" class="selected-check">check</v-icon>
           <img
+            v-if="
+              item.extension.toLowerCase().localeCompare('.jpg') == 0 ||
+              item.extension.toLowerCase().localeCompare('.png') == 0
+            "
             :src="item.url"
             @click="changeStatusSelected(item)"
             :class="[item.selected ? 'foto selected' : 'foto']"
           />
+          <div
+            v-else-if="
+              item.extension.toLowerCase().localeCompare('.mp4') == 0 ||
+              item.extension.toLowerCase().localeCompare('.mov') == 0
+            "
+          >
+            <video
+              :class="[item.selected && 'foto selected']"
+              @click="changeStatusSelected(item)"
+              @load="videoLoaded(item)"
+            >
+              <source :src="item.url" type="video/mp4" />
+            </video>
+            <v-icon
+              :size="`${playButtonSize}px`"
+              :class="[
+                item.selected ? 'play-arrow-top-left' : 'play-arrow-center',
+                'loading-video',
+              ]"
+              >play_circle_outline</v-icon
+            >
+          </div>
         </router-link>
       </vue-justified-layout>
     </template>
@@ -59,6 +85,7 @@ export default {
       // selected: undefined,
       pros_img: undefined,
       imgSize: 200,
+      playButtonSize: 60,
     };
   },
   components: {
@@ -74,21 +101,17 @@ export default {
       default: false,
     },
   },
+
+  created() {
+    this.procesarImagenes();
+  },
+
   watch: {
-    imagenes: function () {
-      if (this.imagenes) {
-        // this.agregarCheck(this.imagenes);
-        this.pros_img = this.imagenes.map((img) => {
-          let nImg = {
-            width: img.exif.ImageWidth,
-            height: img.exif.ImageHeight,
-            url: this.$apiUrl(img.thumbnail.formats.large.url),
-            id: img.id,
-            selected: false,
-          };
-          return nImg;
-        });
-      }
+    imagenes: {
+      deep: true,
+      handler() {
+        this.procesarImagenes();
+      },
     },
   },
   methods: {
@@ -102,9 +125,11 @@ export default {
     },
     sizeUp() {
       this.imgSize < 500 ? (this.imgSize += 50) : undefined;
+      this.playButtonSize += 15;
     },
     sizeDown() {
       this.imgSize > 50 ? (this.imgSize -= 50) : undefined;
+      this.playButtonSize -= 15;
     },
     selectAll() {
       this.pros_img.forEach((element) => {
@@ -124,6 +149,31 @@ export default {
         .filter((e) => e.selected)
         .map((obj) => obj.id);
       this.$emit("selectedPhotos", sendData);
+    },
+    videoLoaded(v) {
+      v.loaded = true;
+    },
+
+    procesarImagenes() {
+      if (this.imagenes) {
+        // this.agregarCheck(this.imagenes);
+        this.pros_img = this.imagenes.map((img) => {
+          let nImg;
+
+          nImg = {
+            width: img.exif.ImageWidth,
+            height: img.exif.ImageHeight,
+            url: img.thumbnail
+              ? this.$apiUrl(img.thumbnail.formats.large.url)
+              : this.$apiUrl(img.img.url),
+            id: img.id,
+            selected: false,
+            extension: img.thumbnail ? img.thumbnail.ext : img.img.ext,
+          };
+
+          return nImg;
+        });
+      }
     },
   },
 };
@@ -152,6 +202,56 @@ export default {
     border-radius: 3px;
     height: 100%;
     max-width: 100%;
+  }
+
+  video {
+    cursor: pointer;
+    border-radius: 3px;
+    width: 100%;
+    height: 100%;
+  }
+
+  video:hover {
+    z-index: 1;
+    transform: scale(1.01);
+  }
+
+  .loading-video {
+    color: black;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    // // filter: drop-shadow(0px 3px 2px rgba(0, 0, 0, 0.1));
+
+    background-image: linear-gradient(270deg, #00b7ff, #c8e2ff);
+    background-size: 400% 400%;
+
+    animation: change-color 1s ease infinite;
+  }
+
+  @keyframes change-color {
+    0% {
+      background-position: 78% 0%;
+    }
+    50% {
+      background-position: 23% 100%;
+    }
+    100% {
+      background-position: 78% 0%;
+    }
+  }
+
+  .play-arrow-center {
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    z-index: 2;
+  }
+
+  .play-arrow-top-left {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    z-index: 2;
   }
 
   .checkbox {

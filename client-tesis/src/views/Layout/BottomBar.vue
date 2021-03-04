@@ -11,7 +11,7 @@
       <v-icon>home</v-icon>
     </v-btn>
 
-    <v-btn>
+    <v-btn :to="{ name: 'Busqueda' }">
       <v-icon>search</v-icon>
     </v-btn>
 

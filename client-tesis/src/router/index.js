@@ -13,6 +13,7 @@ import EtiquetasRapidas from "../views/EtiquetasRapidas.vue";
 import AjustesAutomaticos from "../views/AjustesAutomaticos.vue";
 import NuevaAutomatizacion from "../views/NuevaAutomatizacion.vue";
 import SetEtiqueta from "../views/SetEtiqueta.vue";
+import Busqueda from "../views/Busqueda.vue";
 
 
 Vue.use(VueRouter);
@@ -39,7 +40,7 @@ const routes = [
   {
     path: "/login",
     name: "Login",
-    component: Login
+    component: Login,
   },
   {
     path: "/registro",
@@ -95,6 +96,11 @@ const routes = [
     path: "/set-etiquetas/:set",
     name: "SetEtiqueta",
     component: SetEtiqueta
+  },
+  {
+    path: "/busqueda",
+    name: "Busqueda",
+    component: Busqueda
   }
 ];
 

@@ -11,6 +11,16 @@
       label="Avatar"
     ></v-file-input>
 
+    <v-progress-linear
+      v-if="uploadingFile"
+      v-model="loadingProgress"
+      color="primary"
+      height="15"
+      rounded
+    >
+      <p>{{ loadingProgress }}%</p>
+    </v-progress-linear>
+
     <v-btn @click="nuevaFoto()">Crear</v-btn>
 
     <form action="" class="formulario-nueva-carpeta">
@@ -69,8 +79,6 @@
 import GrillaFotos from "@/components/GrillaFotos_justifiedLayout";
 import Search from "../components/Search";
 
-import Axios from "axios";
-
 export default {
   name: "NuevaCarpeta",
   components: {
@@ -87,6 +95,8 @@ export default {
       imagenes: undefined,
       im: [],
       alert: { state: false, message: "Ocurrio un error", type: "error" },
+      uploadingFile: false,
+      loadingProgress: 0,
     };
   },
 
@@ -127,6 +137,7 @@ export default {
         };
 
         data.append("data", JSON.stringify(info));
+
         this.$http
           .post("/carpetas", data)
           .then((response) => {
@@ -153,6 +164,18 @@ export default {
     },
 
     async nuevaFoto() {
+      const options = {
+        onUploadProgress: (progressEvent) => {
+          const { loaded, total } = progressEvent;
+          let percent = Math.floor((loaded * 100) / total);
+          console.log(`${loaded}kb of ${total}kb | ${percent}%`);
+
+          if (percent < 100) {
+            this.loadingProgress = percent;
+          }
+        },
+      };
+
       const data = new FormData();
       const info = {
         nombre: this.im[0] ? this.im[0].name : this.im[1].name,
@@ -161,7 +184,12 @@ export default {
 
       data.append(
         "files.img",
-        this.im.filter((item) => item.type === "image/NEF")[0]
+        this.im.filter(
+          (item) =>
+            item.type === "image/NEF" ||
+            item.type === "video/mp4" ||
+            item.type === "video/mov"
+        )[0]
       );
       data.append(
         "files.thumbnail",
@@ -169,16 +197,17 @@ export default {
       );
       data.append("data", JSON.stringify(info));
 
-      await Axios({
-        method: "POST",
-        url: "http://192.168.0.123:1337/fotos",
-        data,
-      })
-        .then(function (response) {
+      this.uploadingFile = true;
+
+      this.$http
+        .post("http://192.168.0.123:1337/fotos", data, options)
+        .then((response) => {
           console.log(response);
+          this.uploadingFile = false;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
+          this.uploadingFile = false;
         });
     },
   },

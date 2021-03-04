@@ -124,9 +124,9 @@ export default {
       this.dialogWPS = true;
     },
 
-    requestConnection(e) {
-      this.$http.post("/controllers/connect", e);
-    },
+    // requestConnection(e) {
+    //    this.$http.post("/controllers/connect", e);
+    // },
   },
 };
 </script>
