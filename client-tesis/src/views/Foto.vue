@@ -7,7 +7,7 @@
         @click="informacion = !informacion"
       >
         <v-img
-          v-if="imagen.thumbnail"
+          v-if="showImage()"
           :max-height="fullView ? '100vh' : '90vh'"
           max-width="100vw"
           :src="$apiUrl(imagen.thumbnail.url)"
@@ -500,6 +500,21 @@ export default {
 
     videoWidth() {
       return window.innerWidth - 200;
+    },
+
+    showImage() {
+      if (!this.imagen.img) {
+        return true;
+      } else {
+        console.log(this.imagen.img.ext.toLowerCase().localeCompare(".mp4"));
+        return (
+          this.imagen.thumbnail &&
+          !(
+            this.imagen.img.ext.toLowerCase().localeCompare(".mp4") === 0 ||
+            this.imagen.img.ext.toLowerCase().localeCompare(".mov") === 0
+          )
+        );
+      }
     },
   },
 };

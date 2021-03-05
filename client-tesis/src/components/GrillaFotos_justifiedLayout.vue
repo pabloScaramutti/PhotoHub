@@ -32,36 +32,29 @@
           >
           <v-icon v-else-if="selectable" class="selected-check">check</v-icon>
           <img
-            v-if="
-              item.extension.toLowerCase().localeCompare('.jpg') == 0 ||
-              item.extension.toLowerCase().localeCompare('.png') == 0
-            "
+            v-if="item.hasThumbnail"
             :src="item.url"
             @click="changeStatusSelected(item)"
             :class="[item.selected ? 'foto selected' : 'foto']"
           />
-          <div
-            v-else-if="
-              item.extension.toLowerCase().localeCompare('.mp4') == 0 ||
-              item.extension.toLowerCase().localeCompare('.mov') == 0
-            "
+
+          <video
+            v-else-if="item.isVideo"
+            :class="[item.selected && 'foto selected']"
+            @click="changeStatusSelected(item)"
+            @load="videoLoaded(item)"
           >
-            <video
-              :class="[item.selected && 'foto selected']"
-              @click="changeStatusSelected(item)"
-              @load="videoLoaded(item)"
-            >
-              <source :src="item.url" type="video/mp4" />
-            </video>
-            <v-icon
-              :size="`${playButtonSize}px`"
-              :class="[
-                item.selected ? 'play-arrow-top-left' : 'play-arrow-center',
-                'loading-video',
-              ]"
-              >play_circle_outline</v-icon
-            >
-          </div>
+            <source :src="item.url" type="video/mp4" />
+          </video>
+          <v-icon
+            v-if="item.isVideo"
+            :size="`${playButtonSize}px`"
+            :class="[
+              item.selected ? 'play-arrow-top-left' : 'play-arrow-center',
+              'loading-video',
+            ]"
+            >play_circle_outline</v-icon
+          >
         </router-link>
       </vue-justified-layout>
     </template>
@@ -164,16 +157,34 @@ export default {
             width: img.exif.ImageWidth,
             height: img.exif.ImageHeight,
             url: img.thumbnail
-              ? this.$apiUrl(img.thumbnail.formats.large.url)
+              ? this.$apiUrl(
+                  img.thumbnail.formats
+                    ? img.thumbnail.formats.large.url
+                    : img.thumbnail.url
+                )
               : this.$apiUrl(img.img.url),
             id: img.id,
             selected: false,
-            extension: img.thumbnail ? img.thumbnail.ext : img.img.ext,
+            isVideo: this.isVideo(img),
+            hasThumbnail: img.thumbnail ? true : false,
           };
 
           return nImg;
         });
       }
+    },
+
+    isVideo(img) {
+      if (img.img) {
+        let imgExt = img.img.ext.toLowerCase();
+        if (
+          imgExt.localeCompare(".mp4") === 0 ||
+          imgExt.localeCompare(".mov") === 0
+        ) {
+          return true;
+        }
+      }
+      return false;
     },
   },
 };

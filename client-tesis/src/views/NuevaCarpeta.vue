@@ -11,14 +11,13 @@
       label="Avatar"
     ></v-file-input>
 
+    <p>{{ loadingProgress }}%</p>
     <v-progress-linear
       v-if="uploadingFile"
       v-model="loadingProgress"
       color="primary"
-      height="15"
       rounded
     >
-      <p>{{ loadingProgress }}%</p>
     </v-progress-linear>
 
     <v-btn @click="nuevaFoto()">Crear</v-btn>
@@ -203,6 +202,7 @@ export default {
         .post("http://192.168.0.123:1337/fotos", data, options)
         .then((response) => {
           console.log(response);
+          this.imagenes.push(response.data);
           this.uploadingFile = false;
         })
         .catch((error) => {
