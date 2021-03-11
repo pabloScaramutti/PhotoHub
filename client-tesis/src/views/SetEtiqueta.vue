@@ -14,6 +14,7 @@
         label="Set"
         v-model="set.nombre"
         prepend-icon="local_offer"
+        autocomplete="off"
       >
       </v-text-field>
       <v-icon class="m-left-10">mdi-dots-vertical</v-icon>
@@ -50,22 +51,23 @@
       ></v-checkbox>
     </div>
 
-    <v-btn
-      fab
-      color="primary"
-      class="floating-btn"
-      @click="updateSet()"
-      :loading="loadingDoneBtn"
-      ><v-icon>done</v-icon></v-btn
-    >
-    <v-btn
-      :to="{ name: 'EtiquetasRapidas' }"
-      fab
-      small
-      color="red"
-      class="floating-btn-secondary"
-      ><v-icon>clear</v-icon></v-btn
-    >
+    <div class="floating-btn done-confirm-btn-container">
+      <v-btn
+        :to="{ name: 'EtiquetasRapidas' }"
+        class="m-bottom-10"
+        fab
+        small
+        color="red"
+        ><v-icon>clear</v-icon></v-btn
+      >
+      <v-btn
+        fab
+        color="primary"
+        @click="createOrUpdate()"
+        :loading="loadingDoneBtn"
+        ><v-icon>done</v-icon></v-btn
+      >
+    </div>
 
     <div class="pop-up-alert">
       <v-alert dense v-model="alert.show" :type="alert.type" dismissable>
@@ -124,12 +126,12 @@ export default {
 
   methods: {
     createSet() {
-      if (this.setEtiquetas.nombre) {
+      if (this.set.nombre) {
         this.loadingDoneBtn = true;
         const data = new FormData();
         const info = {
-          nombre: this.setEtiquetas.nombre,
-          etiquetas: this.setEtiquetas.etiquetas,
+          nombre: this.set.nombre,
+          etiquetas: this.set.etiquetas,
         };
 
         data.append("data", JSON.stringify(info));
@@ -233,19 +235,30 @@ export default {
     },
 
     getSet() {
-      this.$http
-        .get(this.$route.path)
-        .then((r) => {
-          this.set = r.data;
-          this.normalizeById(r.data);
-        })
-        .catch((e) => {
-          console.log("Ocurrio un error buscando el set,", e);
-          this.setAlert(
-            "Ocurrió un error buscando el set de etiquetas, vuelva a intentar",
-            "error"
-          );
-        });
+      let path = this.$route.path.includes("set-etiquetas");
+      if (path) {
+        this.$http
+          .get(this.$route.path)
+          .then((r) => {
+            this.set = r.data;
+            this.normalizeById(r.data);
+          })
+          .catch((e) => {
+            console.log("Ocurrio un error buscando el set,", e);
+            this.setAlert(
+              "Ocurrió un error buscando el set de etiquetas, vuelva a intentar",
+              "error"
+            );
+          });
+      }
+    },
+
+    createOrUpdate() {
+      if (this.$route.path.includes("crear-set")) {
+        this.createSet();
+      } else {
+        this.updateSet();
+      }
     },
   },
 };
@@ -276,6 +289,16 @@ export default {
   .chip-group {
     min-height: 120px;
   }
+}
+
+.done-confirm-btn-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.m-bottom-10 {
+  margin-bottom: 10px;
 }
 
 #add-set {

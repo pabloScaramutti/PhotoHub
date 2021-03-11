@@ -68,6 +68,10 @@ p {
   justify-content: space-around;
 }
 
+.justify-space-between {
+  justify-content: space-between;
+}
+
 .align-center {
   align-items: center;
 }
@@ -86,12 +90,6 @@ p {
   position: fixed;
   bottom: 80px;
   right: 25px;
-}
-
-.floating-btn-secondary {
-  position: fixed;
-  bottom: 145px;
-  right: 30px;
 }
 
 .pop-up-alert {

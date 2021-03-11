@@ -90,7 +90,7 @@
                 >image_search</v-icon
               >
             </li>
-            <li @click="state = 'datosCamara'">
+            <li v-if="checkPhoto()" @click="state = 'datosCamara'">
               <v-icon
                 size="20"
                 :color="state === 'datosCamara' ? 'white' : 'grey darken-3'"
@@ -155,7 +155,15 @@ export default {
     }
 
     if (this.img.color) {
-      this.color = this.img.color.nombre;
+      if (this.img.color.nombre) this.color = this.img.color.nombre;
+      else {
+        this.$http
+          .get(`/colores/${this.img.color}`)
+          .then((r) => (this.color = r.data.nombre))
+          .catch((e) =>
+            console.log("Hubo un error para cargar etiqueta de color", e)
+          );
+      }
     }
 
     //console.log(this.img);
@@ -165,19 +173,33 @@ export default {
       return this.$apiUrl(this.img.thumbnail.formats.small.url);
     },
     getTime() {
-      return this.img.exif.DateTimeOriginal.split(" ")[1];
+      if (this.img.exif) return this.img.exif.CreateDate.split(" ")[1];
+      else return this.img.created_at.split("T")[1].split(".")[0];
     },
     getDate() {
-      return this.img.exif.DateTimeOriginal.split(" ")[0]
-        .split(":")
-        .reverse()
-        .join("/");
+      if (this.img.exif)
+        return this.img.exif.CreateDate.split(" ")[0]
+          .split(":")
+          .reverse()
+          .join("/");
+      else return this.img.created_at.split("T")[0];
     },
   },
 
   methods: {
     nuevoPuntaje(valor) {
       this.rating = valor;
+    },
+
+    checkPhoto() {
+      return (
+        (this.img.exif.FileType &&
+          this.img.exif.FileType.toLowerCase() === "jpeg") ||
+        (this.img.exif.FileType &&
+          this.img.exif.FileType.toLowerCase() === "jpg") ||
+        (this.img.exif.FileTypeExtension &&
+          this.img.exif.FileType.toLowerCase() === "nef")
+      );
     },
   },
 };

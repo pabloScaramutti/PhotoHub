@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/obturacions",
+      "handler": "obturacion.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/obturacions/count",
+      "handler": "obturacion.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/obturacions/:id",
+      "handler": "obturacion.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/obturacions",
+      "handler": "obturacion.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/obturacions/:id",
+      "handler": "obturacion.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/obturacions/:id",
+      "handler": "obturacion.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "kind": "collectionType",
+  "collectionName": "obturacions",
+  "info": {
+    "name": "obturacion"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "valor": {
+      "type": "string"
+    },
+    "fotos": {
+      "collection": "fotos"
+    }
+  }
+}

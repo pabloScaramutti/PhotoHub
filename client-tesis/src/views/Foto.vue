@@ -197,43 +197,93 @@
             v-if="tabSelected === 'image-details' && imagen.thumbnail"
             class="w-80 scroll"
           >
-            <ul class="image-info">
-              <li>
-                <v-icon size="50px">camera</v-icon>
-                f{{ imagen.exif.Aperture }}
-              </li>
-              <li>
-                <v-icon size="50px">shutter_speed</v-icon>
-                {{ imagen.exif.ShutterSpeed }}
-              </li>
-              <li>
-                <v-icon size="50px">iso</v-icon>
-                {{ imagen.exif.ISO }}
-              </li>
-              <li>
-                <v-icon size="50px">flash_off</v-icon>
-                {{ imagen.exif.Flash }}
-              </li>
-              <li>
-                <v-icon size="50px">wb_sunny</v-icon>
-                No es el valor real
-              </li>
-              <li>
-                <img src="@/assets/lens-icon.svg" width="50px" height="50px" />
-                {{ imagen.exif.FocalLength }}
-              </li>
-            </ul>
-            <div class="divider"></div>
-            <ul class="camera-info">
-              <li>
-                <v-icon size="40px">camera_alt</v-icon>
-                {{ imagen.exif.Model }}
-              </li>
-              <li class="flex align-center" style="transform: translateX(-5px)">
-                <img src="@/assets/lens-icon.svg" width="50px" height="50px" />
-                {{ imagen.exif.Lens }}
-              </li>
-            </ul>
+            <div
+              v-if="
+                (imagen.exif.FileType &&
+                  imagen.exif.FileType.toLowerCase() === 'jpeg') ||
+                (imagen.exif.FileType &&
+                  imagen.exif.FileType.toLowerCase() === 'jpg') ||
+                (imagen.exif.FileTypeExtension &&
+                  imagen.exif.FileType.toLowerCase() === 'nef')
+              "
+            >
+              <ul class="image-info">
+                <li>
+                  <v-icon size="50px">camera</v-icon>
+                  f{{ imagen.exif.Aperture }}
+                </li>
+                <li>
+                  <v-icon size="50px">shutter_speed</v-icon>
+                  {{ imagen.exif.ShutterSpeed }}
+                </li>
+                <li>
+                  <v-icon size="50px">iso</v-icon>
+                  {{ imagen.exif.ISO }}
+                </li>
+                <li>
+                  <v-icon size="50px">flash_off</v-icon>
+                  {{ imagen.exif.Flash }}
+                </li>
+                <li>
+                  <v-icon size="50px">wb_sunny</v-icon>
+                  No es el valor real
+                </li>
+                <li>
+                  <img
+                    src="@/assets/lens-icon.svg"
+                    width="50px"
+                    height="50px"
+                  />
+                  {{ imagen.exif.FocalLength }}
+                </li>
+              </ul>
+              <div class="divider"></div>
+              <ul class="camera-info">
+                <li>
+                  <v-icon size="40px">camera_alt</v-icon>
+                  {{ imagen.exif.Model }}
+                </li>
+                <li
+                  class="flex align-center"
+                  style="transform: translateX(-5px)"
+                >
+                  <img
+                    src="@/assets/lens-icon.svg"
+                    width="50px"
+                    height="50px"
+                  />
+                  {{ imagen.exif.Lens }}
+                </li>
+              </ul>
+            </div>
+
+            <!-- Si es un video -->
+            <div
+              v-else-if="
+                (imagen.exif.FileType &&
+                  imagen.exif.FileType.toLowerCase() === 'mp4') ||
+                (imagen.exif.FileType &&
+                  imagen.exif.FileType.toLowerCase() === 'mov') ||
+                (imagen.exif.FileTypeExtension &&
+                  imagen.exif.FileType.toLowerCase() === 'mp4')
+              "
+            >
+              <ul class="image-info">
+                <li>
+                  <v-icon size="50px">burst_mode</v-icon>
+                  {{ imagen.exif.VideoFrameRate }} fps
+                </li>
+                <li>
+                  <v-icon size="50px">aspect_ratio</v-icon>
+                  {{ imagen.exif.ImageWidth }}px x
+                  {{ imagen.exif.ImageHeight }}px
+                </li>
+                <li>
+                  <v-icon size="50px">timer</v-icon>
+                  {{ imagen.exif.Duration }}
+                </li>
+              </ul>
+            </div>
           </div>
 
           <!-- Mapa -->

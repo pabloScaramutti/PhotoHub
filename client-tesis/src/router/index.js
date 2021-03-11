@@ -14,6 +14,8 @@ import AjustesAutomaticos from "../views/AjustesAutomaticos.vue";
 import NuevaAutomatizacion from "../views/NuevaAutomatizacion.vue";
 import SetEtiqueta from "../views/SetEtiqueta.vue";
 import Busqueda from "../views/Busqueda.vue";
+import Carpeta from "../views/Carpeta.vue";
+
 
 
 Vue.use(VueRouter);
@@ -93,6 +95,11 @@ const routes = [
     component: NuevaAutomatizacion
   },
   {
+    path: "/crear-set",
+    name: "CrearSet",
+    component: SetEtiqueta
+  },
+  {
     path: "/set-etiquetas/:set",
     name: "SetEtiqueta",
     component: SetEtiqueta
@@ -101,7 +108,12 @@ const routes = [
     path: "/busqueda",
     name: "Busqueda",
     component: Busqueda
-  }
+  },
+  {
+    path: "/carpetas/:id",
+    name: "Carpeta",
+    component: Carpeta
+  },
 ];
 
 const router = new VueRouter({

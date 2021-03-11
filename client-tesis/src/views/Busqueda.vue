@@ -1,17 +1,100 @@
 <template>
   <div class="busqueda">
-    <Search
-      label="Búsque fotos por palabras claves"
-      preppendIcon="search"
-      :clearBeforeSelect="true"
-      url="/etiquetas"
-      v-on:item-selected="agregarTag($event)"
-    />
-    <v-chip-group>
-      <v-chip v-for="(tag, i) in tagsBusqueda" :key="i" close color="primary">
-        {{ tag.nombre }}
-      </v-chip>
-    </v-chip-group>
+    <div class="configuracion-filtros">
+      <Search
+        label="Búsque fotos por palabras claves"
+        preppendIcon="search"
+        :clearBeforeSelect="true"
+        url="/etiquetas"
+        v-on:item-selected="agregarTag($event)"
+      />
+
+      <div class="flex align-baseline">
+        <h3
+          @click="changeModificadorPuntaje()"
+          class="modificador-puntaje"
+          style="user-select: none"
+        >
+          {{ modificadorPuntaje }}
+        </h3>
+        <Puntaje />
+      </div>
+
+      <div class="flex">
+        <div
+          @click="selectedColor = undefined"
+          class="color-tag"
+          :style="`background: gray;
+                  background: linear-gradient(135deg, rgba(255,255,255,1) 40%, rgba(255,0,0,1) 40%, rgba(255,0,0,1) 55%, rgba(255,255,255,1) 55%); 
+                  border: ${
+                    selectedColor === undefined ? '4px solid gray' : 'none'
+                  };`"
+        ></div>
+        <div
+          v-for="(color, i) in colors"
+          @click="selectedColor = color.nombre"
+          :key="i"
+          :style="`background-color: ${color.nombre}; border: ${
+            color.nombre === selectedColor ? '4px solid white' : 'none'
+          }`"
+          class="color-tag"
+        ></div>
+      </div>
+
+      <div class="flex justify-space-between">
+        <div>
+          <h4>Aperturas</h4>
+          <ul v-if="settingsFiltros.aperturas.length > 0">
+            <li v-for="(apertura, i) in settingsFiltros.aperturas" :key="i">
+              <p>{{ apertura.valor }}</p>
+            </li>
+          </ul>
+          <p v-else>No se registraron aperturas</p>
+        </div>
+        <div>
+          <h4>Velocidad Obturacion</h4>
+          <ul v-if="settingsFiltros.obturacion.length > 0">
+            <li v-for="(obturacion, i) in settingsFiltros.obturacion" :key="i">
+              <p>{{ obturacion.valor }}</p>
+            </li>
+          </ul>
+          <p v-else>No se registraron velocidades de obturacion</p>
+        </div>
+        <div>
+          <h4>ISO</h4>
+          <ul v-if="settingsFiltros.isos.length > 0">
+            <li v-for="(iso, i) in settingsFiltros.isos" :key="i">
+              <p>{{ iso.valor }}</p>
+            </li>
+          </ul>
+          <p v-else>No se registraron niveles de ISO</p>
+        </div>
+      </div>
+
+      <ul>
+        <li>Por fecha</li>
+        <li>Por settings</li>
+        <ul>
+          <li>apertura</li>
+          <li>velocidad de obturacion</li>
+          <li>iso</li>
+          <li>tamaño</li>
+          <li>flash</li>
+        </ul>
+        <li>nombre de imagen</li>
+        <li>carpeta</li>
+        <li>etiqueta</li>
+        <li>rating</li>
+        <li>etiqueta color</li>
+        <li>Video / Imagen</li>
+      </ul>
+
+      <v-chip-group>
+        <v-chip v-for="(tag, i) in tagsBusqueda" :key="i" close color="primary">
+          {{ tag.nombre }}
+        </v-chip>
+      </v-chip-group>
+    </div>
 
     <div v-if="fotos.length > 0">
       <div class="left">
@@ -43,6 +126,7 @@
 import Search from "@/components/Search";
 import GrillaFotos from "@/components/GrillaFotos_justifiedLayout";
 import FotoLista from "@/components/Foto_Lista";
+import Puntaje from "@/components/Puntaje";
 
 export default {
   name: "Busqueda",
@@ -51,6 +135,7 @@ export default {
     Search,
     GrillaFotos,
     FotoLista,
+    Puntaje,
   },
 
   data() {
@@ -62,9 +147,38 @@ export default {
         fin: 0,
       },
       colors: [],
+      selectedColor: undefined,
       folders: [],
       vista: "grilla",
+      modificadorPuntaje: "=",
+      settingsFiltros: {
+        aperturas: [],
+        isos: [],
+        obturacion: [],
+      },
     };
+  },
+
+  created() {
+    this.$http
+      .get("/colores")
+      .then((result) => (this.colors = result.data))
+      .catch((error) => {
+        console.log("No se pudieron cargar los colores", error);
+      });
+
+    this.$http
+      .get("/aperturas")
+      .then((r) => (this.settingsFiltros.aperturas = r.data))
+      .catch((e) => console.log("No se pudieron cargar las aperturas", e));
+    this.$http
+      .get("/obturacions")
+      .then((r) => (this.settingsFiltros.obturacion = r.data))
+      .catch((e) => console.log("No se pudieron cargar las obturaciones", e));
+    this.$http
+      .get("/isos")
+      .then((r) => (this.settingsFiltros.isos = r.data))
+      .catch((e) => console.log("No se pudieron cargar los valores iso", e));
   },
 
   methods: {
@@ -86,18 +200,46 @@ export default {
 
       return exist;
     },
+
+    changeModificadorPuntaje() {
+      if (this.modificadorPuntaje === "=") {
+        this.modificadorPuntaje = ">=";
+      } else if (this.modificadorPuntaje === ">=") {
+        this.modificadorPuntaje = "<=";
+      } else if (this.modificadorPuntaje === "<=") {
+        this.modificadorPuntaje = "=";
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .busqueda {
-  width: 80%;
-  margin: auto;
+  .configuracion-filtros {
+    width: 80%;
+    margin: auto;
+  }
 
   .left {
     display: flex;
     justify-content: flex-end;
+  }
+
+  .color-tag {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+
+  .align-baseline {
+    align-items: baseline;
+  }
+
+  .modificador-puntaje {
+    cursor: pointer;
   }
 }
 </style>

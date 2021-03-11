@@ -24,7 +24,7 @@ export default {
     },
     id: {
       type: Number,
-      required: true,
+      required: false,
     },
   },
   data() {
@@ -43,7 +43,7 @@ export default {
   },
   watch: {
     rating: function (newRating) {
-      if (newRating != this.puntajeInicial) {
+      if (this.id && newRating != this.puntajeInicial) {
         this.$http
           .put(`/fotos/${this.id}`, { puntuacion: this.rating })
           .then((r) => console.log("Se actualizó el puntaje:", r))

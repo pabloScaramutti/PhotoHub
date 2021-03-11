@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-toolbar dense flat style="background: transparent; height: 2.5rem">
-      <router-link to="">
+      <router-link :to="`/carpetas/${carpeta.id}`">
         <v-toolbar-title style="font-size: 1.1rem">
           {{ carpeta.nombre }}
         </v-toolbar-title>
