@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "set_etiquetas",
+  "info": {
+    "name": "Set etiquetas",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "etiquetas": {
+      "collection": "etiquetas",
+      "via": "set_etiquetas",
+      "dominant": true
+    },
+    "nombre": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    }
+  }
+}

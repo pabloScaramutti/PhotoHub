@@ -17,6 +17,10 @@
     "fotos": {
       "via": "color",
       "collection": "fotos"
+    },
+    "automatizaciones": {
+      "via": "color",
+      "collection": "automatizacion"
     }
   }
 }

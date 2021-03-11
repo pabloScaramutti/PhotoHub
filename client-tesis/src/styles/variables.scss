@@ -1,0 +1,8 @@
+$rating-padding: .2rem;
+
+@media (max-width: 700px) {
+  $headings: ('h1': ('size': 2.5rem,
+        'line-height': .9em),
+      'h2': ('size': 1rem,
+        'line-height': .3em));
+}

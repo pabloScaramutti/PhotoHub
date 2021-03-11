@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/aperturas",
+      "handler": "aperturas.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/aperturas/count",
+      "handler": "aperturas.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/aperturas/:id",
+      "handler": "aperturas.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/aperturas",
+      "handler": "aperturas.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/aperturas/:id",
+      "handler": "aperturas.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/aperturas/:id",
+      "handler": "aperturas.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

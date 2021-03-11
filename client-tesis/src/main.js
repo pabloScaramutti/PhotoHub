@@ -11,12 +11,13 @@ import "material-design-icons-iconfont/dist/material-design-icons.css";
 
 Vue.config.productionTip = false;
 
-Vue.use({
-  install(Vue) {
-    Vue.prototype.$urlApi = apiUrl;
-    Vue.prototype.$http = instanciaAxios;
-  }
-});
+Vue.use(
+  {
+    install(Vue) {
+      Vue.prototype.$apiUrl = apiUrl;
+      Vue.prototype.$http = instanciaAxios;
+    }
+  });
 
 new Vue({
   router,

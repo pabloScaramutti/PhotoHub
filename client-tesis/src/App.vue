@@ -19,9 +19,13 @@ import BottomBar from "./views/Layout/BottomBar";
 export default {
   name: "App",
 
+  data() {
+    return {};
+  },
+
   components: {
     NavBar,
-    BottomBar
+    BottomBar,
   },
 
   methods: {
@@ -34,11 +38,77 @@ export default {
         default:
           return true;
       }
-    }
+    },
   },
 
-  data: () => ({
+  /*data: () => ({
     //
-  })
+  })*/
 };
 </script>
+
+<style >
+p {
+  font-weight: 100;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.justify-space-around {
+  justify-content: space-around;
+}
+
+.justify-space-between {
+  justify-content: space-between;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.margin-auto {
+  margin: auto;
+}
+
+.loading {
+  padding: 30px;
+  display: flex;
+  margin: auto;
+}
+
+.floating-btn {
+  position: fixed;
+  bottom: 80px;
+  right: 25px;
+}
+
+.pop-up-alert {
+  position: fixed;
+  bottom: 10vh;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 4px;
+  border: none;
+  overflow: visible;
+}
+
+::-webkit-scrollbar-track {
+  background: #141519;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4e4e4e;
+}
+</style>

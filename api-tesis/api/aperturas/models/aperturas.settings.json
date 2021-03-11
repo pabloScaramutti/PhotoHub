@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "aperturas",
+  "info": {
+    "name": "aperturas",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "valor": {
+      "type": "string",
+      "unique": true
+    },
+    "fotos": {
+      "collection": "fotos"
+    }
+  }
+}

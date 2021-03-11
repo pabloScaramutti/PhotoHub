@@ -5,20 +5,21 @@
     background-color="negro"
     color="primary"
     dark
+    class="bottom-bar"
   >
     <v-btn :to="{ name: 'Home' }">
       <v-icon>home</v-icon>
     </v-btn>
 
-    <v-btn>
-      <v-icon>mdi-magnify</v-icon>
+    <v-btn :to="{ name: 'Busqueda' }">
+      <v-icon>search</v-icon>
     </v-btn>
 
-    <v-btn>
+    <v-btn :to="{ name: 'NuevaCarpeta' }">
       <v-icon>create_new_folder</v-icon>
     </v-btn>
 
-    <v-btn :to="{ name: 'Nota' }">
+    <v-btn :to="{ name: 'Notas' }">
       <v-icon>description</v-icon>
     </v-btn>
 
@@ -33,14 +34,14 @@ export default {
   name: "BottomBar",
   data() {
     return {
-      activo: undefined
+      activo: undefined,
     };
   },
-  created: function() {
+  created: function () {
     if (this.$router.currentRoute.name == "/") {
       this.activo = 0;
     }
-  }
+  },
 };
 </script>
 

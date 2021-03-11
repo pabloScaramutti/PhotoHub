@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "automatizaciones",
+  "info": {
+    "name": "Automatizacion",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "color": {
+      "model": "colores",
+      "via": "automatizaciones"
+    },
+    "inicio": {
+      "required": false,
+      "type": "datetime"
+    },
+    "fin": {
+      "type": "datetime"
+    },
+    "etiquetas": {
+      "collection": "etiquetas"
+    },
+    "activa": {
+      "type": "boolean",
+      "default": false
+    },
+    "descripcion": {
+      "type": "string"
+    }
+  }
+}

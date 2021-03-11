@@ -11,12 +11,15 @@ export default new Vuetify({
     dark: true,
     themes: {
       dark: {
-        primary: "#28F5BD",
+        primary: "#00b7ff",
         secondary: "#ff8c00",
         accent: "#9c27b0",
         blanco: "#ADB8D6",
         negro: "#1D1F26"
       }
     }
+  },
+  options: {
+    customProperties: true
   }
 });

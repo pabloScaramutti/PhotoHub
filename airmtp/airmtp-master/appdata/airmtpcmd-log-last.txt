@@ -1,0 +1,39 @@
+
+airmtp v1.1 - MTP network transfer of images/movies for cameras [GPL v3]
+Time: 10/14/20 11:09:16, Py: 3.7.3, OS: Linux
+
+>> Connection Failed <<
+
+There was no response at 192.168.1.1. Please confirm that your camera's
+Wifi is enabled and that you have specified the correct IP address.
+
+Connection established to 192.168.1.1:15740
+Camera Model "D5300", S/N "9683552"
+Clocks skewed: Camera: 10/14/20 11:09:40 AM, System: 10/14/20 11:09:46 AM
+Camera's date/time set to 10/14/20 11:09:46 AM
+Processed info for 23 files/dirs [0 from object cache, 0 previous]
+
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0001.MOV [size = 285,898,699] in 169.01 seconds (1.61 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0002.MOV [size = 77,151,815] in 46.81 seconds (1.57 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0003.MOV [size = 100,174,796] in 59.37 seconds (1.61 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0004.MOV [size = 478,920,053] in 295.74 seconds (1.54 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0005.MOV [size = 163,446,070] in 88.68 seconds (1.76 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0006.NEF [size = 19,907,884] in 10.37 seconds (1.83 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0007.NEF [size = 17,057,524] in 10.00 seconds (1.63 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0008.NEF [size = 17,062,482] in 9.09 seconds (1.79 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0009.NEF [size = 17,498,086] in 9.59 seconds (1.74 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0010.NEF [size = 17,485,886] in 8.77 seconds (1.90 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0011.NEF [size = 18,554,099] in 10.99 seconds (1.61 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0012.NEF [size = 18,515,989] in 12.44 seconds (1.42 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0013.MOV [size = 58,226,830] in 31.57 seconds (1.76 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0014.MOV [size = 666,668,611] in 371.96 seconds (1.71 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0015.MOV [size = 190,144,488] in 100.67 seconds (1.80 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0016.MOV [size = 27,531,259] in 14.43 seconds (1.82 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0017.MOV [size = 2,335,628,995] in 1479.23 seconds (1.51 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0018.NEF [size = 21,719,960] in 14.72 seconds (1.41 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0019.NEF [size = 21,301,990] in 12.78 seconds (1.59 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0020.NEF [size = 20,048,899] in 12.02 seconds (1.59 MB/s)
+/home/pi/Desktop/airmtp/airmtp-master/DSC_0021.NEF [size = 21,624,036] in 15.46 seconds (1.33 MB/s)
+
+21 files downloaded in 2783.71 seconds (Average Rate = 1.57 MB/s)
+>>>> airmtpcmd session over - App Exit Time: 10/14/20 12:00:09

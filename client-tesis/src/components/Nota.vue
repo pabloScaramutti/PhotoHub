@@ -21,14 +21,18 @@
                   paneles = 0;
                 "
                 :readonly="noEditableTitulo"
-                style="width:98%"
+                style="width: 98%"
               ></v-text-field>
-              <p class="fecha">{{ fechaCreacion }}</p>
+              <p class="fecha">
+                {{ fechaCreacion }}
+              </p>
             </v-col>
           </v-row>
         </v-expansion-panel-header>
         <v-divider></v-divider>
-        <v-expansion-panel-content style="padding: 1rem 0 0 0; background-color: #0f0f0f;">
+        <v-expansion-panel-content
+          style="padding: 1rem 0 0 0; background-color: #0f0f0f"
+        >
           <v-textarea
             outlined
             hide-details
@@ -58,23 +62,16 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-    <v-snackbar
-        v-model="alerta"
-      >
-        "Guarde las notas que estan activas antes de cerrar"
+    <v-snackbar v-model="alerta">
+      "Guarde las notas que estan activas antes de cerrar"
 
-        <template v-slot:action="{ attrs }">
-          <v-btn
-            color="pink"
-            text
-            v-bind="attrs"
-            @click="alerta = false"
-          >
-            Close
-          </v-btn>
-        </template>
-      </v-snackbar>
-    </div>
+      <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="alerta = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </div>
 </template>
 
 <script>
@@ -82,34 +79,47 @@ export default {
   name: "Nota",
   data() {
     return {
-      texto: "",
-      titulo: "",
-      fechaCreacion: "01/09/2020",
+      texto: this.text,
+      titulo: this.title,
       noEditableNota: true,
+      fechaCreacion: new Date().toLocaleString(),
       noEditableTitulo: true,
       paneles: undefined,
-      alerta: false
+      alerta: false,
     };
+  },
+  props: {
+    text: String,
+    title: String,
   },
   methods: {
     guardar() {
-      this.noEditableNota = true;
-      this.noEditableTitulo = true;
+      this.$http
+        .post("/notas", {
+          titulo: this.titulo,
+          contenido: this.texto,
+        })
+        .then((response) => {
+          console.log("Se creo la nota", response);
+          this.noEditableNota = true;
+          this.noEditableTitulo = true;
+        })
+        .catch((error) => console.log("No se pudo crear la nota", error));
     },
     focusTextArea(area) {
       this.$refs[area].$refs.input.focus();
     },
-    avisoGuardado(){
-      if( this.seEstaEditando && event.target.tagName != "INPUT" ){
+    avisoGuardado() {
+      if (this.seEstaEditando && event.target.tagName != "INPUT") {
         this.alerta = true;
       }
-    }
+    },
   },
   computed: {
-    seEstaEditando: function() {
-      return !(this.noEditableNota && this.noEditableTitulo)
-    }
-  }
+    seEstaEditando: function () {
+      return !(this.noEditableNota && this.noEditableTitulo);
+    },
+  },
 };
 </script>
 

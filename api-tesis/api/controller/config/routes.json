@@ -1,0 +1,60 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/controllers",
+      "handler": "controller.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/controllers/count",
+      "handler": "controller.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/controllers/:id",
+      "handler": "controller.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/controllers",
+      "handler": "controller.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/controllers/connect",
+      "handler": "controller.connect",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/controllers/:id",
+      "handler": "controller.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/controllers/:id",
+      "handler": "controller.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

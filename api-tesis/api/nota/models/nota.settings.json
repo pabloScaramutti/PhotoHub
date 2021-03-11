@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "notas",
+  "info": {
+    "name": "Nota",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "contenido": {
+      "type": "string",
+      "required": true
+    },
+    "titulo": {
+      "type": "string"
+    }
+  }
+}
