@@ -22,48 +22,66 @@
 
       <div class="flex">
         <div
-          @click="selectedColor = undefined"
+          @click="selectedFilters.color = undefined"
           class="color-tag"
           :style="`background: gray;
                   background: linear-gradient(135deg, rgba(255,255,255,1) 40%, rgba(255,0,0,1) 40%, rgba(255,0,0,1) 55%, rgba(255,255,255,1) 55%); 
                   border: ${
-                    selectedColor === undefined ? '4px solid gray' : 'none'
+                    selectedFilters.color === undefined
+                      ? '4px solid gray'
+                      : 'none'
                   };`"
         ></div>
         <div
           v-for="(color, i) in colors"
-          @click="selectedColor = color.nombre"
+          @click="selectedFilters.color = color.nombre"
           :key="i"
           :style="`background-color: ${color.nombre}; border: ${
-            color.nombre === selectedColor ? '4px solid white' : 'none'
+            color.nombre === selectedFilters.color ? '4px solid white' : 'none'
           }`"
           class="color-tag"
         ></div>
       </div>
 
-      <div class="flex justify-space-between">
-        <div>
-          <h4>Aperturas</h4>
+      <div class="grid-container">
+        <div class="filtros-camera-settings">
+          <h5>Aperturas</h5>
           <ul v-if="settingsFiltros.aperturas.length > 0">
-            <li v-for="(apertura, i) in settingsFiltros.aperturas" :key="i">
-              <p>{{ apertura.valor }}</p>
+            <li
+              v-for="(apertura, i) in settingsFiltros.aperturas"
+              :key="i"
+              @click="selectedFilters.apertura = apertura"
+            >
+              <p>
+                {{ apertura.valor }}
+              </p>
             </li>
           </ul>
           <p v-else>No se registraron aperturas</p>
         </div>
-        <div>
-          <h4>Velocidad Obturacion</h4>
+        <div class="filtros-camera-settings">
+          <h5>Velocidad Obturacion</h5>
           <ul v-if="settingsFiltros.obturacion.length > 0">
-            <li v-for="(obturacion, i) in settingsFiltros.obturacion" :key="i">
-              <p>{{ obturacion.valor }}</p>
+            <li
+              v-for="(obturacion, i) in settingsFiltros.obturacion"
+              :key="i"
+              @click="selectedFilters.obturacion = obturacion"
+            >
+              <p>
+                {{ obturacion.valor }}
+              </p>
             </li>
           </ul>
           <p v-else>No se registraron velocidades de obturacion</p>
         </div>
-        <div>
-          <h4>ISO</h4>
+        <div class="filtros-camera-settings">
+          <h5>ISO</h5>
           <ul v-if="settingsFiltros.isos.length > 0">
-            <li v-for="(iso, i) in settingsFiltros.isos" :key="i">
+            <li
+              v-for="(iso, i) in settingsFiltros.isos"
+              :key="i"
+              @click="selectedFilters.iso = iso"
+            >
               <p>{{ iso.valor }}</p>
             </li>
           </ul>
@@ -147,7 +165,6 @@ export default {
         fin: 0,
       },
       colors: [],
-      selectedColor: undefined,
       folders: [],
       vista: "grilla",
       modificadorPuntaje: "=",
@@ -155,6 +172,12 @@ export default {
         aperturas: [],
         isos: [],
         obturacion: [],
+      },
+      selectedFilters: {
+        apertura: undefined,
+        iso: undefined,
+        obturacion: undefined,
+        color: undefined,
       },
     };
   },
@@ -240,6 +263,35 @@ export default {
 
   .modificador-puntaje {
     cursor: pointer;
+  }
+
+  .grid-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .filtros-camera-settings {
+    width: 32%;
+    min-width: 200px;
+    margin-right: 1%;
+
+    ul {
+      padding: 0;
+    }
+
+    li {
+      list-style-type: none;
+      cursor: pointer;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    li:hover {
+      background-color: gray;
+    }
   }
 }
 </style>

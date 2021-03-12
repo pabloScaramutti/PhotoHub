@@ -32,6 +32,11 @@ module.exports = {
           source: exifPath
         }).then((exif) => {
           data.exif = exif;
+          if (data.exif.FileTypeExtension && data.exif.FileTypeExtension.toLowerCase() === 'nef' && data.exif.Orientation !== 'Horizontal (normal)') {
+            let width = data.exif.ImageWidth;
+            data.exif.ImageWidth = data.exif.ImageHeight;
+            data.exif.ImageHeight = width;
+          }
         })
       }
 
@@ -47,9 +52,9 @@ module.exports = {
       let videoThumbnail;
       let videoEntity;
 
-      if (files.img && (files.img.type.localeCompare('video/mp4') || files.img.type.localeCompare('video/mov'))) {
+      if (files.img && (files.img.type.localeCompare('video/mp4') == 0 || files.img.type.localeCompare('video/mov') == 0)) {
         console.log("Hay un video")
-        thumbnailData = await this.extractScreenshot(files.img.path, files.img.name)
+        thumbnailData = await this.extractScreenshot(files.img.path, files.img.name);
         videoThumbnail = await strapi.plugins.upload.services.upload.upload(
           {
             data: { fileInfo: {} }, files: {
@@ -65,6 +70,18 @@ module.exports = {
         videoEntity = await strapi.services.fotos.update({ id: entity.id }, { thumbnail: videoThumbnail[0].id })
         console.log("VIDEO ENTITYYYYYYYYYYYYYYYYYYYYY", videoEntity);
 
+      } else {
+
+        // If not video create search parameters
+        let update = await this.createOrUpdateServiceItem("iso", entity, entity.exif.ISO.toString());
+        console.log("ISO", update);
+
+        update = await this.createOrUpdateServiceItem("aperturas", entity, entity.exif.Aperture.toString());
+        console.log("Apertura", update);
+
+        update = await this.createOrUpdateServiceItem("obturacion", entity, entity.exif.ShutterSpeed.toString());
+        console.log("Obturador", update);
+
       }
       //console.log(notificacion);
     } else {
@@ -74,6 +91,18 @@ module.exports = {
 
     strapi.io.emit('nuevaFoto', entity);
     return sanitizeEntity(entity, { model: strapi.models.fotos });
+  },
+
+
+  async createOrUpdateServiceItem(service, entity, compareValue) {
+    let exist = await strapi.services[service].findOne({ valor: compareValue });
+    if (exist) {
+      exist.fotos.push(entity);
+      return await strapi.services[service].update({ id: exist.id }, { fotos: exist.fotos.map(e => e.id) });
+    } else {
+      console.log("Valor nuevo");
+      return await strapi.services[service].create({ valor: compareValue, fotos: entity.id });
+    }
   },
 
   async extractScreenshot(inputURL, videoName) {

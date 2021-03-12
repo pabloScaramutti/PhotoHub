@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="justified-layout">
-    <template v-if="pros_img">
+    <template v-if="pros_img && pros_img.length > 0">
       <v-btn text small @click="sizeUp()" :disabled="!(imgSize < 500)"
         ><v-icon>zoom_in</v-icon></v-btn
       >
@@ -59,12 +59,13 @@
       </vue-justified-layout>
     </template>
     <v-progress-circular
-      v-else
+      v-else-if="!pros_img"
       indeterminate
       size="50"
       color="primary"
       class="loading"
     ></v-progress-circular>
+    <h4 v-else-if="pros_img.length < 1">No hay nada que mostrar</h4>
   </v-container>
 </template>
 
