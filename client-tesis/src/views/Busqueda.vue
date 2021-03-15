@@ -7,13 +7,13 @@
         :clearBeforeSelect="true"
         url="/etiquetas"
         v-on:item-selected="agregarTag($event)"
+        v-on:item-created="agregarTag($event)"
       />
 
       <div class="flex align-baseline">
         <h3
           @click="changeModificadorPuntaje()"
-          class="modificador-puntaje"
-          style="user-select: none"
+          class="modificador-puntaje evitar-seleccion-txt"
         >
           {{ modificadorPuntaje }}
         </h3>
@@ -22,22 +22,21 @@
 
       <div class="flex">
         <div
-          @click="selectedFilters.color = undefined"
-          class="color-tag"
-          :style="`background: gray;
-                  background: linear-gradient(135deg, rgba(255,255,255,1) 40%, rgba(255,0,0,1) 40%, rgba(255,0,0,1) 55%, rgba(255,255,255,1) 55%); 
-                  border: ${
-                    selectedFilters.color === undefined
-                      ? '4px solid gray'
-                      : 'none'
-                  };`"
+          @click="selectFilter('color', selectedFilters.color)"
+          class="color-tag color-tag-none"
+          :style="`border: ${
+            !selectedFilters.color ? '4px solid gray' : 'none'
+          };`"
         ></div>
         <div
           v-for="(color, i) in colors"
-          @click="selectedFilters.color = color.nombre"
+          @click="selectFilter('color', color)"
           :key="i"
           :style="`background-color: ${color.nombre}; border: ${
-            color.nombre === selectedFilters.color ? '4px solid white' : 'none'
+            selectedFilters.color &&
+            color.nombre === selectedFilters.color.nombre
+              ? '4px solid white'
+              : 'none'
           }`"
           class="color-tag"
         ></div>
@@ -46,13 +45,14 @@
       <div class="grid-container">
         <div class="filtros-camera-settings">
           <h5>Aperturas</h5>
-          <ul v-if="settingsFiltros.aperturas.length > 0">
+          <ul v-if="settingsFiltros.aperturas.length">
             <li
               v-for="(apertura, i) in settingsFiltros.aperturas"
               :key="i"
-              @click="selectedFilters.apertura = apertura"
+              @click="selectFilter('apertura', apertura)"
+              :class="selectedFilters.apertura == apertura && 'selected-item'"
             >
-              <p>
+              <p class="evitar-seleccion-txt">
                 {{ apertura.valor }}
               </p>
             </li>
@@ -61,13 +61,16 @@
         </div>
         <div class="filtros-camera-settings">
           <h5>Velocidad Obturacion</h5>
-          <ul v-if="settingsFiltros.obturacion.length > 0">
+          <ul v-if="settingsFiltros.obturacion.length">
             <li
               v-for="(obturacion, i) in settingsFiltros.obturacion"
               :key="i"
-              @click="selectedFilters.obturacion = obturacion"
+              @click="selectFilter('obturacion', obturacion)"
+              :class="
+                selectedFilters.obturacion == obturacion && 'selected-item'
+              "
             >
-              <p>
+              <p class="evitar-seleccion-txt">
                 {{ obturacion.valor }}
               </p>
             </li>
@@ -76,13 +79,14 @@
         </div>
         <div class="filtros-camera-settings">
           <h5>ISO</h5>
-          <ul v-if="settingsFiltros.isos.length > 0">
+          <ul v-if="settingsFiltros.isos.length">
             <li
               v-for="(iso, i) in settingsFiltros.isos"
               :key="i"
-              @click="selectedFilters.iso = iso"
+              @click="selectFilter('iso', iso)"
+              :class="selectedFilters.iso == iso && 'selected-item'"
             >
-              <p>{{ iso.valor }}</p>
+              <p class="evitar-seleccion-txt">{{ iso.valor }}</p>
             </li>
           </ul>
           <p v-else>No se registraron niveles de ISO</p>
@@ -99,6 +103,7 @@
           <li>tamaño</li>
           <li>flash</li>
         </ul>
+        <li>geograficamente</li>
         <li>nombre de imagen</li>
         <li>carpeta</li>
         <li>etiqueta</li>
@@ -108,13 +113,19 @@
       </ul>
 
       <v-chip-group>
-        <v-chip v-for="(tag, i) in tagsBusqueda" :key="i" close color="primary">
+        <v-chip
+          v-for="(tag, i) in tagsBusqueda"
+          :key="i"
+          close
+          color="primary"
+          @click:close="removeTag(i)"
+        >
           {{ tag.nombre }}
         </v-chip>
       </v-chip-group>
     </div>
 
-    <div v-if="fotos.length > 0">
+    <div v-if="fotos.length">
       <div class="left">
         <v-icon v-if="vista === 'grilla'" @click="vista = 'lista'" medium
           >view_list</v-icon
@@ -206,16 +217,24 @@ export default {
 
   methods: {
     agregarTag(t) {
-      this.tagsBusqueda.push(t);
-      t.fotos.forEach((foto) => {
-        this.existInArrayById(this.fotos, foto) < 0 && this.fotos.push(foto);
-      });
+      let exist = this.existInArrayById(this.tagsBusqueda, t);
+      if (exist == -1) {
+        this.tagsBusqueda.push(t);
+        this.selectedFilters[t.nombre] = { fotos: t.fotos };
+        this.selectFilter(t.nombre, t);
+      }
+    },
+
+    removeTag(index) {
+      this.selectedFilters[this.tagsBusqueda[index].nombre] = undefined;
+      this.tagsBusqueda.splice(index, 1);
+      this.removePhotoFilter();
     },
 
     existInArrayById(array, foto) {
       let exist = -1;
 
-      if (array.length > 0) {
+      if (array.length) {
         array.forEach((elem, i) => {
           if (elem.id == foto.id) exist = i;
         });
@@ -225,13 +244,123 @@ export default {
     },
 
     changeModificadorPuntaje() {
-      if (this.modificadorPuntaje === "=") {
-        this.modificadorPuntaje = ">=";
-      } else if (this.modificadorPuntaje === ">=") {
-        this.modificadorPuntaje = "<=";
-      } else if (this.modificadorPuntaje === "<=") {
-        this.modificadorPuntaje = "=";
+      const modificadores = {
+        "=": ">=",
+        ">=": "<=",
+        "<=": "=",
+      };
+      this.modificadorPuntaje = modificadores[this.modificadorPuntaje];
+    },
+
+    addPhotoFilter(selectedFilter, photos) {
+      console.log("ADDING________________________________");
+      console.log(
+        "Fotos filtradas:",
+        this.fotos.map((e) => e.id)
+      );
+
+      let filters = this.getFiltersInUse();
+      if (filters.length == 0) {
+        this.fotos.push(...photos);
+      } else {
+        let existInEvery;
+        let intersectedPhotos = [];
+        for (let photo of photos) {
+          for (let filter of filters) {
+            if (selectedFilter == filter) {
+              continue;
+            }
+            existInEvery = this.existInArrayById(
+              this.selectedFilters[filter].fotos,
+              photo
+            );
+            if (existInEvery == -1) {
+              break;
+            }
+          }
+          if (existInEvery != -1) {
+            intersectedPhotos.push(photo);
+          }
+        }
+
+        this.fotos = intersectedPhotos;
+        console.log("RESULT_ADDING________________________________");
+        console.log(
+          "Fotos filtradas:",
+          this.fotos.map((e) => e.id)
+        );
       }
+    },
+
+    removePhotoFilter() {
+      console.log("REMOVING-----------------------------");
+      console.log(
+        "Fotos filtradas:",
+        this.fotos.map((e) => e.id)
+      );
+      let filters = this.getFiltersInUse();
+      if (filters.length == 0) {
+        this.fotos = [];
+      } else {
+        console.log("filtros activos", filters, filters[0]);
+        let intersectedPhotos = [];
+        let firstFilterPhotos = this.selectedFilters[filters[0]].fotos;
+        console.log("intersectedPhotos", intersectedPhotos);
+
+        for (let photo of firstFilterPhotos) {
+          let exist;
+          for (
+            let filterIndex = 1;
+            filterIndex < filters.length;
+            filterIndex++
+          ) {
+            exist = this.existInArrayById(
+              this.selectedFilters[filters[filterIndex]].fotos,
+              photo
+            );
+
+            if (exist == -1) {
+              break;
+            }
+          }
+          if (exist != -1) {
+            intersectedPhotos.push(photo);
+          }
+        }
+
+        this.fotos = intersectedPhotos;
+
+        console.log("RESULT_ADDING________________________________");
+        console.log(
+          "Fotos filtradas:",
+          this.fotos.map((e) => e.id)
+        );
+        //this.fotos = intersectedPhotos;
+      }
+    },
+
+    selectFilter(filter, value) {
+      if (
+        this.selectedFilters[filter] &&
+        this.selectedFilters[filter] == value
+      ) {
+        this.selectedFilters[filter] = undefined;
+        this.removePhotoFilter();
+      } else {
+        this.selectedFilters[filter] = value;
+        this.addPhotoFilter(filter, value.fotos);
+      }
+    },
+
+    getFiltersInUse() {
+      let filters = [];
+      for (let filter in this.selectedFilters) {
+        let item = this.selectedFilters[filter];
+        if (item) {
+          filters.push(filter.toString());
+        }
+      }
+      return filters;
     },
   },
 };
@@ -242,6 +371,10 @@ export default {
   .configuracion-filtros {
     width: 80%;
     margin: auto;
+  }
+
+  .evitar-seleccion-txt {
+    user-select: none;
   }
 
   .left {
@@ -255,6 +388,17 @@ export default {
     height: 20px;
     border-radius: 50%;
     margin-right: 20px;
+  }
+
+  .color-tag-none {
+    background: gray;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 1) 40%,
+      rgba(255, 0, 0, 1) 40%,
+      rgba(255, 0, 0, 1) 55%,
+      rgba(255, 255, 255, 1) 55%
+    );
   }
 
   .align-baseline {
@@ -283,6 +427,7 @@ export default {
     li {
       list-style-type: none;
       cursor: pointer;
+      padding: 2px;
 
       p {
         margin: 0;
@@ -290,7 +435,11 @@ export default {
     }
 
     li:hover {
-      background-color: gray;
+      background-color: rgb(150, 150, 150);
+    }
+
+    .selected-item {
+      background-color: rgb(42, 170, 255);
     }
   }
 }

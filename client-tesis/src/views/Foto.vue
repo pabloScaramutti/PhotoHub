@@ -293,7 +293,7 @@
               <v-icon>location_on</v-icon>
               {{
                 imagen.exif.GPSPosition
-                  ? "un lugar, Argentina"
+                  ? `${imagen.ubicacion.ciudad}, ${imagen.ubicacion.provincia}, ${imagen.ubicacion.pais}`
                   : "No tiene una ubicación guardada"
               }}
             </div>
@@ -324,6 +324,7 @@
 import Puntaje from "@/components/Puntaje";
 import Mapa from "@/components/Mapa";
 import Search from "@/components/Search";
+import Axios from "axios";
 
 export default {
   components: {
@@ -359,6 +360,20 @@ export default {
       .get(this.$route.path)
       .then((result) => {
         this.imagen = result.data;
+        if (this.imagen.exif.GPSPosition) {
+          Axios.get(
+            `https://nominatim.openstreetmap.org/reverse.php?lat=${this.getImgLat}&lon=${this.getImgLong}&zoom=18&format=jsonv2`
+          )
+            .then((r) => {
+              this.imagen.ubicacion = {
+                pais: r.data.address?.country,
+                ciudad: r.data.address?.city,
+                provincia: r.data.address?.state,
+              };
+              console.log(r);
+            })
+            .catch((e) => console.log(e));
+        }
       })
       .catch((error) => {
         console.log("Ocurrio un error", error);
