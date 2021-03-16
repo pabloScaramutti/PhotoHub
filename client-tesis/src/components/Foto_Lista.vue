@@ -134,7 +134,7 @@ export default {
     Puntaje,
   },
   props: {
-    img: {
+    image: {
       type: undefined,
       required: true,
     },
@@ -147,23 +147,30 @@ export default {
     return {
       color: "gray",
       state: "especificaciones",
+      img: {},
     };
   },
   mounted() {
-    if (!this.img.exif.Rating) {
-      this.img.exif.Rating = 0;
-    }
-
-    if (this.img.color) {
+    if (!this.image.etiquetas) {
+      this.$http
+        .get(`/fotos/${this.image.id}`)
+        .then((r) => {
+          this.img = r.data;
+          this.color = this.img.color.nombre;
+        })
+        .catch((e) => console.log("Hubo un error para cargar la imagen", e));
+    } else if (this.img.color) {
       if (this.img.color.nombre) this.color = this.img.color.nombre;
       else {
         this.$http
-          .get(`/colores/${this.img.color}`)
+          .get(`/colores/${this.image.color}`)
           .then((r) => (this.color = r.data.nombre))
           .catch((e) =>
             console.log("Hubo un error para cargar etiqueta de color", e)
           );
       }
+    } else {
+      this.img = this.image;
     }
 
     //console.log(this.img);
@@ -198,7 +205,9 @@ export default {
         (this.img.exif.FileType &&
           this.img.exif.FileType.toLowerCase() === "jpg") ||
         (this.img.exif.FileTypeExtension &&
-          this.img.exif.FileType.toLowerCase() === "nef")
+          this.img.exif.FileType.toLowerCase() === "nef") ||
+        (this.img.exif.FileTypeExtension &&
+          this.img.exif.FileType.toLowerCase() === "png")
       );
     },
   },

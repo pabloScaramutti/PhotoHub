@@ -21,7 +21,7 @@
       </router-link>
     </div>
     <h2>Notificaciones</h2>
-    <FotoLista v-for="(item, index) in imagenes" :key="index" :img="item" />
+    <FotoLista v-for="(item, index) in imagenes" :key="index" :image="item" />
   </div>
 </template>
 

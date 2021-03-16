@@ -204,7 +204,9 @@
                 (imagen.exif.FileType &&
                   imagen.exif.FileType.toLowerCase() === 'jpg') ||
                 (imagen.exif.FileTypeExtension &&
-                  imagen.exif.FileType.toLowerCase() === 'nef')
+                  imagen.exif.FileType.toLowerCase() === 'nef') ||
+                (imagen.exif.FileTypeExtension &&
+                  imagen.exif.FileType.toLowerCase() === 'png')
               "
             >
               <ul class="image-info">

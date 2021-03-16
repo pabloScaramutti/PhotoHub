@@ -31,7 +31,13 @@
             style="margin: 0 2px; border-radius: 3px"
           >
             <img
-              :src="$apiUrl(item.thumbnail.url)"
+              :src="
+                $apiUrl(
+                  item.thumbnail.formats
+                    ? item.thumbnail.formats.medium.url
+                    : item.thumbnail.url
+                )
+              "
               :alt="item.nombre"
               class="imagen-slider"
             />

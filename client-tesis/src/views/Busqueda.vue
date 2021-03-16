@@ -17,7 +17,7 @@
         >
           {{ modificadorPuntaje }}
         </h3>
-        <Puntaje />
+        <Puntaje v-on:nuevoPuntaje="nuevoFiltroPuntaje($event)" />
       </div>
 
       <div class="flex">
@@ -144,7 +144,7 @@
       />
       <div v-else-if="vista === 'lista'">
         <div v-for="(foto, i) in fotos" :key="i">
-          <FotoLista :img="foto"> </FotoLista>
+          <FotoLista :image="foto"> </FotoLista>
         </div>
       </div>
     </div>
@@ -171,10 +171,7 @@ export default {
     return {
       fotos: [],
       tagsBusqueda: [],
-      rangeRating: {
-        inicio: 0,
-        fin: 0,
-      },
+      rating: 0,
       colors: [],
       folders: [],
       vista: "grilla",
@@ -189,6 +186,7 @@ export default {
         iso: undefined,
         obturacion: undefined,
         color: undefined,
+        puntaje: undefined,
       },
     };
   },
@@ -250,6 +248,7 @@ export default {
         "<=": "=",
       };
       this.modificadorPuntaje = modificadores[this.modificadorPuntaje];
+      this.nuevoFiltroPuntaje(this.rating);
     },
 
     addPhotoFilter(selectedFilter, photos) {
@@ -361,6 +360,31 @@ export default {
         }
       }
       return filters;
+    },
+
+    nuevoFiltroPuntaje(event) {
+      this.rating = event != 0 ? event : undefined;
+      if (this.rating) {
+        const filter = {
+          "=": "eq",
+          ">=": "gte",
+          "<=": "lte",
+        };
+
+        this.$http
+          .get(
+            `/fotos?puntuacion_${filter[this.modificadorPuntaje]}=${
+              this.rating
+            }`
+          )
+          .then((r) => {
+            this.selectedFilters.puntaje = { fotos: r.data };
+            this.addPhotoFilter("puntaje", r.data);
+          });
+      } else {
+        this.selectedFilters.puntaje = undefined;
+        this.removePhotoFilter();
+      }
     },
   },
 };

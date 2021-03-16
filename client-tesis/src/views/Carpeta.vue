@@ -31,7 +31,7 @@
           <Grilla v-if="vista === 'grilla'" :imagenes="carpeta.fotos" />
           <div v-else-if="vista === 'lista'">
             <div v-for="(foto, i) in carpeta.fotos" :key="i">
-              <FotoLista :img="foto"> </FotoLista>
+              <FotoLista :image="foto"> </FotoLista>
             </div>
           </div>
         </div>

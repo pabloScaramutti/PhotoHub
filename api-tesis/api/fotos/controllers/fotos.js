@@ -30,12 +30,21 @@ module.exports = {
       if (exifPath) {
         await exiftool.getTags({
           source: exifPath
-        }).then((exif) => {
+        }).then(async (exif) => {
           data.exif = exif;
           if (data.exif.FileTypeExtension && data.exif.FileTypeExtension.toLowerCase() === 'nef' && data.exif.Orientation !== 'Horizontal (normal)') {
             let width = data.exif.ImageWidth;
             data.exif.ImageWidth = data.exif.ImageHeight;
             data.exif.ImageHeight = width;
+          }
+          if (files.img && exifPath === files.img.path)
+            files.img.type = data.exif.MIMEType;
+          if (files.thumbnail && exifPath === files.thumbnail.path)
+            files.thumbnail.type = data.exif.MIMEType;
+          else {
+            await exiftool.getTags({
+              source: files.thumbnail.path
+            }).then(r => files.thumbnail.type = r.MIMEType).catch("No se pudo encontrar el MIMEType")
           }
         })
       }
@@ -71,7 +80,6 @@ module.exports = {
         console.log("VIDEO ENTITYYYYYYYYYYYYYYYYYYYYY", videoEntity);
 
       } else {
-
         // If not video create search parameters
         let update = await this.createOrUpdateServiceItem("iso", entity, entity.exif.ISO.toString());
         console.log("ISO", update);

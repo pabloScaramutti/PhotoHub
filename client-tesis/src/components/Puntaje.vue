@@ -51,6 +51,8 @@ export default {
             console.log("Hubo un problema al actualizar el puntaje:", e)
           );
         this.$emit("nuevoPuntaje", newRating);
+      } else {
+        this.$emit("nuevoPuntaje", newRating);
       }
     },
   },

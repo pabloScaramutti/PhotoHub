@@ -192,11 +192,18 @@ export default {
       );
       data.append(
         "files.thumbnail",
-        this.im.filter((item) => item.type === "image/jpeg")[0]
+        this.im.filter(
+          (item) =>
+            item.type === "image/jpeg" ||
+            item.type === "image/png" ||
+            item.type === "image/jpg"
+        )[0]
       );
       data.append("data", JSON.stringify(info));
 
       this.uploadingFile = true;
+
+      console.log("Lo que va a mandar", data);
 
       this.$http
         .post("http://192.168.0.123:1337/fotos", data, options)
