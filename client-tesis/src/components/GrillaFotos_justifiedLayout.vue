@@ -27,6 +27,7 @@
           :disabled="selectable"
           class="item-jl"
         >
+          <!--@click="goToPhotos(item)" -->
           <v-icon v-if="selectable && !item.selected" class="checkbox"
             >check_box_outline_blank</v-icon
           >
@@ -187,6 +188,12 @@ export default {
       }
       return false;
     },
+
+    // goToPhotos(item){
+    //   localStorage.setItem("listaDeFotos", this.imagenes);
+    //   localStorage.setItem("fotoActual", item);
+    //   this.$route.push( {name: 'foto'} )
+    // }
   },
 };
 </script>
