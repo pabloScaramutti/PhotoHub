@@ -21,7 +21,11 @@
       </router-link>
     </div>
     <h2>Notificaciones</h2>
-    <FotoLista v-for="(item, index) in imagenes" :key="index" :image="item" />
+    <FotoLista
+      v-for="(item, index) in notificaciones"
+      :key="index"
+      :image="item.foto"
+    />
   </div>
 </template>
 
@@ -36,27 +40,14 @@ export default {
   data() {
     return {
       notificaciones: undefined,
-      imagenes: undefined,
     };
   },
-  mounted() {
+  created() {
     this.$http
-      .get("/notificaciones?_sort=created_at:DESC&_limit=15")
+      .get("/notificaciones?_sort=id:DESC&_limit=15")
       .then((response) => {
         //console.log(response);
         this.notificaciones = response.data;
-        if (this.notificaciones) {
-          //console.log(this.notificaciones);
-          this.imagenes = [];
-          this.notificaciones.map((item) => {
-            this.$http.get(`/fotos/${item.foto.id}`).then((response) => {
-              this.imagenes.push(response.data);
-            });
-            //item.foto;
-          });
-
-          //console.log(this.imagenes);
-        }
       })
       .catch((error) => {
         console.log("Se produjo un error", error);

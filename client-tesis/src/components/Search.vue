@@ -15,7 +15,6 @@
       fullscreen
       hide-overlay
       transition="dialog-bottom-transition"
-      class=""
     >
       <v-card>
         <v-toolbar dark color="primary">
@@ -200,6 +199,7 @@ export default {
           .then((response) => {
             this.loading = false;
             this.suggestion = response.data;
+            this.sendEvent("newSugestionList", this.suggestion);
           })
           .catch((error) => console.log(error));
         this.awaitingSearch = false;

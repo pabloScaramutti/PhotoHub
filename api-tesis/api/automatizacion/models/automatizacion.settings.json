@@ -36,6 +36,18 @@
     },
     "descripcion": {
       "type": "string"
+    },
+    "multipleDate": {
+      "type": "json"
+    },
+    "dateType": {
+      "type": "enumeration",
+      "enum": [
+        "siempre",
+        "unico",
+        "rango",
+        "multiple"
+      ]
     }
   }
 }

@@ -79,14 +79,21 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
+
+    <div v-if="showPhotoNotification" class="new-notification">
+      <Foto_Lista width="350px" :image="newPhoto" />
+    </div>
   </div>
 </template>
 
 <script>
 import io from "socket.io-client";
-import servidor from "@/config/servidor.json"
+import servidor from "@/config/servidor.json";
+import sound from "@/assets/notificationSound.mp3";
+import Foto_Lista from "../../components/Foto_Lista.vue";
 
 export default {
+  components: { Foto_Lista },
   data() {
     return {
       drawer: null,
@@ -99,6 +106,10 @@ export default {
       algunaCosa: String,
       noLeidos: [],
       showBack: this.checkRoute(),
+
+      audio: new Audio(sound),
+      newPhoto: undefined,
+      showPhotoNotification: false,
     };
   },
 
@@ -111,18 +122,29 @@ export default {
       this.algunaCosa = data;
     });
     this.socket.on("recibido", (data) => {
+      this.audio.play();
       this.noLeidos.push(data);
       //console.log(this.noLeidos);
     });
     this.socket.on("nuevaFoto", (data) => {
       this.noLeidos.push(data);
+      this.newPhoto = data;
+      this.showPhotoNotification = true;
       console.log("Recibi una nueva foto", data);
+      this.audio.play();
     });
   },
 
   watch: {
     $route() {
       this.showBack = this.checkRoute();
+    },
+    showPhotoNotification: function (v) {
+      if (v) {
+        setTimeout(() => {
+          this.showPhotoNotification = false;
+        }, 5000);
+      }
     },
   },
 
@@ -167,6 +189,16 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.new-notification {
+  position: fixed;
+  bottom: 55px;
+  left: 0px;
+  background-color: #1d1f26;
+  z-index: 5;
+  padding: 4px 10px 4px 5px;
+  border-radius: 5px;
 }
 
 // esto borrar cuando saque el boton prueba madnar-----

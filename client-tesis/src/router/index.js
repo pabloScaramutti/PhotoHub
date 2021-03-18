@@ -90,8 +90,13 @@ const routes = [
     component: AjustesAutomaticos
   },
   {
-    path: "/nueva-automatizacion",
+    path: "/crear-automatizacion",
     name: "NuevaAutomatizacion",
+    component: NuevaAutomatizacion
+  },
+  {
+    path: "/editar-automatizacion/:automatizacion",
+    name: "ModificarAutomatizacion",
     component: NuevaAutomatizacion
   },
   {

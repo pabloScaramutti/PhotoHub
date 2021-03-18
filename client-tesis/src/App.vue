@@ -97,6 +97,16 @@ p {
   bottom: 10vh;
 }
 
+.done-confirm-btn-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.m-bottom-10 {
+  margin-bottom: 10px;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
   height: 4px;

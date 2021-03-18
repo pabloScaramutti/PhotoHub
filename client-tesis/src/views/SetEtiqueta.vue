@@ -291,16 +291,6 @@ export default {
   }
 }
 
-.done-confirm-btn-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.m-bottom-10 {
-  margin-bottom: 10px;
-}
-
 #add-set {
   display: flex;
   margin: auto;
