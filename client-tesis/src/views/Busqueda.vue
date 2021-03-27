@@ -3,7 +3,7 @@
     <div class="configuracion-filtros">
       <Search
         label="Búsque fotos por palabras claves"
-        preppendIcon="search"
+        prependIcon="search"
         :clearBeforeSelect="true"
         url="/etiquetas"
         v-on:item-selected="agregarTag($event)"
@@ -20,97 +20,88 @@
         <Puntaje v-on:nuevoPuntaje="nuevoFiltroPuntaje($event)" />
       </div>
 
-      <div class="flex">
-        <div
-          @click="selectFilter('color', selectedFilters.color)"
-          class="color-tag color-tag-none"
-          :style="`border: ${
-            !selectedFilters.color ? '4px solid gray' : 'none'
-          };`"
-        ></div>
-        <div
-          v-for="(color, i) in colors"
-          @click="selectFilter('color', color)"
-          :key="i"
-          :style="`background-color: ${color.nombre}; border: ${
-            selectedFilters.color &&
-            color.nombre === selectedFilters.color.nombre
-              ? '4px solid white'
-              : 'none'
-          }`"
-          class="color-tag"
-        ></div>
-      </div>
-
       <div class="grid-container">
-        <div class="filtros-camera-settings">
-          <h5>Aperturas</h5>
-          <ul v-if="settingsFiltros.aperturas.length">
-            <li
-              v-for="(apertura, i) in settingsFiltros.aperturas"
-              :key="i"
-              @click="selectFilter('apertura', apertura)"
-              :class="selectedFilters.apertura == apertura && 'selected-item'"
-            >
-              <p class="evitar-seleccion-txt">
-                {{ apertura.valor }}
-              </p>
-            </li>
-          </ul>
-          <p v-else>No se registraron aperturas</p>
-        </div>
-        <div class="filtros-camera-settings">
-          <h5>Velocidad Obturacion</h5>
-          <ul v-if="settingsFiltros.obturacion.length">
-            <li
-              v-for="(obturacion, i) in settingsFiltros.obturacion"
-              :key="i"
-              @click="selectFilter('obturacion', obturacion)"
-              :class="
-                selectedFilters.obturacion == obturacion && 'selected-item'
-              "
-            >
-              <p class="evitar-seleccion-txt">
-                {{ obturacion.valor }}
-              </p>
-            </li>
-          </ul>
-          <p v-else>No se registraron velocidades de obturacion</p>
-        </div>
-        <div class="filtros-camera-settings">
-          <h5>ISO</h5>
-          <ul v-if="settingsFiltros.isos.length">
-            <li
-              v-for="(iso, i) in settingsFiltros.isos"
-              :key="i"
-              @click="selectFilter('iso', iso)"
-              :class="selectedFilters.iso == iso && 'selected-item'"
-            >
-              <p class="evitar-seleccion-txt">{{ iso.valor }}</p>
-            </li>
-          </ul>
-          <p v-else>No se registraron niveles de ISO</p>
-        </div>
-      </div>
+        <DialogSelectionList
+          v-if="settingsFiltros.aperturas.length"
+          icon="camera"
+          title="Apertura"
+          :lista="settingsFiltros.aperturas"
+          :orderFunction="
+            (a, b) => {
+              return a.valor - b.valor;
+            }
+          "
+          v-on:itemSelected="dialogSelectedItem($event)"
+        />
 
-      <ul>
-        <li>Por fecha</li>
-        <li>Por settings</li>
-        <ul>
-          <li>apertura</li>
-          <li>velocidad de obturacion</li>
-          <li>iso</li>
-          <li>tamaño</li>
-          <li>flash</li>
-        </ul>
-        <li>geograficamente</li>
-        <li>nombre de imagen</li>
-        <li>carpeta</li>
-        <li>etiqueta</li>
-        <li>rating</li>
-        <li>etiqueta color</li>
-        <li>Video / Imagen</li>
-      </ul>
+        <DialogSelectionList
+          v-if="settingsFiltros.obturacion.length"
+          icon="shutter_speed"
+          title="Obturacion"
+          :lista="settingsFiltros.obturacion"
+          :orderFunction="
+            (a, b) => {
+              return a.valor.split('/')[1] - b.valor.split('/')[1];
+            }
+          "
+          v-on:itemSelected="dialogSelectedItem($event)"
+        />
+
+        <DialogSelectionList
+          v-if="settingsFiltros.isos.length"
+          icon="iso"
+          title="ISO"
+          :lista="settingsFiltros.isos"
+          :orderFunction="
+            (a, b) => {
+              return a.valor - b.valor;
+            }
+          "
+          v-on:itemSelected="dialogSelectedItem($event)"
+        />
+
+        <DialogSelectionList
+          v-if="settingsFiltros.isos.length"
+          icon="folder"
+          title="Carpetas"
+          :lista="settingsFiltros.isos"
+          :orderFunction="
+            (a, b) => {
+              return a.valor - b.valor;
+            }
+          "
+          v-on:itemSelected="dialogSelectedItem($event)"
+        />
+
+        <DialogSelectionList
+          icon="palette"
+          title="Color"
+          :lista="colors"
+          :listHtmlItem="
+            (item) => {
+              return (
+                '<div class=flex style=align-items:center><div style=width:25px;height:25px;background-color:' +
+                item.nombre +
+                ';margin-right:25px;border-radius:50%></div><p style=margin:0>' +
+                item.nombre +
+                '</p></div>'
+              );
+            }
+          "
+          v-on:itemSelected="dialogSelectedItem($event)"
+        />
+
+        <Search
+          label="Búsque fotos por ubicacion"
+          prependIcon="location_on"
+          :clearBeforeSelect="true"
+          :textField="false"
+          url="/ubicacions"
+          v-on:item-selected="agregarTag($event)"
+          v-on:item-created="agregarTag($event)"
+          class="center-icon"
+        />
+      </div>
 
       <v-chip-group>
         <v-chip
@@ -156,6 +147,7 @@ import Search from "@/components/Search";
 import GrillaFotos from "@/components/GrillaFotos_justifiedLayout";
 import FotoLista from "@/components/Foto_Lista";
 import Puntaje from "@/components/Puntaje";
+import DialogSelectionList from "@/components/DialogSelectionList.vue";
 
 export default {
   name: "Busqueda",
@@ -165,6 +157,7 @@ export default {
     GrillaFotos,
     FotoLista,
     Puntaje,
+    DialogSelectionList,
   },
 
   data() {
@@ -252,12 +245,6 @@ export default {
     },
 
     addPhotoFilter(selectedFilter, photos) {
-      console.log("ADDING________________________________");
-      console.log(
-        "Fotos filtradas:",
-        this.fotos.map((e) => e.id)
-      );
-
       let filters = this.getFiltersInUse();
       if (filters.length == 0) {
         this.fotos.push(...photos);
@@ -283,28 +270,21 @@ export default {
         }
 
         this.fotos = intersectedPhotos;
-        console.log("RESULT_ADDING________________________________");
-        console.log(
-          "Fotos filtradas:",
-          this.fotos.map((e) => e.id)
-        );
+        // console.log("RESULT_ADDING________________________________");
+        // console.log(
+        //   "Fotos filtradas:",
+        //   this.fotos.map((e) => e.id)
+        // );
       }
     },
 
     removePhotoFilter() {
-      console.log("REMOVING-----------------------------");
-      console.log(
-        "Fotos filtradas:",
-        this.fotos.map((e) => e.id)
-      );
       let filters = this.getFiltersInUse();
       if (filters.length == 0) {
         this.fotos = [];
       } else {
-        console.log("filtros activos", filters, filters[0]);
         let intersectedPhotos = [];
         let firstFilterPhotos = this.selectedFilters[filters[0]].fotos;
-        console.log("intersectedPhotos", intersectedPhotos);
 
         for (let photo of firstFilterPhotos) {
           let exist;
@@ -329,19 +309,20 @@ export default {
 
         this.fotos = intersectedPhotos;
 
-        console.log("RESULT_ADDING________________________________");
-        console.log(
-          "Fotos filtradas:",
-          this.fotos.map((e) => e.id)
-        );
+        //console.log("RESULT_ADDING________________________________");
+        // console.log(
+        //   "Fotos filtradas:",
+        //   this.fotos.map((e) => e.id)
+        // );
         //this.fotos = intersectedPhotos;
       }
     },
 
     selectFilter(filter, value) {
       if (
-        this.selectedFilters[filter] &&
-        this.selectedFilters[filter] == value
+        (this.selectedFilters[filter] &&
+          this.selectedFilters[filter] == value) ||
+        (this.selectedFilters[filter] && !value)
       ) {
         this.selectedFilters[filter] = undefined;
         this.removePhotoFilter();
@@ -386,6 +367,12 @@ export default {
         this.removePhotoFilter();
       }
     },
+
+    dialogSelectedItem(event) {
+      // console.log(event);
+      this.selectFilter(event.title.toLowerCase(), event.itemSelected);
+      // @click="selectFilter('iso', iso)"
+    },
   },
 };
 </script>
@@ -414,17 +401,6 @@ export default {
     margin-right: 20px;
   }
 
-  .color-tag-none {
-    background: gray;
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 1) 40%,
-      rgba(255, 0, 0, 1) 40%,
-      rgba(255, 0, 0, 1) 55%,
-      rgba(255, 255, 255, 1) 55%
-    );
-  }
-
   .align-baseline {
     align-items: baseline;
   }
@@ -435,35 +411,16 @@ export default {
 
   .grid-container {
     width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-  }
+    // display: flex;
+    // justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    justify-content: center;
+    align-items: flex-start;
 
-  .filtros-camera-settings {
-    width: 32%;
-    min-width: 200px;
-    margin-right: 1%;
-
-    ul {
-      padding: 0;
-    }
-
-    li {
-      list-style-type: none;
-      cursor: pointer;
-      padding: 2px;
-
-      p {
-        margin: 0;
-      }
-    }
-
-    li:hover {
-      background-color: rgb(150, 150, 150);
-    }
-
-    .selected-item {
-      background-color: rgb(42, 170, 255);
+    .center-icon {
+      display: flex;
+      justify-content: center;
     }
   }
 }

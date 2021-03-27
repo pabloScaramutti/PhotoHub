@@ -2,6 +2,7 @@
   <div class="home">
     <!-- <SlideFotos :imagenes="imagenes" titulo="Nombre del album"></SlideFotos> -->
     <!-- <FotoLista :img="imagenes[0]"> </FotoLista> -->
+    <CalendarioSlider />
     <GrillaFotos :imagenes="imagenes" style="width: 100%"></GrillaFotos>
     <Mapa class="mapa"> </Mapa>
     <router-link :to="{ name: 'Login' }">
@@ -16,7 +17,8 @@
 <script>
 import GrillaFotos from "@/components/GrillaFotos_justifiedLayout";
 import SlideFotos from "@/components/SlideFotos";
-import Mapa from "@/components/Mapa";
+import Mapa from "@/components/Mapa_markercluster";
+import CalendarioSlider from "@/components/CalendarioSlider";
 // import FotoLista from "@/components/Foto_Lista";
 
 export default {
@@ -25,6 +27,7 @@ export default {
     GrillaFotos,
     SlideFotos,
     Mapa,
+    CalendarioSlider,
     // FotoLista,
   },
   data() {

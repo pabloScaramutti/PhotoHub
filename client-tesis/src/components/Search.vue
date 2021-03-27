@@ -1,6 +1,7 @@
 <template>
   <div class="search">
     <v-text-field
+      v-if="textField"
       @focus="inputFocus"
       @click.stop="!disabled && openDialog()"
       :prepend-icon="prependIcon"
@@ -9,6 +10,14 @@
       v-model="input.nombre"
       autocomplete="off"
     ></v-text-field>
+    <v-icon
+      v-else
+      @click.stop="!disabled && openDialog()"
+      :size="iconSize"
+      class="activator"
+    >
+      {{ prependIcon }}
+    </v-icon>
 
     <v-dialog
       v-model="dialog"
@@ -98,6 +107,16 @@ export default {
       type: Boolean,
       required: false,
       default: false,
+    },
+    textField: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    iconSize: {
+      type: String,
+      required: false,
+      default: "32px",
     },
   },
 
@@ -236,5 +255,9 @@ ul {
   li:hover {
     background: #28cbff;
   }
+}
+
+.activator:hover {
+  color: rgb(30, 164, 229);
 }
 </style>

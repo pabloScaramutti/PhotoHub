@@ -10,8 +10,12 @@
           v-if="showImage()"
           :max-height="fullView ? '100vh' : '90vh'"
           max-width="100vw"
-          :src="$apiUrl(imagen.thumbnail.url)"
-          :lazy-src="$apiUrl(imagen.thumbnail.url)"
+          :src="
+            $apiUrl(imagen.thumbnail.formats.large.url || imagen.thumbnail.url)
+          "
+          :lazy-src="
+            $apiUrl(imagen.thumbnail.formats.large.url || imagen.thumbnail.url)
+          "
           contain
           @load="onImageLoad()"
         >
@@ -293,13 +297,13 @@
           <div class="mapa" v-if="tabSelected === 'location'">
             <div class="location">
               <v-icon>location_on</v-icon>
-              {{
-                imagen.exif.GPSPosition
-                  ? `${imagen.ubicacion.ciudad}, ${imagen.ubicacion.provincia}, ${imagen.ubicacion.pais}`
-                  : "No tiene una ubicación guardada"
-              }}
+              {{ ubicacion ? ubicacion : "No hay una ubicacion guardada" }}
             </div>
-            <Mapa :lat="getImgLat" :long="getImgLong"></Mapa>
+            <Mapa
+              v-on:changeLocation="handlerChangeLocation($event)"
+              :lat="getImgLat"
+              :long="getImgLong"
+            ></Mapa>
           </div>
         </div>
 
@@ -308,8 +312,12 @@
         <div v-else class="open-info" @click="informacion = !informacion">
           <div class="open-info-icon"></div>
         </div>
-        <v-icon class="arrow next">keyboard_arrow_right</v-icon>
-        <v-icon class="arrow previous">keyboard_arrow_left</v-icon>
+        <v-icon @click="changePhoto(1)" class="arrow next"
+          >keyboard_arrow_right</v-icon
+        >
+        <v-icon @click="changePhoto(-1)" class="arrow previous"
+          >keyboard_arrow_left</v-icon
+        >
       </template>
     </div>
     <v-progress-circular
@@ -354,32 +362,14 @@ export default {
         edit: false,
         loading: false,
       },
+      ubicacion: undefined,
+
+      fotosIdList: [],
     };
   },
 
   created() {
-    this.$http
-      .get(this.$route.path)
-      .then((result) => {
-        this.imagen = result.data;
-        if (this.imagen.exif.GPSPosition) {
-          Axios.get(
-            `https://nominatim.openstreetmap.org/reverse.php?lat=${this.getImgLat}&lon=${this.getImgLong}&zoom=18&format=jsonv2`
-          )
-            .then((r) => {
-              this.imagen.ubicacion = {
-                pais: r.data.address?.country,
-                ciudad: r.data.address?.city,
-                provincia: r.data.address?.state,
-              };
-              console.log(r);
-            })
-            .catch((e) => console.log(e));
-        }
-      })
-      .catch((error) => {
-        console.log("Ocurrio un error", error);
-      });
+    this.requestPhoto();
 
     this.$http
       .get("/colores")
@@ -396,6 +386,18 @@ export default {
       .catch((error) =>
         console.log("No se pudieron cargar las etiquetas", error)
       );
+
+    this.fotosIdList = JSON.parse(localStorage.getItem("listaDeFotos")).sort(
+      function (a, b) {
+        return a - b;
+      }
+    );
+
+    window.addEventListener("keydown", (e) => {
+      if (e.keyCode == 27) {
+        this.informacion = false;
+      }
+    });
   },
 
   watch: {
@@ -460,12 +462,26 @@ export default {
   },
 
   methods: {
+    requestPhoto() {
+      this.$http
+        .get(this.$route.path)
+        .then((result) => {
+          this.imagen = result.data;
+          if (this.imagen.exif.GPSPosition) {
+            this.getReverseGeocode(this.getImgLat, this.getImgLong);
+          }
+        })
+        .catch((error) => {
+          console.log("Ocurrio un error", error);
+        });
+    },
     onImageLoad() {
       //console.log(this.imagen);
     },
     nuevoPuntaje(e) {
       //console.log("agarre el evento");
       this.puntaje = e;
+      this.imagen.puntuacion = e;
       // envio el nuevo puntaje al serv
       // this.$http
       //   .put(this.$route.path, { puntuacion: this.puntaje })
@@ -582,6 +598,39 @@ export default {
           )
         );
       }
+    },
+
+    changePhoto(step) {
+      if (this.fotosIdList.length > 1) {
+        let newPhotoIdIndex = this.fotosIdList.indexOf(this.imagen.id) + step;
+
+        if (newPhotoIdIndex < 0) {
+          newPhotoIdIndex = this.fotosIdList.length - 1;
+        } else if (newPhotoIdIndex > this.fotosIdList.length - 1) {
+          newPhotoIdIndex = 0;
+        }
+
+        this.$router.push({
+          name: "Foto",
+          params: { img: this.fotosIdList[newPhotoIdIndex] },
+        });
+
+        this.requestPhoto();
+      }
+    },
+
+    async getReverseGeocode(lat, lng) {
+      Axios.get(
+        `https://nominatim.openstreetmap.org/reverse.php?lat=${lat}&lon=${lng}&zoom=18&format=jsonv2`
+      )
+        .then((r) => {
+          this.ubicacion = r.data.display_name;
+        })
+        .catch((e) => console.log(e));
+    },
+
+    handlerChangeLocation(e) {
+      this.getReverseGeocode(e.lat, e.lng);
     },
   },
 };

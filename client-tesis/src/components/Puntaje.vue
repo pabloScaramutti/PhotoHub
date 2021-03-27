@@ -55,6 +55,10 @@ export default {
         this.$emit("nuevoPuntaje", newRating);
       }
     },
+
+    puntajeInicial: function (newPuntaje) {
+      this.rating = newPuntaje;
+    },
   },
   methods: {
     checkearCero() {

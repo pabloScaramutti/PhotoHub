@@ -1,18 +1,20 @@
 <template>
   <v-container fluid class="justified-layout">
     <template v-if="pros_img && pros_img.length > 0">
-      <v-btn text small @click="sizeUp()" :disabled="!(imgSize < 500)"
-        ><v-icon>zoom_in</v-icon></v-btn
-      >
-      <v-btn text small @click="sizeDown()" :disabled="!(imgSize > 50)"
-        ><v-icon>zoom_out</v-icon></v-btn
-      >
-      <v-btn v-if="selectable" fab small @click="selectAll()"
-        ><v-icon>done</v-icon></v-btn
-      >
-      <v-btn v-if="selectable" fab small @click="deselectAll()"
-        ><v-icon>check_box_outline_blank</v-icon></v-btn
-      >
+      <div class="sticky">
+        <v-btn text small @click="sizeUp()" :disabled="!(imgSize < 500)"
+          ><v-icon>zoom_in</v-icon></v-btn
+        >
+        <v-btn text small @click="sizeDown()" :disabled="!(imgSize > 50)"
+          ><v-icon>zoom_out</v-icon></v-btn
+        >
+        <v-btn v-if="selectable" fab small @click="selectAll()"
+          ><v-icon>done</v-icon></v-btn
+        >
+        <v-btn v-if="selectable" fab small @click="deselectAll()"
+          ><v-icon>check_box_outline_blank</v-icon></v-btn
+        >
+      </div>
       <vue-justified-layout
         :items="pros_img"
         v-slot="{ item }"
@@ -21,13 +23,12 @@
           boxSpacing: 5,
         }"
       >
-        <router-link
-          :to="`/fotos/${item.id}`"
+        <div
+          @click="!selectable && goToPhotos(item)"
           tag="button"
-          :disabled="selectable"
           class="item-jl"
         >
-          <!--@click="goToPhotos(item)" -->
+          <!-- :to="`/fotos/${item.id}`" :disabled="selectable"-->
           <v-icon v-if="selectable && !item.selected" class="checkbox"
             >check_box_outline_blank</v-icon
           >
@@ -56,7 +57,7 @@
             ]"
             >play_circle_outline</v-icon
           >
-        </router-link>
+        </div>
       </vue-justified-layout>
     </template>
     <v-progress-circular
@@ -161,7 +162,7 @@ export default {
             url: img.thumbnail
               ? this.$apiUrl(
                   img.thumbnail.formats
-                    ? img.thumbnail.formats.large.url
+                    ? img.thumbnail.formats.medium.url
                     : img.thumbnail.url
                 )
               : this.$apiUrl(img.img.url),
@@ -189,11 +190,15 @@ export default {
       return false;
     },
 
-    // goToPhotos(item){
-    //   localStorage.setItem("listaDeFotos", this.imagenes);
-    //   localStorage.setItem("fotoActual", item);
-    //   this.$route.push( {name: 'foto'} )
-    // }
+    goToPhotos(item) {
+      localStorage.setItem(
+        "listaDeFotos",
+        JSON.stringify(this.imagenes.map((e) => e.id))
+      );
+      // console.log(JSON.stringify(this.imagenes.map((e) => e.id)));
+      // console.log(this.imagenes.map((e) => e.id));
+      this.$router.push({ name: "Foto", params: { img: item.id } });
+    },
   },
 };
 </script>
@@ -285,7 +290,7 @@ export default {
 
   .selected-check {
     width: 100%;
-    transform: translateX(-50%);
+    //transform: translateX(-50%);
     height: 100%;
     position: absolute;
     font-size: 3.5em;

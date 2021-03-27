@@ -156,7 +156,7 @@ export default {
         .get(`/fotos/${this.image.id}`)
         .then((r) => {
           this.img = r.data;
-          this.color = this.img.color.nombre;
+          this.color = this.img.color?.nombre;
         })
         .catch((e) => console.log("Hubo un error para cargar la imagen", e));
     } else if (this.img.color) {

@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/ubicacions",
+      "handler": "ubicacion.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/ubicacions/count",
+      "handler": "ubicacion.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/ubicacions/:id",
+      "handler": "ubicacion.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/ubicacions",
+      "handler": "ubicacion.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/ubicacions/:id",
+      "handler": "ubicacion.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/ubicacions/:id",
+      "handler": "ubicacion.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

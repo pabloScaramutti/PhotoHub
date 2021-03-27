@@ -24,7 +24,8 @@
 
     <v-slide-group>
       <v-slide-item v-for="(item, i) in carpeta.fotos" :key="i">
-        <router-link :to="{ name: 'Foto', params: { img: `${item.id}` } }">
+        <!-- <router-link :to="{ name: 'Foto', params: { img: `${item.id}` } }"> -->
+        <div @click="goToPhotos(item)">
           <v-card
             :height="tamImagenes()"
             :width="tamImagenes()"
@@ -34,7 +35,7 @@
               :src="
                 $apiUrl(
                   item.thumbnail.formats
-                    ? item.thumbnail.formats.medium.url
+                    ? item.thumbnail.formats.small.url
                     : item.thumbnail.url
                 )
               "
@@ -42,7 +43,8 @@
               class="imagen-slider"
             />
           </v-card>
-        </router-link>
+        </div>
+        <!-- </router-link> -->
       </v-slide-item>
     </v-slide-group>
   </div>
@@ -96,6 +98,14 @@ export default {
           console.log("No se pudo actualizar el estado de favorito", e);
           this.loadingFavorite = false;
         });
+    },
+
+    goToPhotos(item) {
+      localStorage.setItem(
+        "listaDeFotos",
+        JSON.stringify(this.carpeta.fotos.map((e) => e.id))
+      );
+      this.$router.push({ name: "Foto", params: { img: item.id } });
     },
   },
 };

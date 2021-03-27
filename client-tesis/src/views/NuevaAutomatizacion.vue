@@ -154,7 +154,7 @@ export default {
       if (exist !== -1) {
         this.removeTag(exist);
       } else {
-        this.imagen.etiquetas.push(e);
+        this.automatizacion.etiquetas.push(e);
       }
     },
 

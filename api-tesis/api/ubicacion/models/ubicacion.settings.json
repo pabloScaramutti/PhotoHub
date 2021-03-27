@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ubicacions",
+  "info": {
+    "name": "ubicacion",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "nombre": {
+      "type": "string"
+    },
+    "fotos": {
+      "collection": "fotos",
+      "via": "ubicacion"
+    }
+  }
+}

@@ -107,6 +107,13 @@ p {
   margin-bottom: 10px;
 }
 
+.sticky {
+  position: sticky;
+  top: 45px;
+  z-index: 3;
+  background-color: #121212;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
   height: 4px;
