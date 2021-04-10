@@ -10,16 +10,6 @@
         v-on:item-created="agregarTag($event)"
       />
 
-      <div class="flex align-baseline">
-        <h3
-          @click="changeModificadorPuntaje()"
-          class="modificador-puntaje evitar-seleccion-txt"
-        >
-          {{ modificadorPuntaje }}
-        </h3>
-        <Puntaje v-on:nuevoPuntaje="nuevoFiltroPuntaje($event)" />
-      </div>
-
       <div class="grid-container">
         <DialogSelectionList
           v-if="settingsFiltros.aperturas.length"
@@ -61,19 +51,6 @@
         />
 
         <DialogSelectionList
-          v-if="settingsFiltros.isos.length"
-          icon="folder"
-          title="Carpetas"
-          :lista="settingsFiltros.isos"
-          :orderFunction="
-            (a, b) => {
-              return a.valor - b.valor;
-            }
-          "
-          v-on:itemSelected="dialogSelectedItem($event)"
-        />
-
-        <DialogSelectionList
           icon="palette"
           title="Color"
           :lista="colors"
@@ -92,14 +69,33 @@
         />
 
         <Search
+          label="Búsque fotos por carpetas"
+          prependIcon="folder"
+          :clearBeforeSelect="true"
+          :textField="false"
+          url="/carpetas"
+          :createBtn="false"
+          v-on:item-selected="agregarTag($event)"
+          v-on:item-created="agregarTag($event)"
+          class="center-icon"
+        />
+
+        <Search
           label="Búsque fotos por ubicacion"
           prependIcon="location_on"
           :clearBeforeSelect="true"
           :textField="false"
           url="/ubicacions"
+          :createBtn="false"
           v-on:item-selected="agregarTag($event)"
           v-on:item-created="agregarTag($event)"
           class="center-icon"
+        />
+
+        <PuntajeFilter
+          title="Seleccione un puntaje"
+          v-on:cambio-modificador-puntaje="changeModificadorPuntaje($event)"
+          v-on:changePuntaje="nuevoFiltroPuntaje($event)"
         />
       </div>
 
@@ -110,6 +106,7 @@
           close
           color="primary"
           @click:close="removeTag(i)"
+          preppend-icon="folder"
         >
           {{ tag.nombre }}
         </v-chip>
@@ -139,6 +136,7 @@
         </div>
       </div>
     </div>
+    <p v-else class="text-center mt-10">No hay fotos para mostrar</p>
   </div>
 </template>
 
@@ -146,8 +144,8 @@
 import Search from "@/components/Search";
 import GrillaFotos from "@/components/GrillaFotos_justifiedLayout";
 import FotoLista from "@/components/Foto_Lista";
-import Puntaje from "@/components/Puntaje";
 import DialogSelectionList from "@/components/DialogSelectionList.vue";
+import PuntajeFilter from "@/components/PuntajeFilterDialog.vue";
 
 export default {
   name: "Busqueda",
@@ -156,8 +154,8 @@ export default {
     Search,
     GrillaFotos,
     FotoLista,
-    Puntaje,
     DialogSelectionList,
+    PuntajeFilter,
   },
 
   data() {
@@ -204,9 +202,18 @@ export default {
       .get("/isos")
       .then((r) => (this.settingsFiltros.isos = r.data))
       .catch((e) => console.log("No se pudieron cargar los valores iso", e));
+
+    this.cargarTodasLasFotos();
   },
 
   methods: {
+    cargarTodasLasFotos() {
+      this.$http
+        .get("/fotos?_sort=created_at:DESC")
+        .then((r) => (this.fotos = r.data))
+        .catch((e) => console.log("No se pudieron cargar las fotos", e));
+    },
+
     agregarTag(t) {
       let exist = this.existInArrayById(this.tagsBusqueda, t);
       if (exist == -1) {
@@ -232,16 +239,6 @@ export default {
       }
 
       return exist;
-    },
-
-    changeModificadorPuntaje() {
-      const modificadores = {
-        "=": ">=",
-        ">=": "<=",
-        "<=": "=",
-      };
-      this.modificadorPuntaje = modificadores[this.modificadorPuntaje];
-      this.nuevoFiltroPuntaje(this.rating);
     },
 
     addPhotoFilter(selectedFilter, photos) {
@@ -270,18 +267,14 @@ export default {
         }
 
         this.fotos = intersectedPhotos;
-        // console.log("RESULT_ADDING________________________________");
-        // console.log(
-        //   "Fotos filtradas:",
-        //   this.fotos.map((e) => e.id)
-        // );
       }
     },
 
     removePhotoFilter() {
       let filters = this.getFiltersInUse();
       if (filters.length == 0) {
-        this.fotos = [];
+        this.cargarTodasLasFotos();
+        // this.fotos = [];
       } else {
         let intersectedPhotos = [];
         let firstFilterPhotos = this.selectedFilters[filters[0]].fotos;
@@ -308,13 +301,6 @@ export default {
         }
 
         this.fotos = intersectedPhotos;
-
-        //console.log("RESULT_ADDING________________________________");
-        // console.log(
-        //   "Fotos filtradas:",
-        //   this.fotos.map((e) => e.id)
-        // );
-        //this.fotos = intersectedPhotos;
       }
     },
 
@@ -343,6 +329,11 @@ export default {
       return filters;
     },
 
+    changeModificadorPuntaje(e) {
+      this.modificadorPuntaje = e;
+      this.nuevoFiltroPuntaje(this.rating);
+    },
+
     nuevoFiltroPuntaje(event) {
       this.rating = event != 0 ? event : undefined;
       if (this.rating) {
@@ -369,9 +360,7 @@ export default {
     },
 
     dialogSelectedItem(event) {
-      // console.log(event);
       this.selectFilter(event.title.toLowerCase(), event.itemSelected);
-      // @click="selectFilter('iso', iso)"
     },
   },
 };
@@ -384,11 +373,8 @@ export default {
     margin: auto;
   }
 
-  .evitar-seleccion-txt {
-    user-select: none;
-  }
-
   .left {
+    width: 95%;
     display: flex;
     justify-content: flex-end;
   }
@@ -410,18 +396,24 @@ export default {
   }
 
   .grid-container {
-    width: 100%;
+    width: 99%;
     // display: flex;
     // justify-content: space-around;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    grid-auto-flow: column;
     justify-content: center;
     align-items: flex-start;
+    overflow: auto;
 
     .center-icon {
       display: flex;
       justify-content: center;
     }
+  }
+
+  .text-center {
+    text-align: center;
   }
 }
 </style>

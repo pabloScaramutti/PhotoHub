@@ -9,10 +9,14 @@
     <l-marker v-if="marker" :lat-lng="marker"></l-marker>
     <v-geosearch :options="geosearchOptions"></v-geosearch>
 
-    <v-marker-cluster>
-      <!-- <v-marker v-for="(c, i) in cases" :key="i" :lat-lng="c.latlng">
-        <v-popup :content="c.tooltipContent"></v-popup>
-      </v-marker> -->
+    <v-marker-cluster v-if="markers">
+      <l-marker
+        v-for="(m, i) in markers"
+        :key="i"
+        :lat-lng="convertToLatLong(m)"
+      >
+        <!-- <v-popup :content="c.tooltipContent"></v-popup> -->
+      </l-marker>
     </v-marker-cluster>
   </l-map>
 </template>
@@ -49,10 +53,6 @@ export default {
     "v-marker-cluster": Vue2LeafletMarkerCluster,
   },
 
-  props: {
-    markers: [],
-  },
-
   data: () => {
     return {
       zoom: 6,
@@ -65,6 +65,12 @@ export default {
         provider: new OpenStreetMapProvider(),
       },
     };
+  },
+
+  props: {
+    markers: {
+      type: Array,
+    },
   },
 
   created() {
@@ -117,6 +123,29 @@ export default {
       console.log(e);
       this.marker = e.latlng;
       this.$emit("changeLocation", e.latlng);
+    },
+
+    getImgLat(img) {
+      if ("GPSLatitude" in img.exif) {
+        let lat = img.exif.GPSLatitude.split(" ");
+        lat[1] == "S" ? (lat[0] *= -1) : "";
+        return lat[0];
+      } else {
+        return undefined;
+      }
+    },
+    getImgLong(img) {
+      if ("GPSLongitude" in img.exif) {
+        let long = img.exif.GPSLongitude.split(" ");
+        long[1] == "W" ? (long[0] *= -1) : "";
+        return long[0];
+      } else {
+        return undefined;
+      }
+    },
+
+    convertToLatLong(unaImagen) {
+      return L.latLng(this.getImgLat(unaImagen), this.getImgLong(unaImagen));
     },
   },
 };

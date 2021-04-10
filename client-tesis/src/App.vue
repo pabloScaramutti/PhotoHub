@@ -72,6 +72,10 @@ p {
   justify-content: space-between;
 }
 
+.justify-center {
+  justify-content: center;
+}
+
 .align-center {
   align-items: center;
 }
@@ -112,6 +116,10 @@ p {
   top: 45px;
   z-index: 3;
   background-color: #121212;
+}
+
+.evitar-seleccion-txt {
+  user-select: none;
 }
 
 ::-webkit-scrollbar {

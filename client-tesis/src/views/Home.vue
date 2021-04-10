@@ -2,15 +2,19 @@
   <div class="home">
     <!-- <SlideFotos :imagenes="imagenes" titulo="Nombre del album"></SlideFotos> -->
     <!-- <FotoLista :img="imagenes[0]"> </FotoLista> -->
-    <CalendarioSlider />
-    <GrillaFotos :imagenes="imagenes" style="width: 100%"></GrillaFotos>
-    <Mapa class="mapa"> </Mapa>
-    <router-link :to="{ name: 'Login' }">
-      <v-btn block rounded color="primary"> Login </v-btn>
-    </router-link>
+    <Mapa class="mapa" :markers="imgWithGPS"> </Mapa>
     <div v-for="(carpeta, i) in carpetas" :key="i">
       <SlideFotos v-if="carpeta.fotos.length > 0" :carpeta="carpeta" />
     </div>
+
+    <br />
+    <h2 class="ml-30">Recientes</h2>
+    <hr />
+    <GrillaFotos :imagenes="imagenes" style="width: 100%"></GrillaFotos>
+
+    <router-link :to="{ name: 'Login' }">
+      <v-btn block rounded color="primary"> Login </v-btn>
+    </router-link>
   </div>
 </template>
 
@@ -18,7 +22,6 @@
 import GrillaFotos from "@/components/GrillaFotos_justifiedLayout";
 import SlideFotos from "@/components/SlideFotos";
 import Mapa from "@/components/Mapa_markercluster";
-import CalendarioSlider from "@/components/CalendarioSlider";
 // import FotoLista from "@/components/Foto_Lista";
 
 export default {
@@ -27,7 +30,6 @@ export default {
     GrillaFotos,
     SlideFotos,
     Mapa,
-    CalendarioSlider,
     // FotoLista,
   },
   data() {
@@ -35,6 +37,7 @@ export default {
       imagenes: undefined,
       cadena: undefined,
       carpetas: undefined,
+      imgWithGPS: undefined,
     };
   },
 
@@ -43,6 +46,7 @@ export default {
       .get("/fotos?_sort=created_at:DESC")
       .then((response) => {
         this.imagenes = response.data;
+        this.imgWithGPS = this.getPhotoLocations();
       })
       .catch((error) => {
         console.log("Error al cargar las imagenes", error);
@@ -53,6 +57,17 @@ export default {
       .then((r) => (this.carpetas = r.data))
       .catch((e) => console.log("Error al cargar las carpetas", e));
   },
+
+  methods: {
+    getPhotoLocations() {
+      if (!this.imagenes) return [];
+      return this.imagenes.filter((p) => {
+        if (p.exif.GPSPosition) {
+          return true;
+        }
+      });
+    },
+  },
 };
 </script>
 
@@ -60,5 +75,9 @@ export default {
 .mapa {
   width: 100%;
   height: 50vh;
+}
+
+.ml-30 {
+  margin-left: 16px;
 }
 </style>

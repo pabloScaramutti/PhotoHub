@@ -31,10 +31,10 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
           <v-toolbar-title>{{ label }}</v-toolbar-title>
-          <v-spacer></v-spacer>
+          <!-- <v-spacer></v-spacer>
           <v-toolbar-items>
             <v-btn dark text @click="dialog = false"> Save </v-btn>
-          </v-toolbar-items>
+          </v-toolbar-items> -->
         </v-toolbar>
 
         <div class="card-content">
@@ -67,17 +67,18 @@
           <p v-if="suggestion.length == 0 && !loading">
             No se encontraron resultados
           </p>
-          <v-btn
-            @click="createItem()"
-            fab
-            small
-            color="primary"
-            id="create-btn"
-          >
-            <v-icon>add</v-icon>
-          </v-btn>
           <!-- </div> -->
         </div>
+
+        <v-btn
+          v-if="createBtn"
+          @click="createItem()"
+          fab
+          color="primary"
+          class="floating-btn"
+        >
+          <v-icon>add</v-icon>
+        </v-btn>
       </v-card>
     </v-dialog>
   </div>
@@ -117,6 +118,11 @@ export default {
       type: String,
       required: false,
       default: "32px",
+    },
+    createBtn: {
+      type: Boolean,
+      required: false,
+      default: true,
     },
   },
 

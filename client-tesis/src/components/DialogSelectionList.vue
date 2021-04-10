@@ -25,10 +25,6 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
         <v-toolbar-title>{{ title }}</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-toolbar-items>
-          <v-btn dark text @click="dialog = false"> Save </v-btn>
-        </v-toolbar-items>
       </v-toolbar>
 
       <ul v-if="lista.length">

@@ -582,7 +582,7 @@ export default {
     },
 
     videoWidth() {
-      return window.innerWidth - 200;
+      return `${window.innerWidth - 50}px`;
     },
 
     showImage() {
