@@ -295,14 +295,11 @@
           <!-- Mapa -->
 
           <div class="mapa" v-if="tabSelected === 'location'">
-            <div class="location">
-              <v-icon>location_on</v-icon>
-              {{ ubicacion ? ubicacion : "No hay una ubicacion guardada" }}
-            </div>
             <Mapa
               v-on:changeLocation="handlerChangeLocation($event)"
-              :lat="getImgLat"
-              :long="getImgLong"
+              :lat="imagen.exif.GPSLatitude"
+              :long="imagen.exif.GPSLongitude"
+              :img="imagen"
             ></Mapa>
           </div>
         </div>
@@ -334,7 +331,6 @@
 import Puntaje from "@/components/Puntaje";
 import Mapa from "@/components/Mapa";
 import Search from "@/components/Search";
-import Axios from "axios";
 
 export default {
   components: {
@@ -362,7 +358,6 @@ export default {
         edit: false,
         loading: false,
       },
-      ubicacion: undefined,
 
       fotosIdList: [],
     };
@@ -441,24 +436,6 @@ export default {
           .join("/");
       else return this.imagen.created_at.split("T")[0];
     },
-    getImgLat() {
-      if ("GPSLatitude" in this.imagen.exif) {
-        let lat = this.imagen.exif.GPSLatitude.split(" ");
-        lat[1] == "S" ? (lat[0] *= -1) : "";
-        return lat[0];
-      } else {
-        return undefined;
-      }
-    },
-    getImgLong() {
-      if ("GPSLongitude" in this.imagen.exif) {
-        let long = this.imagen.exif.GPSLongitude.split(" ");
-        long[1] == "W" ? (long[0] *= -1) : "";
-        return long[0];
-      } else {
-        return undefined;
-      }
-    },
   },
 
   methods: {
@@ -467,9 +444,6 @@ export default {
         .get(this.$route.path)
         .then((result) => {
           this.imagen = result.data;
-          if (this.imagen.exif.GPSPosition) {
-            this.getReverseGeocode(this.getImgLat, this.getImgLong);
-          }
         })
         .catch((error) => {
           console.log("Ocurrio un error", error);
@@ -482,11 +456,6 @@ export default {
       //console.log("agarre el evento");
       this.puntaje = e;
       this.imagen.puntuacion = e;
-      // envio el nuevo puntaje al serv
-      // this.$http
-      //   .put(this.$route.path, { puntuacion: this.puntaje })
-      //   .then((r) => console.log(r))
-      //   .catch((e) => console.log(e));
     },
 
     createColor() {
@@ -617,20 +586,6 @@ export default {
 
         this.requestPhoto();
       }
-    },
-
-    async getReverseGeocode(lat, lng) {
-      Axios.get(
-        `https://nominatim.openstreetmap.org/reverse.php?lat=${lat}&lon=${lng}&zoom=18&format=jsonv2`
-      )
-        .then((r) => {
-          this.ubicacion = r.data.display_name;
-        })
-        .catch((e) => console.log(e));
-    },
-
-    handlerChangeLocation(e) {
-      this.getReverseGeocode(e.lat, e.lng);
     },
   },
 };
@@ -786,10 +741,6 @@ export default {
     .mapa {
       width: 100%;
       height: 100%;
-
-      .location {
-        margin: 0 1vh 2vh 1vh;
-      }
     }
   }
 

@@ -15,7 +15,9 @@
         :key="i"
         :lat-lng="convertToLatLong(m)"
       >
-        <!-- <v-popup :content="c.tooltipContent"></v-popup> -->
+        <l-popup>
+          <img :src="getImgUrl(m)" alt="" class="popup-img" />
+        </l-popup>
       </l-marker>
     </v-marker-cluster>
   </l-map>
@@ -23,7 +25,7 @@
 
 <script>
 import L from "leaflet";
-import { LMap, LTileLayer, LMarker } from "vue2-leaflet";
+import { LMap, LTileLayer, LMarker, LPopup } from "vue2-leaflet";
 import "leaflet/dist/leaflet.css";
 import "@/styles/vgeosearch.css";
 
@@ -49,6 +51,7 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
+    LPopup,
     VGeosearch,
     "v-marker-cluster": Vue2LeafletMarkerCluster,
   },
@@ -147,6 +150,15 @@ export default {
     convertToLatLong(unaImagen) {
       return L.latLng(this.getImgLat(unaImagen), this.getImgLong(unaImagen));
     },
+
+    getImgUrl(img) {
+      if (img.thumbnail)
+        return this.$apiUrl(
+          img.thumbnail.formats
+            ? img.thumbnail.formats.small.url
+            : img.thumbnail.url
+        );
+    },
   },
 };
 </script>
@@ -174,5 +186,10 @@ export default {
 
 .color-black {
   color: black !important;
+}
+
+.popup-img {
+  max-width: 300px;
+  max-height: 240px;
 }
 </style>

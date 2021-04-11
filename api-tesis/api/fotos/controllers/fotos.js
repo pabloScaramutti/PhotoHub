@@ -113,18 +113,19 @@ module.exports = {
   async getGeoposition(imagen) {
     if (imagen.exif.GPSPosition) {
       await axios.get(
-        `https://nominatim.openstreetmap.org/reverse.php?lat=${this.getImgLat(imagen)}&lon=${this.getImgLong(imagen)}&zoom=18&format=jsonv2`
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${this.getImgLat(imagen)}&longitude=${this.getImgLong(imagen)}&localityLanguage=es`
       )
         .then(async (r) => {
           let ubicacion = {
-            pais: r.data.address.country,
-            ciudad: r.data.address.city,
-            provincia: r.data.address.state,
+            localidad: r.data.locality,
+            ciudad: r.data.city,
+            provincia: r.data.principalSubdivision,
+            pais: r.data.countryName,
           };
 
           console.log("ubicacion", ubicacion)
 
-          let nombre = `${ubicacion.ciudad}, ${ubicacion.provincia}, ${ubicacion.pais}`;
+          let nombre = `${ubicacion.localidad}, ${ubicacion.ciudad}, ${ubicacion.provincia}, ${ubicacion.pais}`;
 
           await this.createOrUpdateServiceItem("ubicacion", imagen, { nombre: nombre }, { nombre: nombre, fotos: [imagen.id] }).then(r => console.log("Se creo o actualizo la ubicacion", r)).catch(e => console.log("aca se produjo un error", e));
 
@@ -175,5 +176,37 @@ module.exports = {
     const data = await exec(`ffmpeg -ss 0 -i ${inputURL} -vframes 1 ${output}`);
     console.log(data);
     return { URL: output, name: videoName.split('.')[0] };
-  }
+  },
+
+  //UPDATE---------------------------------------------------------
+  async update(ctx) {
+    console.log("EL METODO UPDATE CUSTOM", ctx.params)
+    const { id } = ctx.params;
+
+    let entity;
+    if (ctx.is('multipart')) {
+      console.log("es multipart")
+      const { data, files } = parseMultipartData(ctx);
+
+      if ("exif.GPSPosition" in data) {
+        console.log("Existe")
+        let img = await strapi.services.fotos.findOne({ id: id });
+        this.getGeoposition(img)
+      }
+
+      entity = await strapi.services.fotos.update({ id }, data, {
+        files,
+      });
+    } else {
+      entity = await strapi.services.fotos.update({ id }, ctx.request.body);
+
+      if (ctx.request.body.exif.GPSPosition) {
+        console.log("Existe")
+        this.getGeoposition(entity)
+      }
+    }
+
+    return sanitizeEntity(entity, { model: strapi.models.fotos });
+  },
+
 };
