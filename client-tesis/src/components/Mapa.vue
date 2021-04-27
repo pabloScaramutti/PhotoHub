@@ -9,6 +9,7 @@
       }}
     </div>
     <l-map
+      class="z-index"
       ref="myMap"
       :zoom="zoom"
       :center="center"
@@ -98,16 +99,33 @@ export default {
   created() {
     console.log(this.lat, this.lng);
     if (this.procesarCoordenadas()) {
-      this.center = L.latLng(this.coordenadas.lat, this.coordenadas.lng);
-      this.marker = L.latLng(this.coordenadas.lat, this.coordenadas.lng);
-      this.getReverseGeocode(this.coordenadas.lat, this.coordenadas.lng);
+      this.updateWithProps();
     } else {
       this.getGeolocation();
       console.log("Ubicacion por dispositivo sin marcador");
     }
   },
 
+  watch: {
+    lat: function (newValue) {
+      if (!newValue) return;
+      this.coordenadas.lat = this.getImgLat();
+      this.updateWithProps();
+    },
+    long: function (newValue) {
+      if (!newValue) return;
+      this.coordenadas.lng = this.getImgLong();
+      this.updateWithProps();
+    },
+  },
+
   methods: {
+    updateWithProps() {
+      this.center = L.latLng(this.coordenadas.lat, this.coordenadas.lng);
+      this.marker = L.latLng(this.coordenadas.lat, this.coordenadas.lng);
+      this.getReverseGeocode(this.coordenadas.lat, this.coordenadas.lng);
+    },
+
     getGeolocation() {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition((location) => {
@@ -165,6 +183,11 @@ export default {
       this.editMarker = false;
       this.coordenadas = this.coordenadasTemp;
 
+      if (!this.img) {
+        this.$emit("changeLocation", this.coordenadas);
+        return;
+      }
+
       this.img.exif.GPSLatitude = `${
         this.coordenadas.lat < 0
           ? (this.coordenadas.lat * -1).toString() + " S"
@@ -210,13 +233,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.mapa {
+  z-index: -10;
+}
+
+.z-index {
+  z-index: 0;
+}
+
 .leaflet-pane {
-  z-index: 1;
+  z-index: -10;
 }
 
 .leaflet-top,
 .leaflet-bottom {
-  z-index: 2;
+  z-index: -10;
 }
 
 .control-btn {
