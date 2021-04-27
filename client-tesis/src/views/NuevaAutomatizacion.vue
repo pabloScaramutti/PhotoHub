@@ -72,7 +72,23 @@
       {{ tag.nombre }}
     </v-chip>
 
-    <Search label="Carpeta" prependIcon="folder" url="/carpetas" />
+    <color-tag-picker
+      class="color-picker"
+      :initialValue="automatizacion.color"
+      v-on:colorSelected="handlerColorSelected($event)"
+    />
+
+    <v-autocomplete
+      v-model="automatizacion.carpeta"
+      label="Carpeta"
+      :items="carpetas"
+      item-text="nombre"
+      hide-selected
+      chips
+      prepend-icon="folder"
+      url="/carpetas"
+      return-object
+    />
 
     <div class="floating-btn done-confirm-btn-container">
       <v-btn
@@ -91,16 +107,31 @@
         ><v-icon>done</v-icon></v-btn
       >
     </div>
+
+    <div class="mapa">
+      <Mapa
+        :lat="automatizacion.GPSLatitude"
+        :long="automatizacion.GPSLongitude"
+        v-on:changeLocation="handlerChangeLocation($event)"
+      ></Mapa>
+    </div>
+
+    <div class="height-surpase"></div>
   </div>
 </template>
 
 <script>
 import Search from "@/components/Search";
+import Mapa from "@/components/Mapa";
+import ColorTagPicker from "@/components/ColorTagPicker";
+import formatGPS from "@/helpers/formatGPS.js";
 
 export default {
   name: "NuevaAutomatizacion",
   components: {
     Search,
+    Mapa,
+    ColorTagPicker,
   },
 
   data() {
@@ -108,12 +139,18 @@ export default {
       automatizacion: {
         nombre: "",
         etiquetas: [],
+        carpeta: undefined,
+        GPSPosition: undefined,
+        GPSLatitude: undefined,
+        GPSLongitude: undefined,
+        color: undefined,
       },
 
       date: undefined,
       menu: false,
       datePickerType: "siempre",
       loadingDoneBtn: false,
+      carpetas: undefined,
     };
   },
 
@@ -141,9 +178,18 @@ export default {
         })
         .catch((e) => console.log("No se pudo cargar la automatizacion", e));
     }
+
+    this.loadFolders();
   },
 
   methods: {
+    loadFolders() {
+      this.$http
+        .get("carpetas")
+        .then((r) => (this.carpetas = r.data))
+        .catch((e) => console.log("Fallo la carga de las carpetas", e));
+    },
+
     removeTag(index) {
       this.automatizacion.etiquetas.splice(index, 1);
     },
@@ -210,6 +256,11 @@ export default {
         multipleDate: this.dateForSend_Multiple(),
         etiquetas: this.automatizacion.etiquetas.map((e) => e.id),
         dateType: this.datePickerType,
+        carpeta: this.automatizacion.carpeta.id,
+        GPSLatitude: this.automatizacion.GPSLatitude,
+        GPSLongitude: this.automatizacion.GPSLongitude,
+        GPSPosition: this.automatizacion.GPSPosition,
+        color: this.automatizacion.color.id,
         activa: true,
       };
     },
@@ -222,6 +273,7 @@ export default {
         .then((r) => {
           console.log("Se creó la automatización", r);
           this.loadingDoneBtn = false;
+          this.$router.push({ name: "AjustesAutomaticos" });
         })
         .catch((e) => {
           console.log("Hubo un error creando la automatización", e);
@@ -237,10 +289,25 @@ export default {
         .then((r) => {
           console.log("Se actualizo la automatizacion", r);
           this.loadingDoneBtn = false;
+          this.$router.push({ name: "AjustesAutomaticos" });
         })
         .catch((e) =>
           console.log("Ocurrio un error actualizando la automatizacion", e)
         );
+    },
+
+    handlerChangeLocation(evento) {
+      console.log(evento, evento.lat, evento.lng);
+      this.automatizacion.GPSLatitude = formatGPS.formatLat(evento.lat);
+      this.automatizacion.GPSLongitude = formatGPS.formatLng(evento.lng);
+      this.automatizacion.GPSPosition = formatGPS.formatGPSPosition(
+        evento.lat,
+        evento.lng
+      );
+    },
+
+    handlerColorSelected(evento) {
+      this.automatizacion.color = evento;
     },
   },
 };
@@ -254,5 +321,18 @@ export default {
 .background-solid {
   background-color: #1e1e1e;
   padding: 5px;
+}
+
+.mapa {
+  width: 100%;
+  height: 500px;
+}
+
+.color-picker {
+  margin: 40px 0;
+}
+
+.height-surpase {
+  height: 25vh;
 }
 </style>

@@ -108,6 +108,13 @@ export default {
         .put(`/automatizacions/${e.id}`, { activa: e.activa })
         .then((r) => console.log("Se activo la automatizacion", r))
         .catch((e) => console.log("No se pudo activar la automatizacion", e));
+
+      if (e.activa) {
+        this.showAutomatizations.forEach((a) => {
+          if (a == e || !a.activa) return;
+          a.activa = false;
+        });
+      }
     },
   },
 };

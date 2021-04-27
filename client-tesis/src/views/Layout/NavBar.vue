@@ -69,15 +69,26 @@
 
       <v-list dense>
         <v-list-item v-for="item in items" :key="item.title" link>
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
+          <router-link class="router-link" :to="{ name: item.url }">
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
 
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item-content>
+          </router-link>
         </v-list-item>
       </v-list>
+
+      <v-divider></v-divider>
+
+      <v-list-item link @click="logout()">
+        <v-list-item-icon>
+          <v-icon>logout</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content> Cerrar Sesión </v-list-item-content>
+      </v-list-item>
     </v-navigation-drawer>
 
     <div v-if="showPhotoNotification" class="new-notification">
@@ -91,6 +102,7 @@ import io from "socket.io-client";
 import servidor from "@/config/servidor.json";
 import sound from "@/assets/notificationSound.mp3";
 import Foto_Lista from "../../components/Foto_Lista.vue";
+import { AccionesNombres } from "@/store/actions/acciones";
 
 export default {
   components: { Foto_Lista },
@@ -98,8 +110,16 @@ export default {
     return {
       drawer: null,
       items: [
-        { title: "Home", icon: "dashboard" },
-        { title: "About", icon: "question_answer" },
+        {
+          title: "Set de etiquetas",
+          icon: "local_offer",
+          url: "EtiquetasRapidas",
+        },
+        {
+          title: "Automatizaciones",
+          icon: "settings",
+          url: "AjustesAutomaticos",
+        },
       ],
 
       socket: {},
@@ -162,6 +182,12 @@ export default {
         this.$router.push({ name: "Notificaciones" });
       }
     },
+
+    logout() {
+      this.$store
+        .dispatch(AccionesNombres.Logout)
+        .then(() => this.$router.push({ name: "Login" }));
+    },
   },
 };
 </script>
@@ -199,6 +225,12 @@ export default {
   z-index: 5;
   padding: 4px 10px 4px 5px;
   border-radius: 5px;
+}
+
+.router-link {
+  display: flex;
+  text-decoration: none;
+  color: white;
 }
 
 // esto borrar cuando saque el boton prueba madnar-----

@@ -97,59 +97,7 @@
                 <v-icon small>create</v-icon>
               </div>
             </div>
-            <div>
-              <v-icon>palette</v-icon>
-              <div class="divider" />
-              <div class="flex">
-                <div
-                  v-for="(color, index) in colors"
-                  :key="index"
-                  @click="saveColor(color)"
-                  :style="`background-color: ${color.nombre}; border: ${
-                    imagen.color && imagen.color.nombre === color.nombre
-                      ? '4px solid white'
-                      : 'none'
-                  }`"
-                  class="m-top-10px color-tag"
-                ></div>
-                <div
-                  @click.stop="createNewColor.dialog = true"
-                  class="m-top-10px color-tag"
-                  style="background-color: white"
-                >
-                  <p
-                    style="
-                      color: black;
-                      font-weight: 300;
-                      text-align: center;
-                      transform: translateY(-8px);
-                      font-size: 1.5em;
-                    "
-                  >
-                    +
-                  </p>
-                </div>
-
-                <!-- Color Picker -->
-                <v-dialog v-model="createNewColor.dialog" max-width="290">
-                  <v-card>
-                    <v-color-picker
-                      v-model="createNewColor.color"
-                      hide-inputs
-                    ></v-color-picker>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn @click="createNewColor.dialog = false">
-                        <v-icon>close</v-icon>
-                      </v-btn>
-                      <v-btn @click="createColor()" color="primary">
-                        <v-icon>done</v-icon>
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-              </div>
-            </div>
+            <ColorTagPicker :imagen="imagen" />
             <div class="m-top-20px">
               <Search
                 v-on:item-created="addTag($event)"
@@ -331,12 +279,14 @@
 import Puntaje from "@/components/Puntaje";
 import Mapa from "@/components/Mapa";
 import Search from "@/components/Search";
+import ColorTagPicker from "@/components/ColorTagPicker";
 
 export default {
   components: {
     Puntaje,
     Mapa,
     Search,
+    ColorTagPicker,
   },
   props: {},
   data() {
@@ -345,12 +295,7 @@ export default {
       informacion: false,
       fullView: false,
       puntaje: undefined,
-      createNewColor: {
-        dialog: false,
-        color: "#FF0000",
-      },
       tabSelected: "tags",
-      colors: [],
       allTags: [],
       tagSelected: [],
       normalizeTagsSelected: false,
@@ -365,13 +310,6 @@ export default {
 
   created() {
     this.requestPhoto();
-
-    this.$http
-      .get("/colores")
-      .then((result) => (this.colors = result.data))
-      .catch((error) => {
-        console.log("No se pudieron cargar los colores", error);
-      });
 
     this.$http
       .get("/etiquetas?_sort=nombre:ASC")
@@ -456,39 +394,6 @@ export default {
       //console.log("agarre el evento");
       this.puntaje = e;
       this.imagen.puntuacion = e;
-    },
-
-    createColor() {
-      this.$http
-        .post("/colores", {
-          nombre: this.createNewColor.color,
-        })
-        .then((result) => {
-          console.log(
-            "Se creó la etiqueta de color:",
-            this.createNewColor.color,
-            "en la base de datos",
-            result
-          );
-          this.colors.push(result.data);
-        })
-        .catch((error) =>
-          console.log("Hubo un problema creando la etiqueta de color", error)
-        );
-      this.createNewColor.dialog = false;
-    },
-
-    saveColor(c) {
-      this.imagen.color = c;
-      this.$http
-        .put(`/fotos/${this.imagen.id}`, { color: c.id })
-        .then((r) => {
-          console.log("Se actualizó el color de la foto:", r);
-          this.imagen.color = c;
-        })
-        .catch((e) =>
-          console.log("Ocurrió un error actualizando el color:", e)
-        );
     },
 
     removeTag(index) {
@@ -769,14 +674,6 @@ export default {
   .divider {
     width: 100%;
     border-bottom: 1px solid white;
-  }
-
-  .color-tag {
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    margin-right: 20px;
   }
 
   .flex {

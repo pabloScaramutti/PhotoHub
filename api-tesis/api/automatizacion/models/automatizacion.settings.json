@@ -48,6 +48,18 @@
         "rango",
         "multiple"
       ]
+    },
+    "carpeta": {
+      "model": "carpetas"
+    },
+    "GPSPosition": {
+      "type": "string"
+    },
+    "GPSLatitude": {
+      "type": "string"
+    },
+    "GPSLongitude": {
+      "type": "string"
     }
   }
 }

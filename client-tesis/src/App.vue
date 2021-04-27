@@ -91,6 +91,7 @@ p {
 }
 
 .floating-btn {
+  z-index: 1;
   position: fixed;
   bottom: 80px;
   right: 25px;

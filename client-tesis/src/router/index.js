@@ -28,7 +28,10 @@ const routes = [
   {
     path: "/home",
     name: "Home",
-    component: Home
+    component: Home,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/about",
@@ -43,81 +46,129 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login,
+    meta: {
+      hideForAuth: true
+    }
   },
   {
     path: "/registro",
     name: "Registro",
-    component: Registro
+    component: Registro,
+    meta: {
+      hideForAuth: true
+    }
   },
   {
     path: "/notas",
     name: "Notas",
-    component: Notas
+    component: Notas,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/fotos/:img",
     name: "Foto",
-    component: Foto
+    component: Foto,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/calendario",
     name: "Calendario",
-    component: Calendario
+    component: Calendario,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/nueva-carpeta",
     name: "NuevaCarpeta",
-    component: NuevaCarpeta
+    component: NuevaCarpeta,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/notificaciones",
     name: "Notificaciones",
-    component: Notificaciones
+    component: Notificaciones,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/conexion",
     name: "Conexion",
-    component: Conexion
+    component: Conexion,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/etiquetas-rapidas",
     name: "EtiquetasRapidas",
-    component: EtiquetasRapidas
+    component: EtiquetasRapidas,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/ajustes-automaticos",
     name: "AjustesAutomaticos",
-    component: AjustesAutomaticos
+    component: AjustesAutomaticos,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/crear-automatizacion",
     name: "NuevaAutomatizacion",
-    component: NuevaAutomatizacion
+    component: NuevaAutomatizacion,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/editar-automatizacion/:automatizacion",
     name: "ModificarAutomatizacion",
-    component: NuevaAutomatizacion
+    component: NuevaAutomatizacion,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/crear-set",
     name: "CrearSet",
-    component: SetEtiqueta
+    component: SetEtiqueta,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/set-etiquetas/:set",
     name: "SetEtiqueta",
-    component: SetEtiqueta
+    component: SetEtiqueta,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/busqueda",
     name: "Busqueda",
-    component: Busqueda
+    component: Busqueda,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/carpetas/:id",
     name: "Carpeta",
-    component: Carpeta
+    component: Carpeta,
+    meta: {
+      requiresAuth: true
+    }
   },
 ];
 
@@ -125,6 +176,36 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!localStorage.getItem('authtoken')) {
+      console.log("entre aca");
+      next({
+        name: "Login"
+      });
+      console.log("ejecute el next de login");
+      return;
+    } else {
+      next();
+      return;
+    }
+  } else if (to.matched.some(record => record.meta.hideForAuth)) {
+    console.log("Estoy entrando aca tambien");
+    if (localStorage.getItem('authtoken')) {
+      next({
+        name: "Home"
+      });
+      console.log("estoy ejecutando el next de home")
+      return;
+    } else {
+      next();
+    }
+  } else {
+    next();
+    return;
+  }
 });
 
 export default router;

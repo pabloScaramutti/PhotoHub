@@ -11,10 +11,6 @@
     <h2 class="ml-30">Recientes</h2>
     <hr />
     <GrillaFotos :imagenes="imagenes" style="width: 100%"></GrillaFotos>
-
-    <router-link :to="{ name: 'Login' }">
-      <v-btn block rounded color="primary"> Login </v-btn>
-    </router-link>
   </div>
 </template>
 

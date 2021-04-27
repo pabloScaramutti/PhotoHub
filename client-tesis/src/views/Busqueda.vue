@@ -61,6 +61,9 @@
                 item.nombre +
                 ';margin-right:25px;border-radius:50%></div><p style=margin:0>' +
                 item.nombre +
+                ' (' +
+                item.fotos.length +
+                ') ' +
                 '</p></div>'
               );
             }

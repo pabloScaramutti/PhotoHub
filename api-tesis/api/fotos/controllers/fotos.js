@@ -8,7 +8,8 @@ const { promisify } = require('util');
 const exec = promisify(require("child_process").exec);
 
 //EXIF
-const ExifTool = require('exiftool-kit/lib/exiftool-wrapper')
+const ExifTool = require('exiftool-kit/lib/exiftool-wrapper');
+const automatizacion = require('../../automatizacion/controllers/automatizacion');
 
 module.exports = {
   async create(ctx) {
@@ -51,20 +52,35 @@ module.exports = {
       }
 
 
-      console.log('data', data)
-      console.log('files', files)
+      //console.log('data', data)
+      //console.log('files', files)
 
-      const automatizaciones = await strapi.services.automatizacion.find({ activa: true })
-      const unifyTaggList = [];
-      automatizaciones.forEach(currentValue => unifyTaggList.push(...currentValue.etiquetas.map(e => e.id)));
-      const removeDuplicates = [...new Set(unifyTaggList)];
-      data.etiquetas = removeDuplicates;
+      const automatizaciones = await strapi.services.automatizacion.find({ activa: true });
+      console.log(automatizaciones);
+      if (automatizaciones.length) {
+        const unifyTaggList = [];
+        automatizaciones.forEach(currentValue => unifyTaggList.push(...currentValue.etiquetas.map(e => e.id)));
+        const removeDuplicates = [...new Set(unifyTaggList)];
+        data.etiquetas = removeDuplicates;
+        data.carpeta = automatizaciones[0].carpeta || undefined;
+        if (automatizaciones[0].GPSPosition && !data.exif.GPSPosition) {
+          console.log("Puse los datos de GPS de la automatizacion");
+          data.exif.GPSPosition = automatizaciones[0].GPSPosition;
+          data.exif.GPSLatitude = automatizaciones[0].GPSLatitude;
+          data.exif.GPSLongitude = automatizaciones[0].GPSLongitude;
+        }
+
+        if (automatizaciones[0].color) {
+          data.color = automatizaciones[0].color;
+        }
+      }
 
       //agregar etiquetas de color; carpetas; Decidir si hay varias automatizaciones activas que pasa
 
 
       entity = await strapi.services.fotos.create(data, { files });
       const notificacion = await strapi.services.notificaciones.create({ foto: entity.id });
+      strapi.io.emit('nuevaFoto', entity);
 
       // Video thumbnail
       let videoThumbnail;
@@ -97,14 +113,14 @@ module.exports = {
 
         update = await this.createOrUpdateServiceItem("obturacion", entity, { valor: entity.exif.ShutterSpeed.toString() }, { valor: entity.exif.ShutterSpeed.toString(), fotos: [entity.id] });
 
-        await this.getGeoposition(entity)
+        await this.getGeoposition(entity).then(r => console.log("Pude hacer la geoposition", r)).catch(e => console.log("no pude hacer la geoposition", e))
 
       }
     } else {
       entity = await strapi.services.fotos.create(ctx.request.body);
     }
 
-    strapi.io.emit('nuevaFoto', entity);
+
     return sanitizeEntity(entity, { model: strapi.models.fotos });
 
 
@@ -185,11 +201,11 @@ module.exports = {
 
     let entity;
     if (ctx.is('multipart')) {
-      console.log("es multipart")
+      console.log('es multipart')
       const { data, files } = parseMultipartData(ctx);
 
-      if ("exif.GPSPosition" in data) {
-        console.log("Existe")
+      if ('exif.GPSPosition' in data) {
+        console.log('Existe')
         let img = await strapi.services.fotos.findOne({ id: id });
         this.getGeoposition(img)
       }
@@ -200,8 +216,8 @@ module.exports = {
     } else {
       entity = await strapi.services.fotos.update({ id }, ctx.request.body);
 
-      if (ctx.request.body.exif.GPSPosition) {
-        console.log("Existe")
+      if ('exif.GPSPosition' in ctx.request.body) {
+        console.log('Existe')
         this.getGeoposition(entity)
       }
     }

@@ -53,7 +53,10 @@ export default {
 
   props: {
     icon: String,
-    iconSize: { type: String, default: "32px" },
+    iconSize: {
+      type: String,
+      default: "32px",
+    },
     title: String,
     lista: Array,
     orderFunction: {
@@ -61,10 +64,9 @@ export default {
       type: Function,
       required: false,
     },
+
     listHtmlItem: {
-      default: (item) => {
-        return "<p>" + item.valor + "</p>";
-      },
+      default: (item) => `<p>${item.valor} (${item.fotos.length})</p>`,
       type: Function,
       required: false,
     },

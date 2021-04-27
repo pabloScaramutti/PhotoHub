@@ -16,7 +16,9 @@
         :lat-lng="convertToLatLong(m)"
       >
         <l-popup>
-          <img :src="getImgUrl(m)" alt="" class="popup-img" />
+          <router-link :to="`/fotos/${m.id}`">
+            <img :src="getImgUrl(m)" alt="" class="popup-img" />
+          </router-link>
         </l-popup>
       </l-marker>
     </v-marker-cluster>
@@ -166,6 +168,10 @@ export default {
 <style lang="scss" scoped>
 @import "~leaflet.markercluster/dist/MarkerCluster.css";
 @import "~leaflet.markercluster/dist/MarkerCluster.Default.css";
+
+.mapa {
+  z-index: 0;
+}
 
 .leaflet-pane {
   z-index: 1;
