@@ -2,7 +2,7 @@
   <img src="./readme_src/Logo.png" width="150px" height="150px"/>
 </p>
 
-# FotoHub
+# PhotoHub
 
 ![](./readme_src/dispositivo.png)
 ## Introducción
