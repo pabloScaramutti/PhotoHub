@@ -6,26 +6,22 @@
 
 ![](./readme_src/dispositivo.png)
 ## Introducción
----
 
 Este proyecto fue realizado como trabajo final de la Lic. en Diseño Multimedial de la Facultad de Artes en la UNLP.
 
 ## Problematica
----
 
 Muchas veces, los fotógrafos y videografos se encuentran con la situación de estar en un lugar remoto y quedarse sin espacio en la tarjeta de memoria, sin posibilidad de hacer una copia por falta de una computadora. Esto quiere decir que pase lo que pase ya no pueden seguir trabajando, o tienen que ponerse a revisar qué borrar.
 
 Otro de los problemas es la organización del material. Muchas veces los productores de contenido concurren a eventos sociales y necesitan entregar el material de la jornada lo antes posible. Esto quiere decir que se debe ordenar, seleccionar y en ocasiones editar las fotos rápidamente. Para esto en general depende de tener una computadora cerca, poder copiar los archivos, seleccionarlos, y luego editarlos y/o enviarlos.
 
 ## Propuesta
----
 
 Este producto viene a solucionar estas cuestiones a partir de catalogar y hacer una copia de seguridad ordenada y sin redundancia a un disco rígido que, además, funciona como un punto de acceso por el cuál se podrán traspasar los archivos entre dispositivos en cualquier lugar y a cualquier dispositivo que tenga Wi-Fi. Todo esto sin necesidad de contar con red eléctrica, ni conexión a internet.
 
 Por el alcance del proyecto y el tamaño, lo que hice fue prototipar un MVP que pueda dar cuenta del objetivo general del trabajo.
 
 ## MVP
----
 
 El proyecto requería: 
 - una web app en donde se podría revisar las fotos, catalogarlas y buscar archivos mediante filtros y la catalogación antes realizada.
@@ -45,7 +41,6 @@ Existe un sistema de alertas y notificaciones, desde el back hacia el front cuan
 ![](./readme_src/app.png)
 
 ## Instalación
----
 
 - Se requiere NodeJS instalado en el sistema.
 Se puede instalar desde la página https://nodejs.org/ de acuerdo con tu sistema operativo.
