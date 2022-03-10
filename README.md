@@ -1,6 +1,6 @@
-<div style="width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center">
+<p align="center">
   <img src="./readme_src/Logo.png" width="150px" height="150px"/>
-</div>
+</p>
 
 # FotoHub
 
