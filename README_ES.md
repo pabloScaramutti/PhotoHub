@@ -6,7 +6,7 @@
 
 ![Render del dispositivo](./readme_src/dispositivo.png)
 
-** For `english version` --> [English version](./README_ES.md)
+** For `english version` --> [English version](./README.md)
 
 ## Introducción
 
