@@ -1,10 +1,13 @@
 <p align="center">
-  <img src="./readme_src/Logo.png" width="150px" height="150px"/>
+  <img src="./readme_src/Logo.png" width="150px" height="150px" alt="Photohub logo"/>
 </p>
 
 # PhotoHub
 
-![](./readme_src/dispositivo.png)
+![Render del dispositivo](./readme_src/dispositivo.png)
+
+** For `english version` --> [English version](./README_ES.md)
+
 ## Introducción
 
 Este proyecto fue realizado como trabajo final de la Lic. en Diseño Multimedial de la Facultad de Artes en la UNLP.
@@ -34,11 +37,11 @@ La conexión con la cámara fue realizada a partir del repositorio https://githu
 
 Existe un sistema de alertas y notificaciones, desde el back hacia el front cuando se registra una nueva foto, que fue realizado con la librería Socket.io
 
-![](./readme_src/Esquema-funcionamiento.png)
+![Esquema de funcionamiento](./readme_src/Esquema-funcionamiento.png)
 
 ## Pantallas Web App
 
-![](./readme_src/app.png)
+![Pantallas de la web app](./readme_src/app.png)
 
 ## Instalación
 
