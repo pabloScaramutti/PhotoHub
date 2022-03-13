@@ -9,26 +9,22 @@
 ** For `spanish version` --> [Spanish version](./README_ES.md)
 
 ## Introduction
----
 
 This project was made as the final assigment for the Multimedia Design Degree from the Faculty of Arts at the UNLP (National University of La Plata)
 
 ## Problem
----
 
 Many times photographers and videographers find themselves in a remote place, without storage in the memory card, and without possibility of making a copy because a computer is needed. Therefore, they can't keep working, or they have to revise the content of the memory card and select something to delete.
 
 Another problem is the organization of files. Usualy, content creators have to go to social events, and they need to hand in the footage/images of the day inmediatly. So, they have to organize the files, select them and, in ocations, edit them on the go. This requires a big hardware at hand, for example a laptop.
 
 ## Proposal
----
 
 This product was designed to overcome this issues by catalogin and making an ordered backup avoiding redundancy, to a hard disk. These files are accessibles from any device that can run a browser and have wifi connection. All these packed in a portable device and without the need of internet connection.
 
 Given the size of the project and its requirements I've made a prototipe of the MVP (Minimum viable product) that can show the general purpose of the assigment.
 
 ## MVP
----
 
 Project requirements:
 
@@ -50,7 +46,6 @@ There is a system of alerts an notifications, that was made utilizing Soket.io, 
 ![App screens](./readme_src/app.png)
 
 ## Instalation
----
 
 - NodeJS is required.
 This can be downloaded and installed from https://nodejs.or/ selecting the OS version you are using.
